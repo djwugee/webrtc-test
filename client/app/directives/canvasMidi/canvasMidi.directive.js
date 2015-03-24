@@ -4,7 +4,7 @@ angular.module('webrtcTestApp')
   .directive('canvasMidi', function ($log) {
     return {
       restrict: 'EA',
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         //element.text('this is the canvasMidi directive');
         $log.info('loading canvas directive');
 
@@ -16,8 +16,8 @@ angular.module('webrtcTestApp')
         	$log.debug('clicked');
 
         	
-        	ctx.font = "30px Arial";
-			ctx.fillText("Hello World "+String.fromCharCode(e.which),10,50);
+        	ctx.font = '30px Arial';
+			ctx.fillText('Hello World '+String.fromCharCode(e.which),10,50);
 
 			//self.contexts.push(ctx);
 
