@@ -1,0 +1,4 @@
+div(canvas-midi-main="canvasId", style="width:100%;margin:0px;padding:0px")
+	pre
+		| notes:{{notes | json}}
+	canvas(id="{{canvasId}}",canvas-midi-notes="",width='{{canvasWidth}}',height='{{canvasHeight}}')
