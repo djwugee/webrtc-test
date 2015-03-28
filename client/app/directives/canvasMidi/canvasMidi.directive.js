@@ -133,7 +133,7 @@ angular.module('webrtcTestApp')
         function doKeyDown(event){
           var note= event.keyCode - 49; // 49 = key 1
 
-          if(note>=1 || note <=5){
+          if(note>=1 && note <=5){
             createMidiNote(note);
           }
         }
