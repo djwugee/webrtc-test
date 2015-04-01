@@ -120,6 +120,59 @@
         }
       }
     })
+
+    /**
+      * Base layer, just draw the neck cords
+      */
+    .directive('canvasMidiBase',function($log){
+      return{
+        restrict:'EA',
+        link: function(scope,element){
+          $log.info('loading canvas midi base layer directive');
+
+          var canvas=element[0];
+          var ctx=canvas.getContext('2d');
+
+          ctx.clearRect(0,0,canvas.width, canvas.height);
+          //ctx.beginPath();
+          ctx.strokeStyle='#FFFFFF';
+          ctx.fillStyle='#FFFFFF';
+
+          var colWidth= canvas.width/6;
+          var colOffset= colWidth/2;
+          $log.debug('canvas.width: '+canvas.width+', colWidth: '+colWidth+', colOffset: '+colOffset);
+
+          //ctx.fillRect(25,25,100,100);
+
+          var i;
+          for(i=1;i<=5;i++){
+            var left= i*colWidth+2;
+            var right= left+ 1;
+            var top=0;
+            var bottom=canvas.height;
+
+            $log.debug('left: '+left+',right: '+right+', top: '+top+', bottom: '+bottom);
+
+            ctx.beginPath();
+            ctx.moveTo(left,top);
+            ctx.lineTo(left,bottom);
+            ctx.stroke();
+            ctx.closePath();
+
+
+          }
+
+          ctx.beginPath();
+          var top=(canvas.height/4)*3;
+          ctx.moveTo(0,top);
+          ctx.lineTo(canvas.width,top);
+          ctx.stroke();
+          ctx.closePath();
+
+
+        }
+      }
+    })
     /**
       * Layer to draw notes from midi
       */
@@ -127,7 +180,7 @@
       return{
         restrict: 'EA',
         scope:true,
-        link: function (scope, element, attrs) {
+        link: function (scope, element) {
           //element.text('this is the canvasMidi directive');
           $log.info('loading canvas notes directive');
 
@@ -135,7 +188,7 @@
 
           var canvas=element[0]; 
           var ctx=canvas.getContext('2d');
-          $log.debug('Canvas context',ctx);
+
                   
 
 
