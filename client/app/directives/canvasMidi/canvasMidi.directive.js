@@ -44,7 +44,7 @@
           $scope.canvasHeight=$attrs.height;
           $scope.canvasWidth=$attrs.width;
         }
-      }
+      };
     })
     /**
       * Parent for inner layers, it creates the notes context
@@ -57,32 +57,102 @@
 
           // notes being rendered
           $scope.notes=[];
+          $scope.userNotes={};
           $scope.notesCounter=0;
           $scope.lastNote=0;
-
 
           /**
             * capture a note (keyboard) event
            */
           var eventName='user.note.event.'+$scope.canvasId;
+          var releaseEventName='user.note.release.event.'+$scope.canvasId;
           $log.debug('Register user note events for '+eventName);
           var _this=this;
+
           $rootScope.$on(eventName,function(event, note){
             $log.debug('new user note event',event,note);
 
             if(note>=0 && note <=4){
-              _this.createMidiNote(note);
+              //_this.createMidiNote(note);
+              _this.createUserNote(note);
+            }
+
+          });
+
+          $rootScope.$on(releaseEventName,function(event, note){
+            $log.debug('new release user note event',event,note);
+
+            if(note>=0 && note <=4){
+              //_this.createMidiNote(note);
+              _this.releaseUserNote(note);
             }
 
           });
 
 
+          /**
+           * used to draw the horizontal line where the user notes are showed
+           * @param canvas
+           * @returns {number}
+           */
+          var horizontalUserCoord=($attrs.canvasMainHeight / 4) * 3;
+          $log.debug('horizontalUserCoord: '+horizontalUserCoord);
+          this.getUserTop= function() {
 
+            return horizontalUserCoord;
+          };
+
+          /**
+           * Creates a new user note
+           */
+          function notifyNewUserNoteToCanvas() {
+            $rootScope.$broadcast('controller.userNote.event.' + $scope.canvasId);
+          }
+
+          this.createUserNote= function(noteIndex){
+            //calculate iamge vars
+            var image= noteImages[noteIndex];
+            var left= noteIndex*NOTE_WIDTH+ NOTE_WIDTH/2;
+
+            var top=_this.getUserTop()-(NOTE_HEIGHT/2);
+
+
+
+            var note= {
+
+              image:image,
+              left: left,
+              top:top
+            };
+
+
+
+
+            $log.debug('creating user note',note);
+
+            //push to current notes (toggle)
+            $scope.userNotes[noteIndex]=note;
+
+            //send event to update canvas
+            notifyNewUserNoteToCanvas();
+
+          };
+          this.releaseUserNote=function(noteIndex){
+            //remove note from map
+            $scope.userNotes[noteIndex]=undefined;
+
+            //send event to update canvas
+            notifyNewUserNoteToCanvas();
+          };
+
+          this.getUserNotes=function(){
+            return $scope.userNotes;
+          };
 
           /**
             * Creates a new note to be rendered scrolling down
            */
-           this.createMidiNote=   function (noteIndex){
+          this.createMidiNote=   function (noteIndex){
             //calculate iamge vars
             var image= noteImages[noteIndex];
             var left= noteIndex*NOTE_WIDTH+ NOTE_WIDTH/2;
@@ -95,13 +165,13 @@
               left: left,
               top:0
             };
-            $log.debug('creating note',note);
+            $log.debug('creating midi note',note);
 
             //push to current notes
             $scope.notes.push(note);
 
             //start render if is the first note
-            if($scope.notes.length==1){
+            if($scope.notes.length===1){
               $rootScope.$broadcast('controller.note.event.'+$scope.canvasId);
             }
           };
@@ -111,14 +181,14 @@
           /*
            * create random notes onclik
           */
-          element.bind('click',function(e){
+          element.bind('click',function(){
             controller.createMidiNote(scope.lastNote);
             scope.lastNote= (scope.lastNote+1)%NUMBER_OF_DIFFERENT_NOTES;
 
           });
 
         }
-      }
+      };
     })
 
     /**
@@ -127,7 +197,8 @@
     .directive('canvasMidiBase',function($log){
       return{
         restrict:'EA',
-        link: function(scope,element){
+        require:'^canvasMidiMain',
+        link: function(scope,element,attrs,canvasMidiController){
           $log.info('loading canvas midi base layer directive');
 
           var canvas=element[0];
@@ -146,8 +217,8 @@
 
           var i;
           for(i=1;i<=5;i++){
-            var left= i*colWidth+2;
-            var right= left+ 1;
+            var left= i*colWidth;
+            var right= left;
             var top=0;
             var bottom=canvas.height;
 
@@ -163,15 +234,17 @@
           }
 
           ctx.beginPath();
-          var top=(canvas.height/4)*3;
-          ctx.moveTo(0,top);
-          ctx.lineTo(canvas.width,top);
+
+          var hztalTop=canvasMidiController.getUserTop();
+          $log.debug('drawing user horizontal line, top coord: '+hztalTop);
+          ctx.moveTo(0,hztalTop);
+          ctx.lineTo(canvas.width,hztalTop);
           ctx.stroke();
           ctx.closePath();
 
 
         }
-      }
+      };
     })
     /**
       * Layer to draw notes from midi
@@ -179,24 +252,25 @@
     .directive('canvasMidiNotes', function ($rootScope,$log) {
       return{
         restrict: 'EA',
+        require:'^canvasMidiMain',
         scope:true,
         link: function (scope, element) {
           //element.text('this is the canvasMidi directive');
           $log.info('loading canvas notes directive');
 
-          
 
-          var canvas=element[0]; 
+
+          var canvas=element[0];
           var ctx=canvas.getContext('2d');
 
-                  
 
 
 
-          //capute new notes event 
+
+          //capute new notes event
           var eventName='controller.note.event.'+scope.canvasId;
           $log.debug('Registering for new notes event '+'controller.note.event.'+scope.canvasId);
-          $rootScope.$on(eventName,function(event){
+          $rootScope.$on(eventName,function(){
             startRender();
           });
 
@@ -224,11 +298,11 @@
                 //remove the note from notes
                 scope.notes.splice(index, 1);
 
-              } else { 
+              } else {
                 //draw the musical note
                 //$log.debug('draw note '+note.id);
                 ctx.drawImage(note.image,note.left,note.top);
-      
+
               }
 
             });
@@ -243,15 +317,54 @@
           }
 
           /**
-           * Starts a render loop 
+           * Starts a render loop
            */
           function startRender(){
             window.requestAnimationFrame(drawNoteFrame);
           }
 
         }
-      }
+      };
+    })
+  /**
+   * Renders the notes pressed by the user
+   */
+    .directive('canvasMidiUser', function ($rootScope,$log) {
+      return {
+        restrict: 'EA',
+        require:'^canvasMidiMain',
+        scope: true,
+        link: function (scope, element,attrs,canvasMidiController) {
+          //element.text('this is the canvasMidi directive');
+          $log.info('loading canvas user notes directive');
+
+          var eventName='controller.userNote.event.'+scope.canvasId;
+          $log.debug('Registering for new user notes event '+'controller.userNote.event.'+scope.canvasId);
+          $rootScope.$on(eventName,function(){
+            renderUserNotes();
+          });
+
+          var canvas=element[0];
+          var ctx=canvas.getContext('2d');
+
+
+          function renderUserNotes(){
+            //first clear the canvas (we are rendering a new frame)
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            //for each user note
+            var userNotes=canvasMidiController.getUserNotes();
+            angular.forEach(userNotes,function(note){
+              if(note){
+                ctx.drawImage(note.image,note.left,note.top);
+              }
+            });
+
+          }
+        }
+      };
     });
+
+
 
 })(angular);
 
