@@ -214,6 +214,7 @@ function MidiFile(data) {
 	var formatType = headerStream.readInt16();
 	var trackCount = headerStream.readInt16();
 	var timeDivision = headerStream.readInt16();
+	var ticksPerBeat=undefined;
 	
 	if (timeDivision & 0x8000) {
 		throw "Expressing time division in SMTPE frames is not supported yet"

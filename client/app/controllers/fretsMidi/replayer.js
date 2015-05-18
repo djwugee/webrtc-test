@@ -30,7 +30,7 @@ function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) 
 			}
 			//console.log('playing note' + note);
 			rootScope.sendNote(note - 96);
-			generator = currentProgram.createNote(note, velocity);
+			var generator = currentProgram.createNote(note, velocity);
 			synth.addGenerator(generator);
 			generatorsByNote[note] = generator;
 		}
