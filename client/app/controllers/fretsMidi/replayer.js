@@ -23,20 +23,20 @@ function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) 
 		var generatorsByNote = {};
 		var currentProgram = PianoProgram;
 		
-		function noteOn(note, velocity) {
-			if (generatorsByNote[note] && !generatorsByNote[note].released) {
+		function noteOn(noteEvent) {
+			if (generatorsByNote[noteEvent.noteNumber] && !generatorsByNote[noteEvent.noteNumber].released) {
 				/* playing same note before releasing the last one. BOO */
-				generatorsByNote[note].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
+				generatorsByNote[noteEvent.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
 			}
 			//console.log('playing note' + note);
-			rootScope.sendNote(note - 96);
-			var generator = currentProgram.createNote(note, velocity);
+			rootScope.sendNote(noteEvent);
+			var generator = currentProgram.createNote(noteEvent.noteNumber, noteEvent.velocity);
 			synth.addGenerator(generator);
-			generatorsByNote[note] = generator;
+			generatorsByNote[noteEvent.noteNumber] = generator;
 		}
-		function noteOff(note, velocity) {
-			if (generatorsByNote[note] && !generatorsByNote[note].released) {
-				generatorsByNote[note].noteOff(velocity);
+		function noteOff(noteEvent) {
+			if (generatorsByNote[noteEvent.noteNumber] && !generatorsByNote[noteEvent.noteNumber].released) {
+				generatorsByNote[noteEvent.noteNumber].noteOff(noteEvent.velocity);
 			}
 		}
 		function setProgram(programNumber) {
@@ -149,13 +149,13 @@ function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) 
 					case 'noteOn':
 						if (event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1]) 
 						{
-							channels[event.channel].noteOn(event.noteNumber, event.velocity);
+							channels[event.channel].noteOn(nextEventInfo);
 						}
 						break;
 					case 'noteOff':
 						if (event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1]) 
 						{
-							channels[event.channel].noteOff(event.noteNumber, event.velocity);
+							channels[event.channel].noteOff(nextEventInfo);
 						}
 						break;
 					case 'programChange':

@@ -97,11 +97,11 @@
             * capture midi event
             */
 
-          $rootScope.$on(midiEventName,function(event, note){
-            //$log.debug('new midi note event',event,note);
-
-            if(note>=0 && note <=4){
-              _this.createMidiNote(note);
+          $rootScope.$on(midiEventName,function(event, noteEvent){
+            $log.debug('new midi note event',event,noteEvent);
+            var normalizedNote = noteEvent.event.noteNumber - 96;
+            if(normalizedNote>=0 && normalizedNote <=4){
+              _this.createMidiNote(normalizedNote);
               //_this.releaseUserNote(note);
             }
 

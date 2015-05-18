@@ -62,42 +62,16 @@ angular.module('webrtcTestApp')
       e.preventDefault();
     }
 
-
-    if(FileReader){
-      document.addEventListener('dragenter', cancelEvent, false);
-      document.addEventListener('dragover', cancelEvent, false);
-      document.addEventListener('drop', function(e){
-      cancelEvent(e);
-      for(var i=0;i<e.dataTransfer.files.length;++i){
-        var file = e.dataTransfer.files[i];
-        if(file.type != 'audio/mid'){
-          continue;
-        }
-        var reader = new FileReader();
-
-        reader.onload = function(e){
-          var data= e.target.result;
-
-            $log.debug('loading demo from drop file');
-            $log.debug(data);
-
-          var midiFile = MidiFile(data);
-          var synth = FretsSynth(44100);
-          var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
-          var audio = AudioPlayer(replayer);
-          var songAudio = new Audio('./assets/midi/bangbang/song.ogg');
-          songAudio.play();
-        };
-        reader.readAsBinaryString(file);
-      }
-    }, false);
-    };
-
     $scope.startDemo=function(){
+
+    }        
+
+    function playMidi()
+    {
         $log.debug('Iniciando midi de demo');
 
         // do the get request with response type "blobl" 
-        $http.get('/assets/midi/bangbang/notes.mid',{responseType: "blob"}).
+        $http.get('/assets/midi/PearlJamBetterMan/notes.mid',{responseType: "blob"}).
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
@@ -117,7 +91,8 @@ angular.module('webrtcTestApp')
               var synth = FretsSynth(44100);
               var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
               var audio = AudioPlayer(replayer);             
-
+              var songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
+              songAudio.play();  
             };
 
             
@@ -129,9 +104,11 @@ angular.module('webrtcTestApp')
             // called asynchronously if an error occurs
             // or server returns response with an error status.
             $log.debug('loading demo from $http KO',data,status,headers,config);
-          });
+          });      
+    }
 
-    }        
+    playMidi();
+
 
 
 
