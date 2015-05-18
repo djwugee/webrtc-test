@@ -98,7 +98,7 @@
             */
 
           $rootScope.$on(midiEventName,function(event, note){
-            $log.debug('new midi note event',event,note);
+            //$log.debug('new midi note event',event,note);
 
             if(note>=0 && note <=4){
               _this.createMidiNote(note);
@@ -183,7 +183,7 @@
               left: left,
               top:0
             };
-            $log.debug('creating midi note',note);
+            //$log.debug('creating midi note',note);
 
             //push to current notes
             $scope.notes.push(note);

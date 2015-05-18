@@ -1,13 +1,13 @@
 - var imageWidth=64;
 - var imageHeigth=64;
 - var canvasWidth=imageWidth*6; // 5 notes and 1 for margin
-- var canvasHeight=imageHeigth*4;
+- var canvasHeight=imageHeigth*8;
 .col-md-12()
     h1.page-header This is the canvas view...
     div.col-lg-6(canvas-midi="idUserCanvas",width=canvasWidth,height=canvasHeight)
     canvas.mainPlayerCanvas(id="otherPlayerCanvas",width=canvasWidth,height=canvasHeight)
 .col-md-4()
-    input(type="button",ng-click="start()",value="Start")
+    input(type="button",ng-click="startDemo()",value="Start demo")
 .col-md-4()
     input(type="file",name="midiFile",id="midiFile")
     

@@ -147,7 +147,7 @@ function FretsSynth(sampleRate) {
 	}
 	
 	function generateIntoBuffer(samplesToGenerate, buffer, offset) {
-		console.log('generateIntoBuffer ' + Date.now());
+		//console.log('generateIntoBuffer ' + Date.now());
 
 		var i;
 		for (i = offset; i < offset + samplesToGenerate * 2; i++) {

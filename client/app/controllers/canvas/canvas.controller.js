@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('CanvasCtrl', function ($rootScope,$scope,$log,midiService) {
+  .controller('CanvasCtrl', function ($rootScope,$scope,$log,midiService,$http) {
     $scope.message = 'Hello';
     $log.info('Loading canvas controller');
 
@@ -51,7 +51,7 @@ angular.module('webrtcTestApp')
 
     function sendNote(note){
       var eventName='midi.note.event.'+$scope.idUserCanvas;
-      $log.debug('sending midi note to user canvas '+eventName);
+      //$log.debug('sending midi note to user canvas '+eventName);
       
       $rootScope.$broadcast(eventName,note);
     }
@@ -76,7 +76,12 @@ angular.module('webrtcTestApp')
         var reader = new FileReader();
 
         reader.onload = function(e){
-          var midiFile = MidiFile(e.target.result);
+          var data= e.target.result;
+
+            $log.debug('loading demo from drop file');
+            $log.debug(data);
+
+          var midiFile = MidiFile(data);
           var synth = FretsSynth(44100);
           var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
           var audio = AudioPlayer(replayer);
@@ -88,22 +93,44 @@ angular.module('webrtcTestApp')
     }, false);
     };
 
-    $scope.start=function(){
-        $log.debug('Iniciando midi');
-        var xmlhttp;
-        xmlhttp.onreadystatechange=function()
-        {
+    $scope.startDemo=function(){
+        $log.debug('Iniciando midi de demo');
 
-            if (xmlhttp.readyState==4 && xmlhttp.status==200)
-            {
-                var midiFile = MidiFile(xmlhttp.responseText);
-                var synth = FretsSynth(44100);
-                var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
-                var audio = AudioPlayer(replayer);             
-            }
-        }
-        xmlhttp.open("GET","./assets/midi/bangbang/notes.mid",true);
-        xmlhttp.send();
+        // do the get request with response type "blobl" 
+        $http.get('/assets/midi/bangbang/notes.mid',{responseType: "blob"}).
+          success(function(data, status, headers, config) {
+            // this callback will be called asynchronously
+            // when the response is available
+            $log.debug('loading demo from $http OK');
+            $log.debug('data type: '+typeof data);
+            $log.debug('data.byteLength '+data.byteLength)
+            //$log.debug('data...');
+            $log.debug(data);
+
+            //create a file from arraybuffer
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              var contents = event.target.result;
+              //console.log("File contents: " + contents);  
+
+              var midiFile = MidiFile(contents);
+              var synth = FretsSynth(44100);
+              var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
+              var audio = AudioPlayer(replayer);             
+
+            };
+
+            
+            reader.readAsBinaryString(data);
+
+
+          }).
+          error(function(data, status, headers, config) {
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+            $log.debug('loading demo from $http KO',data,status,headers,config);
+          });
+
     }        
 
 

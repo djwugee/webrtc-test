@@ -28,7 +28,7 @@ function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) 
 				/* playing same note before releasing the last one. BOO */
 				generatorsByNote[note].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
 			}
-			console.log('playing note' + note);
+			//console.log('playing note' + note);
 			rootScope.sendNote(note - 96);
 			generator = currentProgram.createNote(note, velocity);
 			synth.addGenerator(generator);
