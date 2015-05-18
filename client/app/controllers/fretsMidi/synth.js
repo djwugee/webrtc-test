@@ -59,7 +59,7 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 		}
 		child.generate(input, 0, count);
 		
-		childOffset = 0;
+		var childOffset = 0;
 		var ampl;
 		while(count) {
 			if (releaseTime !== null) {
