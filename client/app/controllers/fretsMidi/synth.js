@@ -1,4 +1,4 @@
-
+'use strict';
 function SineGenerator(freq) {
 	var self = {'alive': true};
 	var period = sampleRate / freq;
@@ -12,7 +12,7 @@ function SineGenerator(freq) {
 			buf[offset++] += result;
 			t++;
 		}
-	}
+	};
 	
 	return self;
 }
@@ -29,13 +29,13 @@ function SquareGenerator(freq, phase) {
 			buf[offset++] += result;
 			t++;
 		}
-	}
+	};
 	
 	return self;
 }
 
 function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, decayTimeS, releaseTimeS) {
-	var self = {'alive': true}
+	var self = {'alive': true};
 	var attackTime = sampleRate * attackTimeS;
 	var decayTime = sampleRate * (attackTimeS + decayTimeS);
 	var decayRate = (attackAmplitude - sustainAmplitude) / (decayTime - attackTime);
@@ -45,14 +45,14 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 	var t = 0;
 	
 	self.noteOff = function() {
-		if (self.released) return;
+		if (self.released) {return;}
 		releaseTime = t;
 		self.released = true;
 		endTime = releaseTime + sampleRate * releaseTimeS;
-	}
+	};
 	
 	self.generate = function(buf, offset, count) {
-		if (!self.alive) return;
+		if (!self.alive) {return;}
 		var input = new Array(count * 2);
 		for (var i = 0; i < count*2; i++) {
 			input[i] = 0;
@@ -60,12 +60,13 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 		child.generate(input, 0, count);
 		
 		childOffset = 0;
+		var ampl;
 		while(count) {
-			if (releaseTime != null) {
+			if (releaseTime !== null) {
 				if (t < endTime) {
 					/* release */
 					while(count && t < endTime) {
-						var ampl = sustainAmplitude - releaseRate * (t - releaseTime);
+						ampl = sustainAmplitude - releaseRate * (t - releaseTime);
 						buf[offset++] += input[childOffset++] * ampl;
 						buf[offset++] += input[childOffset++] * ampl;
 						t++;
@@ -79,7 +80,7 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 			} else if (t < attackTime) {
 				/* attack */
 				while(count && t < attackTime) {
-					var ampl = attackAmplitude * t / attackTime;
+					ampl = attackAmplitude * t / attackTime;
 					buf[offset++] += input[childOffset++] * ampl;
 					buf[offset++] += input[childOffset++] * ampl;
 					t++;
@@ -88,7 +89,7 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 			} else if (t < decayTime) {
 				/* decay */
 				while(count && t < decayTime) {
-					var ampl = attackAmplitude - decayRate * (t - attackTime);
+					ampl = attackAmplitude - decayRate * (t - attackTime);
 					buf[offset++] += input[childOffset++] * ampl;
 					buf[offset++] += input[childOffset++] * ampl;
 					t++;
@@ -104,11 +105,16 @@ function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, de
 				}
 			}
 		}
-	}
+	};
 	
 	return self;
 }
-PianoProgram = {
+
+function midiToFrequency(note) {
+	return 440 * Math.pow(2, (note-69)/12);
+}
+
+var PianoProgram = {
 	'attackAmplitude': 0.2,
 	'sustainAmplitude': 0.1,
 	'attackTime': 0.02,
@@ -116,17 +122,14 @@ PianoProgram = {
 	'releaseTime': 0.02,
 	'createNote': function(note, velocity) {
 		var frequency = midiToFrequency(note);
-		return ADSRGenerator(
-			SineGenerator(frequency),
+		return new ADSRGenerator(
+			new SineGenerator(frequency),
 			this.attackAmplitude * (velocity / 128), this.sustainAmplitude * (velocity / 128),
 			this.attackTime, this.decayTime, this.releaseTime
 		);
 	}
-}
+};
 
-function midiToFrequency(note) {
-	return 440 * Math.pow(2, (note-69)/12);
-}
 
 function FretsSynth(sampleRate) {
 	
@@ -137,20 +140,22 @@ function FretsSynth(sampleRate) {
 	}
 	
 	function generate(samples) {
-		console.log("generate" + Date.now());				
+		console.log('generate ' + Date.now());				
 		var data = new Array(samples*2);
 		generateIntoBuffer(samples, data, 0);
 		return data;
 	}
 	
 	function generateIntoBuffer(samplesToGenerate, buffer, offset) {
-		console.log("generateIntoBuffer" + Date.now());
-		for (var i = offset; i < offset + samplesToGenerate * 2; i++) {
+		console.log('generateIntoBuffer ' + Date.now());
+
+		var i;
+		for (i = offset; i < offset + samplesToGenerate * 2; i++) {
 			buffer[i] = 0;
 		}
-		for (var i = generators.length - 1; i >= 0; i--) {
+		for (i = generators.length - 1; i >= 0; i--) {
 			generators[i].generate(buffer, offset, samplesToGenerate);
-			if (!generators[i].alive) generators.splice(i, 1);
+			if (!generators[i].alive) {generators.splice(i, 1);}
 		}
 	}
 	
@@ -159,5 +164,5 @@ function FretsSynth(sampleRate) {
 		'addGenerator': addGenerator,
 		'generate': generate,
 		'generateIntoBuffer': generateIntoBuffer
-	}
+	};
 }
