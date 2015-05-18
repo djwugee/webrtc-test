@@ -1,3 +1,4 @@
+
 (function(angular){
 
   'use strict';
@@ -66,6 +67,7 @@
            */
           var eventName='user.note.event.'+$scope.canvasId;
           var releaseEventName='user.note.release.event.'+$scope.canvasId;
+          var midiEventName='midi.note.event.'+$scope.canvasId;
           $log.debug('Register user note events for '+eventName);
           var _this=this;
 
@@ -85,6 +87,22 @@
             if(note>=0 && note <=4){
               //_this.createMidiNote(note);
               _this.releaseUserNote(note);
+            }
+
+          });
+
+
+
+          /**
+            * capture midi event
+            */
+
+          $rootScope.$on(midiEventName,function(event, note){
+            $log.debug('new midi note event',event,note);
+
+            if(note>=0 && note <=4){
+              _this.createMidiNote(note);
+              //_this.releaseUserNote(note);
             }
 
           });

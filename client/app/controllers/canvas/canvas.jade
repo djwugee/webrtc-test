@@ -6,6 +6,10 @@
     h1.page-header This is the canvas view...
     div.col-lg-6(canvas-midi="idUserCanvas",width=canvasWidth,height=canvasHeight)
     canvas.mainPlayerCanvas(id="otherPlayerCanvas",width=canvasWidth,height=canvasHeight)
+.col-md-4()
+    input(type="button",ng-click="start()",value="Start")
+.col-md-4()
+    input(type="file",name="midiFile",id="midiFile")
     
     // canvas.col-md-6(canvas-midi="",id="mainPlayerCanvas",width=canvasWidth,height=canvasHeight)
     //   canvas.col-md-6(id="otherPlayerCanvas",width=canvasWidth,height=canvasHeight)
