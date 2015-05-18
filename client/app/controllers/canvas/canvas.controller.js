@@ -49,11 +49,11 @@ angular.module('webrtcTestApp')
 
     }
 
-    function sendNote(note){
+    function sendNote(noteEvent){
       var eventName='midi.note.event.'+$scope.idUserCanvas;
       //$log.debug('sending midi note to user canvas '+eventName);
       
-      $rootScope.$broadcast(eventName,note);
+      $rootScope.$broadcast(eventName,noteEvent);
     }
     $rootScope.sendNote = sendNote;
 
@@ -89,7 +89,7 @@ angular.module('webrtcTestApp')
 
               var midiFile = MidiFile(contents);
               var synth = FretsSynth(44100);
-              var replayer = Replayer(midiFile, synth, [1], [96, 100], $rootScope);
+              var replayer = Replayer(midiFile, synth, [96, 100], $rootScope);
               var audio = AudioPlayer(replayer);             
               var songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
               songAudio.play();  

@@ -1,11 +1,9 @@
-function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) {
+function Replayer(midiFile, synth, octaveRangeInclude, rootScope) {
 	var trackStates = [];
 	var beatsPerMinute = 120;
 	var ticksPerBeat = midiFile.header.ticksPerBeat;
 	var channelCount = 16;
-	var j = 0;
 	for (var i = 0; i < midiFile.tracks.length; i++) {
-		//if (tracksInclude.indexOf(i) >=0) {
 			trackStates[i] = {
 				'nextEventIndex': 0,
 				'ticksToNextEvent': (
@@ -14,8 +12,6 @@ function Replayer(midiFile, synth, tracksInclude,octaveRangeInclude, rootScope) 
 						null
 				)
 			};
-			j = j + 1;
-		//}
 	}
 	
 	function Channel() {
