@@ -6,7 +6,7 @@ angular.module('webrtcTestApp')
     $log.info('Loading canvas controller');
 
     $scope.idUserCanvas='mainPlayerCanvas';
-
+    $scope.otherUserCanvas='otherPlayerCanvas';
 
     function getNoteFromKeyboard(event) {
       var keyID = (event.charCode) ? event.charCode : ((event.which) ? event.which : event.keyCode);
@@ -50,10 +50,18 @@ angular.module('webrtcTestApp')
     }
 
     function sendNote(noteEvent){
-      var eventName='midi.note.event.'+$scope.idUserCanvas;
-      //$log.debug('sending midi note to user canvas '+eventName);
-      
-      $rootScope.$broadcast(eventName,noteEvent);
+      if (noteEvent.track == 1) {
+        var eventName='midi.note.event.'+$scope.idUserCanvas;
+        $log.debug('sending midi note to user canvas '+eventName);
+        $rootScope.$broadcast(eventName,noteEvent);        
+      } else if (noteEvent.track == 2)
+      {
+        var eventName='midi.note.event.'+$scope.otherUserCanvas;
+        $log.debug('sending midi note to user canvas '+eventName);
+        $rootScope.$broadcast(eventName,noteEvent);        
+
+      }
+
     }
     $rootScope.sendNote = sendNote;
 
