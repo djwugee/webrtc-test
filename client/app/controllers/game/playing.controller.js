@@ -2,6 +2,7 @@
 
 angular.module('webrtcTestApp')
   .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http) {
+    $scope.globalScore = 0;
     $scope.message = 'Hello';
     $log.info('Loading canvas controller');
 
@@ -52,6 +53,8 @@ angular.module('webrtcTestApp')
     }
 
     function sendNote(noteEvent){
+      var normalizedNote = noteEvent.event.noteNumber - $rootScope.difficultyLevel[0];
+      noteEvent.event.noteNumber = normalizedNote;
       if (noteEvent.track == 1) {
         var eventName='midi.note.event.'+$scope.idUserCanvas;
         $log.debug('sending midi note to user canvas '+eventName);
@@ -84,42 +87,15 @@ angular.module('webrtcTestApp')
 
     function playMidi()
     {
-        $log.debug('Iniciando midi de demo');
+      $rootScope.synth = FretsSynth(44100);
+      $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope.difficultyLevel, $rootScope);
+      $rootScope.audio = AudioPlayer($rootScope.replayer);
 
-        // do the get request with response type "blobl" 
-        $http.get($rootScope.songURL,{responseType: "blob"}).
-          success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
-            $log.debug('loading demo from $http OK');
-            $log.debug('data type: '+typeof data);
-            $log.debug('data.byteLength '+data.byteLength)
-
-            //create a file from arraybuffer
-            var reader = new FileReader();
-            reader.onload = function(event) {
-              var contents = event.target.result;
-              //console.log("File contents: " + contents);  
-
-              $rootScope.midiFile = MidiFile(contents);
-              $rootScope.synth = FretsSynth(44100);
-              $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope.difficultyLevel, $rootScope);
-              $rootScope.audio = AudioPlayer($rootScope.replayer);
-
-              $rootScope.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
-              $rootScope.songAudio.play();  
-            };
-
-            
-            reader.readAsBinaryString(data);
-
-
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            $log.debug('loading demo from $http KO',data,status,headers,config);
-          });      
+      //start the sound later, this must be sync with midi and note rendering
+      setTimeout(function(){
+        $rootScope.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
+        $rootScope.songAudio.play();
+        },$rootScope.secondsInAdvance * 1000);  
     }
 
     playMidi();

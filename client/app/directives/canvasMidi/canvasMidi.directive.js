@@ -99,9 +99,8 @@
 
           $rootScope.$on(midiEventName,function(event, noteEvent){
             $log.debug('new midi note event',event,noteEvent);
-            var normalizedNote = noteEvent.event.noteNumber - 96;
-            if(normalizedNote>=0 && normalizedNote <=4){
-              _this.createMidiNote(normalizedNote);
+            if(noteEvent.event.noteNumber>=0 && noteEvent.event.noteNumber <=4){
+              _this.createMidiNote(noteEvent.event.noteNumber);
               //_this.releaseUserNote(note);
             }
 
@@ -280,8 +279,11 @@
 
           var canvas=element[0];
           var ctx=canvas.getContext('2d');
-
-
+          var animationStartTime = 0;
+          var msInASecond = 1000;
+          var msInadvance = $rootScope.secondsInAdvance * msInASecond;
+          //remove this duplicate calculation
+          var horizontalUserCoord=(canvas.height/ 4) * 3;
 
 
 
@@ -298,7 +300,9 @@
            * Draws a frame. The idea is to traverse all the notes objects, scroll down n pixels or remove it if is on the bottom of the canvas.
            * IMPORTANT  !!! the top coordinate will be calculated with timestamps in future versions to sync all the notes!!!
            */
-          function drawNoteFrame(){
+          function drawNoteFrame(renderTimeStamp){
+            var elapsedTimeMS = renderTimeStamp - animationStartTime;
+            var pixelsToMove = (elapsedTimeMS * horizontalUserCoord) / msInadvance;
             //first clear the canvas (we are rendering a new frame)
             ctx.clearRect(0,0,canvas.width, canvas.height);
 
@@ -306,7 +310,7 @@
             angular.forEach(scope.notes,function(note, index){
 
               //update top to scroll down SEE IMPORTANT NOTE ABOVE!!!
-              note.top=note.top+VERTICAL_SCROLL_INCREMENT;
+              note.top=note.top+pixelsToMove;
               //$log.debug('update note '+note.id+', top='+note.top);
 
               //check if the note is out of bounds
@@ -338,6 +342,7 @@
            * Starts a render loop
            */
           function startRender(){
+            animationStartTime = window.performance.now();
             window.requestAnimationFrame(drawNoteFrame);
           }
 
