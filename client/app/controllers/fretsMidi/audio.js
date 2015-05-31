@@ -37,6 +37,7 @@ function AudioPlayer(generator, opts) {
 			}
 		}
 		
+		//we don't want to hear the midi, just to lead the notes in canvas
 		var gainNode = context.createGain();
 		gainNode.gain.value = 0;
 		// start

@@ -1,0 +1,16 @@
+.col-md-12()
+	h1.page-header Select a Song...
+	div.col-lg-4()
+		form(id="selectSongForm")
+			select(id="selectSongMenu")
+				option(value="1") Betterman-PearlJam
+			select(id="difficultyLevelMenu")
+				option(value="1") Easy
+				option(value="2") Medium
+				option(value="3") Hard			
+			input(id="selectSongSubmit" type="submit" ng-click="selectSong()" value="Select Song")
+	h1.page-header Join existing game...
+	div.col-lg-4()
+		form(id="joinGameForm")
+			input(id="gameURLText" type="text")
+			input(id="joinGameSubmit" type="submit" ng-click="joinGame()" value="Join Game")			

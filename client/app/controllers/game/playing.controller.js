@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('CanvasCtrl', function ($rootScope,$scope,$log,midiService,$http) {
+  .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http) {
     $scope.message = 'Hello';
     $log.info('Loading canvas controller');
 
@@ -36,8 +36,9 @@ angular.module('webrtcTestApp')
       }
     }
 
-    function sendUserNote(note){
-        var eventName='user.note.event.'+$scope.idUserCanvas;
+    function sendUserNote(note, canvasId){
+        canvasId = canvasId || $scope.idUserCanvas;
+        var eventName='user.note.event.'+ canvasId;
         //$log.debug('sending user note to user canvas '+eventName);
         $rootScope.$broadcast(eventName,note);
 
@@ -86,15 +87,13 @@ angular.module('webrtcTestApp')
         $log.debug('Iniciando midi de demo');
 
         // do the get request with response type "blobl" 
-        $http.get('/assets/midi/PearlJamBetterMan/notes.mid',{responseType: "blob"}).
+        $http.get($rootScope.songURL,{responseType: "blob"}).
           success(function(data, status, headers, config) {
             // this callback will be called asynchronously
             // when the response is available
             $log.debug('loading demo from $http OK');
             $log.debug('data type: '+typeof data);
             $log.debug('data.byteLength '+data.byteLength)
-            //$log.debug('data...');
-            $log.debug(data);
 
             //create a file from arraybuffer
             var reader = new FileReader();
@@ -102,12 +101,13 @@ angular.module('webrtcTestApp')
               var contents = event.target.result;
               //console.log("File contents: " + contents);  
 
-              var midiFile = MidiFile(contents);
-              var synth = FretsSynth(44100);
-              var replayer = Replayer(midiFile, synth, [96, 100], $rootScope);
-              var audio = AudioPlayer(replayer);             
-              var songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
-              songAudio.play();  
+              $rootScope.midiFile = MidiFile(contents);
+              $rootScope.synth = FretsSynth(44100);
+              $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope.difficultyLevel, $rootScope);
+              $rootScope.audio = AudioPlayer($rootScope.replayer);
+
+              $rootScope.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
+              $rootScope.songAudio.play();  
             };
 
             
