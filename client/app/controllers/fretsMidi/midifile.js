@@ -15,15 +15,16 @@ angular.module('webrtcTestApp')
 function MidiFile(data, octaveRangeInclude) {
 	function isNoteIncluded(event)
 	{
-		var included = false;
-		if (event.subtype === 'noteOn' || event.subtype === 'noteOff' || event.subtype === 'setTempo')
+		var included = true;
+		//this condition somehow mess all the replaying later. leave difficulty level filter by now
+		/*if (event.subtype === 'noteOn' || event.subtype === 'noteOff' || event.subtype === 'setTempo')
 		{
 			included = event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1];
-		}
-		if (event.subtype = 'setTempo')
+		}*/
+		/*if (event.subtype === 'setTempo')
 		{
 			included = true;
-		}		
+		}*/
 		return included;
 	}
 
@@ -251,8 +252,10 @@ function MidiFile(data, octaveRangeInclude) {
 		var trackStream = Stream(trackChunk.data);
 		while (!trackStream.eof()) {
 			var event = readEvent(trackStream);
-
-			tracks[i].push(event);
+			if (isNoteIncluded(event))
+			{
+				tracks[i].push(event);
+			}
 			//console.log(event);
 		}
 	}

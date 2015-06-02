@@ -38,11 +38,16 @@ angular.module('webrtcTestApp')
     }
 
     function sendUserNote(note, canvasId){
+        var accumulatedNoteDelta = window.performance.now() - $rootScope.playingStartTimestamp;      
+        if ($rootScope.replayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
+        {
+          $scope.globalScore = $scope.globalScore + 1;
+          $scope.$digest();          
+        }
         canvasId = canvasId || $scope.idUserCanvas;
         var eventName='user.note.event.'+ canvasId;
         //$log.debug('sending user note to user canvas '+eventName);
         $rootScope.$broadcast(eventName,note);
-
     }
 
     function sendUserNoteRelease(note){
@@ -57,18 +62,18 @@ angular.module('webrtcTestApp')
       noteEvent.event.noteNumber = normalizedNote;
       if (noteEvent.track == 1) {
         var eventName='midi.note.event.'+$scope.idUserCanvas;
-        $log.debug('sending midi note to user canvas '+eventName);
+        //$log.debug('sending midi note to user canvas '+eventName);
         $rootScope.$broadcast(eventName,noteEvent);        
       } else if (noteEvent.track == 2)
       {
         var eventName='midi.note.event.'+$scope.idOtherUserCanvas;
-        $log.debug('sending midi note to user canvas '+eventName);
+        //$log.debug('sending midi note to user canvas '+eventName);
         $rootScope.$broadcast(eventName,noteEvent);        
 
       } else if (noteEvent.track == 3)
       {
         var eventName='midi.note.event.'+$scope.idThirdUserCanvas;
-        $log.debug('sending midi note to user canvas '+eventName);
+       //$log.debug('sending midi note to user canvas '+eventName);
         $rootScope.$broadcast(eventName,noteEvent);        
 
       }
@@ -90,12 +95,13 @@ angular.module('webrtcTestApp')
       $rootScope.synth = FretsSynth(44100);
       $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope);
       $rootScope.audio = AudioPlayer($rootScope.replayer);
-      $rootScope.playingStartTimestamp = window.performance.now();
+      
 
       //start the sound later, this must be sync with midi and note rendering
       setTimeout(function(){
         $rootScope.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
         $rootScope.songAudio.play();
+        $rootScope.playingStartTimestamp = window.performance.now();
         },$rootScope.secondsInAdvance * 1000);  
     }
 

@@ -1,5 +1,6 @@
 function Replayer(midiFile, synth, rootScope) {
 	var trackStates = [];
+	var trackAccumulatedDelta = [{noteNumber:0,total:0,track:0}];
 	var beatsPerMinute = 120;
 	var ticksPerBeat = midiFile.header.ticksPerBeat;
 	var channelCount = 16;
@@ -91,6 +92,12 @@ function Replayer(midiFile, synth, rootScope) {
 			}
 			var beatsToNextEvent = ticksToNextEvent / ticksPerBeat;
 			var secondsToNextEvent = beatsToNextEvent / (beatsPerMinute / 60);
+			if (typeof(nextEvent.noteNumber) != "undefined")
+			{
+				console.debug("track:" + nextEventTrack + "last accumulated:" + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + "secondToNextEvet:" + (secondsToNextEvent * 1000));
+				var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + (secondsToNextEvent * 1000);
+				trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};	 
+			}
 			samplesToNextEvent += secondsToNextEvent * synth.sampleRate;
 		} else {
 			nextEventInfo = null;
@@ -143,7 +150,8 @@ function Replayer(midiFile, synth, rootScope) {
 			case 'channel':
 				switch (event.subtype) {
 					case 'noteOn':
-						channels[event.channel].noteOn(nextEventInfo);						break;
+						channels[event.channel].noteOn(nextEventInfo);						
+						break;
 					case 'noteOff':
 						channels[event.channel].noteOff(nextEventInfo);
 						break;
@@ -161,11 +169,30 @@ function Replayer(midiFile, synth, rootScope) {
 		audio.write(generate(44100));
 		setTimeout(function() {replay(audio)}, 10);
 	}
+
+	function isANoteThere(noteNumber, accumulatedDelta, marginOfError, track)
+	{
+		var isThere = false;
+		for (var i = 0; i < trackAccumulatedDelta.length; i++) {
+			var userNoteDif = Math.abs(trackAccumulatedDelta[i].total - accumulatedDelta);
+			console.debug("UserNoteDif:" + userNoteDif);
+			if ( trackAccumulatedDelta[i].track === track &&
+				trackAccumulatedDelta[i].noteNumber === noteNumber && 
+				userNoteDif <= marginOfError) {
+				isThere = true;
+				break;
+			} else if (userNoteDif > 10000) {
+				//remove accumulated, no longer required. reduces comparisons on next note
+			}
+		}
+		return isThere;
+	}
 	
 	var self = {
 		'replay': replay,
 		'generate': generate,
-		'finished': false
+		'finished': false,
+		'isANoteThere': isANoteThere
 	}
 	return self;
 }
