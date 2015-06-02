@@ -12,7 +12,21 @@ angular.module('webrtcTestApp')
 	}
 );
 
-function MidiFile(data) {
+function MidiFile(data, octaveRangeInclude) {
+	function isNoteIncluded(event)
+	{
+		var included = false;
+		if (event.subtype === 'noteOn' || event.subtype === 'noteOff' || event.subtype === 'setTempo')
+		{
+			included = event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1];
+		}
+		if (event.subtype = 'setTempo')
+		{
+			included = true;
+		}		
+		return included;
+	}
+
 	function readChunk(stream) {
 		var id = stream.read(4);
 		var length = stream.readInt32();
@@ -237,6 +251,7 @@ function MidiFile(data) {
 		var trackStream = Stream(trackChunk.data);
 		while (!trackStream.eof()) {
 			var event = readEvent(trackStream);
+
 			tracks[i].push(event);
 			//console.log(event);
 		}

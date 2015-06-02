@@ -88,8 +88,9 @@ angular.module('webrtcTestApp')
     function playMidi()
     {
       $rootScope.synth = FretsSynth(44100);
-      $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope.difficultyLevel, $rootScope);
+      $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope);
       $rootScope.audio = AudioPlayer($rootScope.replayer);
+      $rootScope.playingStartTimestamp = window.performance.now();
 
       //start the sound later, this must be sync with midi and note rendering
       setTimeout(function(){

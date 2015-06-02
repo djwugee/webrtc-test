@@ -22,7 +22,7 @@ angular.module('webrtcTestApp')
             var reader = new FileReader();
             reader.onload = function(event) {
               var contents = event.target.result; 
-              $rootScope.midiFile = MidiFile(contents);
+              $rootScope.midiFile = MidiFile(contents, $rootScope.difficultyLevel);
             };
 
             

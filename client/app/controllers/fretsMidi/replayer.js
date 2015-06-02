@@ -1,4 +1,4 @@
-function Replayer(midiFile, synth, octaveRangeInclude, rootScope) {
+function Replayer(midiFile, synth, rootScope) {
 	var trackStates = [];
 	var beatsPerMinute = 120;
 	var ticksPerBeat = midiFile.header.ticksPerBeat;
@@ -143,16 +143,9 @@ function Replayer(midiFile, synth, octaveRangeInclude, rootScope) {
 			case 'channel':
 				switch (event.subtype) {
 					case 'noteOn':
-						if (event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1]) 
-						{
-							channels[event.channel].noteOn(nextEventInfo);
-						}
-						break;
+						channels[event.channel].noteOn(nextEventInfo);						break;
 					case 'noteOff':
-						if (event.noteNumber >= octaveRangeInclude[0] && event.noteNumber <= octaveRangeInclude[1]) 
-						{
-							channels[event.channel].noteOff(nextEventInfo);
-						}
+						channels[event.channel].noteOff(nextEventInfo);
 						break;
 					case 'programChange':
 						//console.log('program change to ' + event.programNumber);
