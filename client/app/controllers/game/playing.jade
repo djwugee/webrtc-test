@@ -1,10 +1,10 @@
-- var imageWidth=64;
-- var imageHeigth=64;
-- var canvasWidth=imageWidth*6; // 5 notes and 1 for margin
-- var canvasHeight=imageHeigth*20;
+// var divStyle='text-align:center;border:1px dashed red;'; 
+- var divStyle=''; 
 .col-md-12
-    h1.page-header(ng-controller='PlayingCtrl') Playing.. GlobalScore={{globalScore}}
-    div.col-lg-4(canvas-midi="idUserCanvas",width=canvasWidth,height=canvasHeight)
-    div.col-lg-4(canvas-midi="idOtherUserCanvas",width=canvasWidth,height=canvasHeight)
-    div.col-lg-4(canvas-midi="idThirdUserCanvas",width=canvasWidth,height=canvasHeight)
-    pre Global Score 
+    h1.page-header(ng-controller='PlayingCtrl') Playing, GlobalScore={{globalScore}}
+
+    div.col-md-4.col-sm-12(canvas-midi="idUserCanvas",style=divStyle)
+    div.col-md-4.col-sm-12(canvas-midi="idOtherUserCanvas",style=divStyle)
+    div.col-md-4.col-sm-12(canvas-midi="idThirdUserCanvas",style=divStyle)
+    div.col-md-12.col-sm-12
+      pre Global Score= {{globalScore}}
