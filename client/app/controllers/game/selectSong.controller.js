@@ -37,7 +37,7 @@ angular.module('webrtcTestApp')
           });      
     }
 
-    $scope.selectSong=function(){
+    $scope.selectSong=function(selectSongModel){
       //first user, this is related to instrument in song, but hardcoded now.
       $rootScope.localPlayerId=1;
       //this should come from the user selection, hardcoded now for testing
@@ -51,7 +51,7 @@ angular.module('webrtcTestApp')
 
 
 
-    $scope.joinGame=function(){
+    $scope.joinGame=function(joinModel){
       $state.go('main.connectingToHost');      
     }    
 

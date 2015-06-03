@@ -124,7 +124,7 @@ TelScaleWebRTCPhoneController.prototype.register=function(sipUserName)
 /**
  * on disconnect event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickUnregister=function()
+TelScaleWebRTCPhoneController.prototype.unregister=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickUnregister()"); 
     if(this.webRTCommClient != undefined)
@@ -151,7 +151,7 @@ TelScaleWebRTCPhoneController.prototype.onClickUnregister=function()
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenedEvent=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent()");
-    $rootScope.$broadcast("playmyband.webrtc.client.opened", error);     
+    this.rootScope.$broadcast("playmyband.webrtc.client.opened");     
     // Get local user media
     try
     {
@@ -167,7 +167,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenedEvent=function()
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenErrorEvent=function(error)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientOpenErrorEvent():error:"+error);
-    $rootScope.$broadcast("playmyband.webrtc.client.openError", error); 
+    this.rootScope.$broadcast("playmyband.webrtc.client.openError"); 
     this.webRTCommCall=undefined;
     console.error("Connection to the Server has failed"); 
 } 
@@ -178,7 +178,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenErrorEvent=function
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientClosedEvent=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientClosedEvent()");
-    $rootScope.$broadcast("playmyband.webrtc.client.closed"); 
+    this.rootScope.$broadcast("playmyband.webrtc.client.closed"); 
     this.webRTCommCall=undefined;
 }
 
@@ -208,7 +208,7 @@ TelScaleWebRTCPhoneController.prototype.getLocalUserMedia=function(videoContrain
  */ 
 TelScaleWebRTCPhoneController.prototype.onGetUserMediaSuccessEventHandler=function(localAudioVideoMediaStream) 
 {
-    $rootScope.$broadcast("playmyband.webrtc.usermedia.sucess",error);     
+    this.rootScope.$broadcast("playmyband.webrtc.usermedia.sucess",error);     
     try
     {
         console.debug("TelScaleWebRTCPhoneController:onGetUserMediaSuccessEventHandler(): localAudioVideoMediaStream.id="+localAudioVideoMediaStream.id);
@@ -223,8 +223,7 @@ TelScaleWebRTCPhoneController.prototype.onGetUserMediaSuccessEventHandler=functi
 TelScaleWebRTCPhoneController.prototype.onGetUserMediaErrorEventHandler=function(error) 
 {
     console.debug("TelScaleWebRTCPhoneController:onGetUserMediaErrorEventHandler(): error="+error);
-    alert("Failed to get local user media: error="+error);
-    $rootScope.$broadcast("playmyband.webrtc.usermedia.error",error);    
+    this.rootScope.$broadcast("playmyband.webrtc.usermedia.error",error);    
 }	
 
 /**
@@ -358,7 +357,7 @@ TelScaleWebRTCPhoneController.prototype.rejectCall=function()
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallClosedEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    $rootScope.$broadcast("playmyband.webrtc.call.closed",webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.closed",webRTCommCall);
     this.webRTCommCall=undefined;
 
 	var from = null;
@@ -378,7 +377,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webR
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenedEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
-    $rootScope.$broadcast("playmyband.webrtc.call.opened",webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.opened",webRTCommCall);
 
 	var from = null;
 	if (webRTCommCall.isIncoming()) {
@@ -395,7 +394,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webR
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallInProgressEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallInProgressEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    $rootScope.$broadcast("playmyband.webrtc.call.inprogress",webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.inprogress",webRTCommCall);
 }
 
 
@@ -405,7 +404,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallInProgressEvent=function(
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(webRTCommCall, error)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenErrorEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    $rootScope.$broadcast("playmyband.webrtc.call.openerror",webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.openerror",webRTCommCall);
     this.webRTCommCall=undefined;
 }
 
@@ -415,7 +414,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(w
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    $rootScope.$broadcast("playmyband.webrtc.call.ringing",webRTCommCall);     
+    this.rootScope.$broadcast("playmyband.webrtc.call.ringing",webRTCommCall);     
     this.webRTCommCall=webRTCommCall;
 }
 
@@ -425,7 +424,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingEvent=function(web
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingBackEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingBackEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    $rootScope.$broadcast("playmyband.webrtc.call.ringingback",webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.ringingback",webRTCommCall);
 }
 
 /**
@@ -433,7 +432,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingBackEvent=function
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallHangupEvent=function(webRTCommCall)
 {
-    $rootScope.$broadcast("playmyband.webrtc.call.hangup",webRTCommCall);      
+    this.rootScope.$broadcast("playmyband.webrtc.call.hangup",webRTCommCall);      
     this.webRTCommCall=undefined;
 }
 
@@ -502,7 +501,7 @@ TelScaleWebRTCPhoneController.prototype.sendDataMessage=function(contact, messag
  * @param {String} message message
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageReceivedEvent = function(message) {
-    $rootScope.$broadcast("playmyband.webrtc.message.received",message);
+    this.rootScope.$broadcast("playmyband.webrtc.message.received",message);
 };
 
 /**
@@ -511,7 +510,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageReceivedEvent = functi
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageSentEvent = function(message) {
-    $rootScope.$broadcast("playmyband.webrtc.data.message.sent",message);    
+    this.rootScope.$broadcast("playmyband.webrtc.data.message.sent",message);    
 };
 
 /**
@@ -521,7 +520,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageSentEvent = functi
  * @param {String} message message
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageReceivedEvent = function(message) {
-    $rootScope.$broadcast("playmyband.webrtc.data.message.received",message);  
+    this.rootScope.$broadcast("playmyband.webrtc.data.message.received",message);  
 };
 
 /**
@@ -530,7 +529,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageReceivedEvent = fu
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSentEvent = function(message) {
-    $rootScope.$broadcast("playmyband.webrtc.message.sent",message);    
+    this.rootScope.$broadcast("playmyband.webrtc.message.sent",message);    
 };
 
 /**
@@ -539,7 +538,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSentEvent = function(m
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSendErrorEvent = function(message, error) {
-        $rootScope.$broadcast("playmyband.webrtc.message.send.error",message);
+    $this.rootScope.$broadcast("playmyband.webrtc.message.send.error",message);
 };
 
 /**

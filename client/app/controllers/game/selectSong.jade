@@ -2,13 +2,17 @@
 	h1.page-header Select a Song...
 	div.col-lg-4()
 		form(id="selectSongForm")
-			select(id="selectSongMenu")
+			select(ng-model='selectSong.song')
 				option(value="1") Betterman-PearlJam
-			select(id="difficultyLevelMenu")
+			select(ng-model='selectSong.difficulty')
 				option(value="1") Easy
 				option(value="2") Medium
-				option(value="3") Hard			
-			input(id="selectSongSubmit" type="submit" ng-click="selectSong()" value="Select Song")
+				option(value="3") Hard
+			select(ng-model='selectSong.instrument')
+				option(value="1") Guitar
+				option(value="2") Bass
+				option(value="3") Drums	
+			input(id="selectSongSubmit" type="submit" ng-click="selectSong(selectSong)" value="Select Song")
 	h1.page-header Join existing game...
 	div.col-lg-4()
 		form(id="joinGameForm")
