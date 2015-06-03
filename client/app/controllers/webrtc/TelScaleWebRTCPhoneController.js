@@ -27,10 +27,10 @@ window.URL = window.URL || window.webkitURL;
 /**
  * Constructor 
  */ 
-function TelScaleWebRTCPhoneController(view) {
+function TelScaleWebRTCPhoneController(rootScope) {
     console.debug("TelScaleWebRTCPhoneController:TelScaleWebRTCPhoneController()")
     //  WebRTComm client 
-    this.view=view;
+    this.rootScope=rootScope;
     this.webRTCommClient=new WebRTCommClient(this); 
     this.webRTCommClientConfiguration=undefined;
     this.localAudioVideoMediaStream=undefined;
@@ -70,7 +70,7 @@ TelScaleWebRTCPhoneController.prototype.DEFAULT_FORCE_TURN_MEDIA_RELAY_MODE=fals
 /**
  * on connect event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickRegister=function()
+TelScaleWebRTCPhoneController.prototype.register=function(sipUserName)
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickRegister()");
     if(this.webRTCommClientConfiguration == undefined) {
@@ -103,32 +103,12 @@ TelScaleWebRTCPhoneController.prototype.onClickRegister=function()
 	}
     if(this.webRTCommClient != undefined)
     {
-	sipUserName = document.getElementById("sipUserName").value;
+    	//by jimsipUserName = document.getElementById("sipUserName").value;
         this.webRTCommClientConfiguration.sip.sipDisplayName= sipUserName;
         this.webRTCommClientConfiguration.sip.sipUserName = sipUserName;
-
-        // Doing TURN on xirsys.com
-        /*if(this.webRTCommClientConfiguration.RTCPeerConnection.turnServer) {
-	            $.post(this.webRTCommClientConfiguration.RTCPeerConnection.turnServer,
-	        		{
-	        		domain: "www." + this.webRTCommClientConfiguration.sip.sipDomain,
-	        		room: "default",
-	        		application: "restcomm-webrtc",
-	        		ident: this.webRTCommClientConfiguration.RTCPeerConnection.turnLogin,
-	        		secret: this.webRTCommClientConfiguration.RTCPeerConnection.turnPassword,
-	        		username: this.webRTCommClientConfiguration.sip.sipUserName,
-				secure: "1"
-	        		},
-	        		function(data,status){
-	        			var result = jQuery.parseJSON(data);
-	        			self.webRTCommClientConfiguration.RTCPeerConnection.iceServers = result.d;
-	        		}
-	            );
-            }
-            this.webRTCommClient.open(this.webRTCommClientConfiguration);*/
-	try {
-	    this.webRTCommClient.open(this.webRTCommClientConfiguration); 
-	    console.info("TelScaleWebRTCPhoneController:onClickRegister(): client opened");      
+    	try {
+    	    this.webRTCommClient.open(this.webRTCommClientConfiguration); 
+    	    console.info("TelScaleWebRTCPhoneController:onClickRegister(): client opened");      
         }
         catch(exception)
         {
@@ -171,6 +151,7 @@ TelScaleWebRTCPhoneController.prototype.onClickUnregister=function()
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenedEvent=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent()");
+    $rootScope.$broadcast("playmyband.webrtc.client.opened", error);     
     // Get local user media
     try
     {
@@ -185,7 +166,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenedEvent=function()
     
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenErrorEvent=function(error)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientOpenErrorEvent():error:"+error); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientOpenErrorEvent():error:"+error);
+    $rootScope.$broadcast("playmyband.webrtc.client.openError", error); 
     this.webRTCommCall=undefined;
     console.error("Connection to the Server has failed"); 
 } 
@@ -195,8 +177,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenErrorEvent=function
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommClientClosedEvent=function()
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientClosedEvent()"); 
-    //Enabled button CONNECT, disable DISCONECT, CALL, BYE
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommClientClosedEvent()");
+    $rootScope.$broadcast("playmyband.webrtc.client.closed"); 
     this.webRTCommCall=undefined;
 }
 
@@ -226,37 +208,11 @@ TelScaleWebRTCPhoneController.prototype.getLocalUserMedia=function(videoContrain
  */ 
 TelScaleWebRTCPhoneController.prototype.onGetUserMediaSuccessEventHandler=function(localAudioVideoMediaStream) 
 {
+    $rootScope.$broadcast("playmyband.webrtc.usermedia.sucess",error);     
     try
     {
         console.debug("TelScaleWebRTCPhoneController:onGetUserMediaSuccessEventHandler(): localAudioVideoMediaStream.id="+localAudioVideoMediaStream.id);
         this.localAudioVideoMediaStream=localAudioVideoMediaStream;
-	var localVideo = document.getElementById('localVideo');
-        if (window.URL) {
-	    // In Chrome or Opera, the URL.createObjectURL() method converts a MediaStream to a Blob URL which can be set as the src of a video element. 
-	    // (In Firefox and Opera, the src of the video can be set from the stream itself.) 
-	    localVideo.src = window.URL.createObjectURL(localAudioVideoMediaStream);
-	} else {
-	    localVideo.src = localAudioVideoMediaStream;
-	}
-        /*var audioTracks = undefined;
-        if(this.localAudioVideoMediaStream.audioTracks) audioTracks=this.localAudioVideoMediaStream.audioTracks;
-        else if(this.localAudioVideoMediaStream.getAudioTracks) audioTracks=this.localAudioVideoMediaStream.getAudioTracks();
-        if(audioTracks)
-        {
-            console.debug("TelScaleWebRTCPhoneController:onWebkitGetUserMediaSuccessEventHandler(): audioTracks="+JSON.stringify(audioTracks));
-        }
-        else
-        {
-            alert("MediaStream Track  API not supported");
-        }
-        
-        var videoTracks = undefined;
-        if(this.localAudioVideoMediaStream.videoTracks) videoTracks=this.localAudioVideoMediaStream.videoTracks;
-        else if(this.localAudioVideoMediaStream.getVideoTracks) videoTracks=this.localAudioVideoMediaStream.getVideoTracks();
-        if(videoTracks)
-        {
-            console.debug("TelScaleWebRTCPhoneController:onWebkitGetUserMediaSuccessEventHandler(): videoTracks="+JSON.stringify(videoTracks));
-        }*/
     }
     catch(exception)
     {
@@ -268,45 +224,38 @@ TelScaleWebRTCPhoneController.prototype.onGetUserMediaErrorEventHandler=function
 {
     console.debug("TelScaleWebRTCPhoneController:onGetUserMediaErrorEventHandler(): error="+error);
     alert("Failed to get local user media: error="+error);
+    $rootScope.$broadcast("playmyband.webrtc.usermedia.error",error);    
 }	
 
 /**
  * on call event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickCall=function()
+TelScaleWebRTCPhoneController.prototype.call=function(contact)
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickCall()");     
-    //if(this.webRTCommCall == undefined)
-    //{
-	contact = document.getElementById("contactUserName").value;
-        try
-        {
-            var callConfiguration = {
-                displayName:this.DEFAULT_SIP_DISPLAY_NAME,
-                localMediaStream: this.localAudioVideoMediaStream,
-                audioMediaFlag:false,
-                videoMediaFlag:false,
-                messageMediaFlag:true,
-                audioCodecsFilter:null,
-                videoCodecsFilter:null
-            }
-            this.webRTCommCall = this.webRTCommClient.call(contact, callConfiguration);
+    try
+    {
+        var callConfiguration = {
+            displayName:this.DEFAULT_SIP_DISPLAY_NAME,
+            localMediaStream: this.localAudioVideoMediaStream,
+            audioMediaFlag:false,
+            videoMediaFlag:false,
+            messageMediaFlag:true,
+            audioCodecsFilter:null,
+            videoCodecsFilter:null
         }
-        catch(exception)
-        {
-            console.error("Call has failed, reason:"+exception);
-        }
-    //}
-    //else
-    //{
-    //    console.error("TelScaleWebRTCPhoneController:onClickCall(): internal error");      
-    //}
+        this.webRTCommCall = this.webRTCommClient.call(contact, callConfiguration);
+    }
+    catch(exception)
+    {
+        console.error("Call has failed, reason:"+exception);
+    }
 }
 
 /**
  * on call event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickCancel=function()
+TelScaleWebRTCPhoneController.prototype.cancel=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickCancelCall()"); 
     if(this.webRTCommCall != undefined)
@@ -329,7 +278,7 @@ TelScaleWebRTCPhoneController.prototype.onClickCancel=function()
 /**
  * on call event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickDisconnectCall=function()
+TelScaleWebRTCPhoneController.prototype.disconnectCall=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickDisconnectCall()"); 
     if(this.webRTCommCall)
@@ -352,7 +301,7 @@ TelScaleWebRTCPhoneController.prototype.onClickDisconnectCall=function()
 /**
  * on accept event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickAcceptCall=function()
+TelScaleWebRTCPhoneController.prototype.acceptCall=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickAcceptCall()"); 
     if(this.webRTCommCall)
@@ -382,7 +331,7 @@ TelScaleWebRTCPhoneController.prototype.onClickAcceptCall=function()
 /**
  * on accept event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickRejectCall=function()
+TelScaleWebRTCPhoneController.prototype.rejectCall=function()
 {
     console.debug ("TelScaleWebRTCPhoneController:onClickRejectCall()"); 
 	if(this.webRTCommCall)
@@ -391,8 +340,6 @@ TelScaleWebRTCPhoneController.prototype.onClickRejectCall=function()
         {
             this.webRTCommCall.reject();
             this.webRTCommCall = undefined;
-	    document.getElementById("AcceptCall").disabled=true;
-    	    document.getElementById("RejectCall").disabled=true;
         }
         catch(exception)
         {
@@ -410,16 +357,10 @@ TelScaleWebRTCPhoneController.prototype.onClickRejectCall=function()
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webRTCommCall)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallClosedEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallClosedEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
+    $rootScope.$broadcast("playmyband.webrtc.call.closed",webRTCommCall);
     this.webRTCommCall=undefined;
-    document.getElementById("AcceptCall").disabled=true;
-    document.getElementById("RejectCall").disabled=true;
-    document.getElementById("remoteVideo").pause();
-    if (typeof navigator.mozGetUserMedia != 'undefined') {
-	document.getElementById("remoteVideo").mozSrcObject = undefined;
-    } else {
-	document.getElementById("remoteVideo").src = undefined;
-    } 
+
 	var from = null;
 	if (webRTCommCall.isIncoming()) {
             from = webRTCommCall.getCallerPhoneNumber();
@@ -437,27 +378,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webR
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenedEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
-   
-    if(webRTCommCall.getRemoteBundledAudioVideoMediaStream())
-    {
-        if (typeof navigator.mozGetUserMedia != 'undefined') {
-		document.getElementById("remoteVideo").mozSrcObject = webRTCommCall.getRemoteBundledAudioVideoMediaStream();
-	} else {
-		document.getElementById("remoteVideo").src = window.URL.createObjectURL(webRTCommCall.getRemoteBundledAudioVideoMediaStream());
-	} 
-	document.getElementById("remoteVideo").play();
-    }
-    else if(webRTCommCall.getRemoteVideoMediaStream()) {
-	if (typeof navigator.mozGetUserMedia != 'undefined') {
-		document.getElementById("remoteVideo").mozSrcObject = webRTCommCall.getRemoteVideoMediaStream();
-	} else {
-		document.getElementById("remoteVideo").src = window.URL.createObjectURL(webRTCommCall.getRemoteVideoMediaStream());
-	} 
-	document.getElementById("remoteVideo").play();
-    }
-    document.getElementById("AcceptCall").disabled=true;
-    document.getElementById("RejectCall").disabled=true;
-    
+    $rootScope.$broadcast("playmyband.webrtc.call.opened",webRTCommCall);
+
 	var from = null;
 	if (webRTCommCall.isIncoming()) {
             from = webRTCommCall.getCallerPhoneNumber();
@@ -472,7 +394,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webR
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallInProgressEvent=function(webRTCommCall)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallInProgressEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallInProgressEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
+    $rootScope.$broadcast("playmyband.webrtc.call.inprogress",webRTCommCall);
 }
 
 
@@ -481,7 +404,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallInProgressEvent=function(
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(webRTCommCall, error)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenErrorEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenErrorEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
+    $rootScope.$broadcast("playmyband.webrtc.call.openerror",webRTCommCall);
     this.webRTCommCall=undefined;
 }
 
@@ -490,10 +414,9 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(w
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingEvent=function(webRTCommCall)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
+    $rootScope.$broadcast("playmyband.webrtc.call.ringing",webRTCommCall);     
     this.webRTCommCall=webRTCommCall;
-    document.getElementById("AcceptCall").disabled=false;
-    document.getElementById("RejectCall").disabled=false;
 }
 
 /**
@@ -501,7 +424,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingEvent=function(web
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingBackEvent=function(webRTCommCall)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingBackEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
+    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingBackEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
+    $rootScope.$broadcast("playmyband.webrtc.call.ringingback",webRTCommCall);
 }
 
 /**
@@ -509,15 +433,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingBackEvent=function
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallHangupEvent=function(webRTCommCall)
 {
-    console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallHangupEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
-    document.getElementById("AcceptCall").disabled=true;
-    document.getElementById("RejectCall").disabled=true;
-    document.getElementById("remoteVideo").pause();
-    if (typeof navigator.mozGetUserMedia != 'undefined') {
-	document.getElementById("remoteVideo").mozSrcObject = undefined;
-    } else {
-	document.getElementById("remoteVideo").src = undefined;
-    } 
+    $rootScope.$broadcast("playmyband.webrtc.call.hangup",webRTCommCall);      
     this.webRTCommCall=undefined;
 }
 
@@ -526,13 +442,9 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallHangupEvent=function(webR
 /**
  * on send message event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickSendMessage=function()
+TelScaleWebRTCPhoneController.prototype.sendMessage=function(contact,message)
 {
     console.debug ("WebRTCommTestWebAppController:onClickSendMessage()"); 
-    contact = document.getElementById("contactUserName").value;   
-    message = document.getElementById("messageToSend").value;  
-    chatBox = document.getElementById("chatBox");
-    chatBox.value += this.webRTCommClientConfiguration.sip.sipUserName + ": " + message + "\n";
 
     this.webRTCommActiveCalls.forEach(function (activeCall, contact) {
 	if(activeCall && activeCall.peerConnectionState == 'established')
@@ -558,13 +470,9 @@ TelScaleWebRTCPhoneController.prototype.onClickSendMessage=function()
 /**
  * on send message event handler
  */ 
-TelScaleWebRTCPhoneController.prototype.onClickSendDataMessage=function()
+TelScaleWebRTCPhoneController.prototype.sendDataMessage=function(contact, message)
 {
     console.debug ("WebRTCommTestWebAppController:onClickSendDataMessage()"); 
-    contact = document.getElementById("contactUserName").value;   
-    message = document.getElementById("data-messageToSend").value;  
-    chatBox = document.getElementById("data-chatBox");
-    chatBox.value += this.webRTCommClientConfiguration.sip.sipUserName + ": " + message + "\n";
 
     this.webRTCommActiveCalls.forEach(function (activeCall, contact) {
 	if(activeCall && activeCall.peerConnectionState == 'established')
@@ -594,18 +502,7 @@ TelScaleWebRTCPhoneController.prototype.onClickSendDataMessage=function()
  * @param {String} message message
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageReceivedEvent = function(message) {
-    console.debug ("WebRTCommTestWebAppController:onWebRTCommMessageReceivedEvent()"); 
-    from = message.getFrom();
-    var webRTCommCall = message.getLinkedWebRTCommCall();
-    if (webRTCommCall) {
-        if (webRTCommCall.isIncoming()) {
-            from = webRTCommCall.getCallerPhoneNumber();
-        } else {
-            from = webRTCommCall.getCalleePhoneNumber();
-        }
-    }
-    chatBox = document.getElementById("chatBox");
-    chatBox.value += from + ": " + message.getText() + "\n";
+    $rootScope.$broadcast("playmyband.webrtc.message.received",message);
 };
 
 /**
@@ -614,6 +511,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageReceivedEvent = functi
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageSentEvent = function(message) {
+    $rootScope.$broadcast("playmyband.webrtc.data.message.sent",message);    
 };
 
 /**
@@ -623,18 +521,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageSentEvent = functi
  * @param {String} message message
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageReceivedEvent = function(message) {
-    console.debug ("WebRTCommTestWebAppController:onWebRTCommDataMessageReceivedEvent()"); 
-    from = message.getFrom();
-    var webRTCommCall = message.getLinkedWebRTCommCall();
-    if (webRTCommCall) {
-        if (webRTCommCall.isIncoming()) {
-            from = webRTCommCall.getCallerPhoneNumber();
-        } else {
-            from = webRTCommCall.getCalleePhoneNumber();
-        }
-    }
-    chatBox = document.getElementById("data-chatBox");
-    chatBox.value += from + ": " + message.getContent() + "\n";
+    $rootScope.$broadcast("playmyband.webrtc.data.message.received",message);  
 };
 
 /**
@@ -643,6 +530,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageReceivedEvent = fu
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSentEvent = function(message) {
+    $rootScope.$broadcast("playmyband.webrtc.message.sent",message);    
 };
 
 /**
@@ -651,6 +539,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSentEvent = function(m
  * @param {String} error
  */
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSendErrorEvent = function(message, error) {
+        $rootScope.$broadcast("playmyband.webrtc.message.send.error",message);
 };
 
 /**

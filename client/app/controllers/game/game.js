@@ -3,6 +3,12 @@
 angular.module('webrtcTestApp')
   .config(function ($stateProvider) {
     $stateProvider
+      .state('main.registeringPlayer', {
+        url: 'game',
+        templateUrl: 'app/controllers/game/registeringPlayer.html',
+        controller: 'RegisteringPlayerCtrl'
+      });    
+    $stateProvider
       .state('main.selectSong', {
         url: 'game',
         templateUrl: 'app/controllers/game/selectSong.html',
