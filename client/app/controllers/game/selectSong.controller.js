@@ -52,6 +52,7 @@ angular.module('webrtcTestApp')
 
 
     $scope.joinGame=function(joinModel){
+      $rootScope.telScaleWebRTCPhoneController.call(joinModel.contact);
       $state.go('main.connectingToHost');      
     }    
 

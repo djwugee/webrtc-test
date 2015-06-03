@@ -1,0 +1,6 @@
+.col-md-12()
+	h1.page-header Register player to start game, type any name...
+	div.col-lg-4
+		form(id="userForm")
+			input(id="userText" type='text' ng-model='user.name' required )		
+			input(id="registerSubmit" type='submit' ng-click="registerPlayer(user)" value='Register')				

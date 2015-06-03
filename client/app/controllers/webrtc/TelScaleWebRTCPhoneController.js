@@ -208,7 +208,7 @@ TelScaleWebRTCPhoneController.prototype.getLocalUserMedia=function(videoContrain
  */ 
 TelScaleWebRTCPhoneController.prototype.onGetUserMediaSuccessEventHandler=function(localAudioVideoMediaStream) 
 {
-    this.rootScope.$broadcast("playmyband.webrtc.usermedia.sucess",error);     
+    this.rootScope.$broadcast("playmyband.webrtc.usermedia.sucess",localAudioVideoMediaStream);     
     try
     {
         console.debug("TelScaleWebRTCPhoneController:onGetUserMediaSuccessEventHandler(): localAudioVideoMediaStream.id="+localAudioVideoMediaStream.id);

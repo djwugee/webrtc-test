@@ -3,7 +3,6 @@
 angular.module('webrtcTestApp')
   .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http) {
     $scope.globalScore = 0;
-    $scope.message = 'Hello';
     $log.info('Loading canvas controller');
 
     $scope.idUserCanvas='mainPlayerCanvas';

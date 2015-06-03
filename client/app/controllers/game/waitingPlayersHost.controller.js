@@ -3,8 +3,21 @@
 angular.module('webrtcTestApp')
   .controller('WaitingPlayersHostCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
 
-    $scope.startGame=function(){
-      $state.go('main.playing');
+  	$scope.rootScope = $rootScope;
 
+    $rootScope.$on("playmyband.webrtc.call.ringing",function(event){
+    	$rootScope.telScaleWebRTCPhoneController.acceptCall();
+      //let user check number of players
+    	$scope.digest();
+      //send session init message so player may prepare song
+      var sessionInitMsg = {data: {localPlayerId:$rootScope.telScaleWebRTCPhoneController.webRTCommActiveCalls.length, songURL:$rootScope.songURL, $rootScope.difficultyLevel:}};
+      rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", sessionInitMsg);
+    });
+
+    $scope.startGame=function(){
+      //send session init message so player may prepare song
+      var startGameMsg = {data: "startGame"};
+      rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", startGameMsg);      
+      $state.go('main.playing');
     }
   });
