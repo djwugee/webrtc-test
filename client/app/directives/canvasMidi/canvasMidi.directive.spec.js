@@ -6,14 +6,10 @@ describe('Directive: canvasMidi', function () {
   beforeEach(module('webrtcTestApp'));
 
   
-  var element,
-    scope;
+  var scope;
 
   beforeEach(inject(function ($rootScope) {
-    scope = $rootScope.$new();
-    canvasMidi = $controller('canvasMidi', {
-      $scope: scope
-    });    
+    scope = $rootScope.$new();   
   }));
   
   /*

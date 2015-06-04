@@ -9,6 +9,13 @@ angular.module('webrtcTestApp')
     $scope.idOtherUserCanvas='otherPlayerCanvas';
     $scope.idThirdUserCanvas='idThirdUserCanvas';
 
+    $rootScope.$on("playmyband.webrtc.data.message.received",function(event, message){
+      $log.debug('playing message received');
+      var msgContent = JSON.parse(message.getContent());
+      var eventName='user.note.event.'+ msgContent.playerId;
+      $rootScope.broadcast(eventName, msgContent);
+    });
+
     function getNoteFromKeyboard(event) {
       var keyID = (event.charCode) ? event.charCode : ((event.which) ? event.which : event.keyCode);
       var note = keyID - 49; // 49 = key 1
@@ -37,16 +44,18 @@ angular.module('webrtcTestApp')
     }
 
     function sendUserNote(note, canvasId){
-        var accumulatedNoteDelta = window.performance.now() - $rootScope.playingStartTimestamp;      
-        if ($rootScope.replayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
-        {
-          $scope.globalScore = $scope.globalScore + 1;
-          $scope.$digest();          
-        }
-        canvasId = canvasId || $scope.idUserCanvas;
-        var eventName='user.note.event.'+ canvasId;
-        //$log.debug('sending user note to user canvas '+eventName);
-        $rootScope.$broadcast(eventName,note);
+      var accumulatedNoteDelta = window.performance.now() - $rootScope.playingStartTimestamp;      
+      if ($rootScope.replayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
+      {
+        $scope.globalScore = $scope.globalScore + 1;
+        $scope.$digest();          
+      }
+      canvasId = canvasId || $scope.idUserCanvas;
+      var userInputMsg = {data: {localPlayerId:$rootScope.localPlayerId, songURL:$rootScope.songURL, difficultyLevel:$rootScope.difficultyLevel}};
+      rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", JSON.stringify(sessionInitMsg));        
+      var eventName='user.note.event.'+ canvasId;
+      //$log.debug('sending user note to user canvas '+eventName);
+      $rootScope.$broadcast(eventName,note);
     }
 
     function sendUserNoteRelease(note){

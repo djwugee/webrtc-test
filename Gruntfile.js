@@ -54,6 +54,12 @@ module.exports = function (grunt) {
         url: 'http://localhost:<%= express.options.port %>'
       }
     },
+    uglify: {
+    options: {
+      mangle: false,
+      compress: false,
+      beautify: false
+    }},
     watch: {
       injectJS: {
         files: [
