@@ -1,3 +1,5 @@
+'use strict';
+
 var sampleRate = 44100; /* hard-coded in Flash player */
 
 function AudioPlayer(generator, opts) {
@@ -18,7 +20,7 @@ function AudioPlayer(generator, opts) {
 		
 		var node = context.createScriptProcessor(bufferSize, 0, channelCount);
 		
-		node.onaudioprocess = function(e) { process(e) };
+		node.onaudioprocess = function(e) { process(e); };
 
 		function process(e) {
 			if (generator.finished) {
@@ -50,5 +52,5 @@ function AudioPlayer(generator, opts) {
 				requestStop = true;
 			},
 			'type': 'Webkit Audio'
-		}
+		};
 }

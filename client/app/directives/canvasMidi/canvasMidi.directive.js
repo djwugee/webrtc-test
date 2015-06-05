@@ -378,10 +378,9 @@
             var userNotes=canvasMidiController.getUserNotes();
             angular.forEach(userNotes,function(note){
               if(note){
-                ctx.drawImage(note.image,note.left,note.top);
+                ctx.drawImage(note.image, note.left, note.top);
               }
             });
-
           }
         }
       };
@@ -389,5 +388,5 @@
 
 
 
-})(angular);
+})
 

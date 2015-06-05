@@ -518,7 +518,7 @@ module.exports = function (grunt) {
 
     injector: {
       options: {
-
+        lineEnding: grunt.util.linefeed
       },
       // Inject application script files into index.html (doesn't include bower)
       scripts: {

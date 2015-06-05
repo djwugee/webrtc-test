@@ -2,13 +2,14 @@
 class to parse the .mid file format
 (depends on stream.js)
 */
+'use strict';
 
 angular.module('webrtcTestApp')
 .factory(
 	'midiService',function(){
 		return function (data){
-			return MidiFile(data);
-		}
+			return new MidiFile(data);
+		};
 	}
 );
 
@@ -44,9 +45,9 @@ function MidiFile(data, octaveRangeInclude) {
 		var event = {};
 		event.deltaTime = stream.readVarInt();
 		var eventTypeByte = stream.readInt8();
-		if ((eventTypeByte & 0xf0) == 0xf0) {
+		if ((eventTypeByte & 0xf0) === 0xf0) {
 			/* system / meta event */
-			if (eventTypeByte == 0xff) {
+			if (eventTypeByte === 0xff) {
 				/* meta event */
 				event.type = 'meta';
 				var subtypeByte = stream.readInt8();
@@ -54,7 +55,9 @@ function MidiFile(data, octaveRangeInclude) {
 				switch(subtypeByte) {
 					case 0x00:
 						event.subtype = 'sequenceNumber';
-						if (length != 2) throw "Expected length for sequenceNumber event is 2, got " + length;
+						if (length != 2) {
+							throw 'Expected length for sequenceNumber event is 2, got ' + length;
+						}
 						event.number = stream.readInt16();
 						return event;
 					case 0x01:
