@@ -357,7 +357,6 @@ TelScaleWebRTCPhoneController.prototype.rejectCall=function()
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallClosedEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    this.rootScope.$broadcast("playmyband.webrtc.call.closed",webRTCommCall);
     this.webRTCommCall=undefined;
 
 	var from = null;
@@ -368,6 +367,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webR
         }
     this.webRTCommActiveCalls.delete(from);
     this.webRTCommCall=undefined;
+    this.rootScope.$broadcast("playmyband.webrtc.call.closed",webRTCommCall);
 }
    
    
@@ -377,8 +377,6 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallClosedEvent=function(webR
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenedEvent(): webRTCommCall.getId()="+webRTCommCall.getId()); 
-    this.rootScope.$broadcast("playmyband.webrtc.call.opened",webRTCommCall);
-
 	var from = null;
 	if (webRTCommCall.isIncoming()) {
             from = webRTCommCall.getCallerPhoneNumber();
@@ -386,6 +384,7 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenedEvent=function(webR
             from = webRTCommCall.getCalleePhoneNumber();
         }
     this.webRTCommActiveCalls.set(from, webRTCommCall);
+    this.rootScope.$broadcast("playmyband.webrtc.call.opened",webRTCommCall);    
 }
 
 /**
@@ -404,8 +403,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallInProgressEvent=function(
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(webRTCommCall, error)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallOpenErrorEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    this.rootScope.$broadcast("playmyband.webrtc.call.openerror",webRTCommCall);
     this.webRTCommCall=undefined;
+    this.rootScope.$broadcast("playmyband.webrtc.call.openerror",webRTCommCall);
 }
 
 /**
@@ -414,8 +413,8 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommCallOpenErrorEvent=function(w
 TelScaleWebRTCPhoneController.prototype.onWebRTCommCallRingingEvent=function(webRTCommCall)
 {
     console.debug ("TelScaleWebRTCPhoneController:onWebRTCommCallRingingEvent(): webRTCommCall.getId()="+webRTCommCall.getId());
-    this.rootScope.$broadcast("playmyband.webrtc.call.ringing",webRTCommCall);     
     this.webRTCommCall=webRTCommCall;
+    this.rootScope.$broadcast("playmyband.webrtc.call.ringing",webRTCommCall);     
 }
 
 /**
@@ -540,22 +539,3 @@ TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSentEvent = function(m
 TelScaleWebRTCPhoneController.prototype.onWebRTCommMessageSendErrorEvent = function(message, error) {
     $this.rootScope.$broadcast("playmyband.webrtc.message.send.error",message);
 };
-
-/**
- * on unload event handler
- */ 
-TelScaleWebRTCPhoneController.prototype.onUnloadViewEventHandler=function()
-{
-    console.debug ("TelScaleWebRTCPhoneController:onBeforeUnloadEventHandler()"); 
-    if(this.webRTCommClient != undefined)
-    {
-        try
-        {
-            this.webRTCommClient.close();  
-        }
-        catch(exception)
-        {
-             console.error("WebRtcCommTestWebAppController:onUnloadViewEventHandler(): catched exception:"+exception);  
-        }
-    }    
-}

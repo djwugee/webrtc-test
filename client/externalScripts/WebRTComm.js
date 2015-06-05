@@ -10,9 +10,9 @@
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  * @author Jean Deruelle (jean.deruelle@ŧelestax.com)
  */
-function PrivateJainSipMessageConnector(clientConnector, webRTCommMessage, sipCallId)
+PrivateJainSipMessageConnector = function(clientConnector, webRTCommMessage, sipCallId)
 {
-    console.debug("by jim PrivateJainSipMessageConnector:PrivateJainSipMessageConnector()");
+    console.debug("PrivateJainSipMessageConnector:PrivateJainSipMessageConnector()");
     if (clientConnector instanceof PrivateJainSipClientConnector && webRTCommMessage instanceof WebRTCommMessage)
     {
         if (typeof(sipCallId) === 'string')
@@ -30,8 +30,6 @@ function PrivateJainSipMessageConnector(clientConnector, webRTCommMessage, sipCa
         throw "PrivateJainSipMessageConnector:PrivateJainSipMessageConnector(): bad arguments"
     }
 };
-
-PrivateJainSipMessageConnector.prototype.constructor = PrivateJainSipMessageConnector;
 
 /**
  * SIP Message Control state machine constant
@@ -425,7 +423,7 @@ PrivateJainSipMessageConnector.prototype.send = function() {
  * @throw {String} Exception "bad argument"
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */
-var PrivateJainSipCallConnector = function(clientConnector, webRTCommCall, sipCallId)
+PrivateJainSipCallConnector = function(clientConnector, webRTCommCall, sipCallId)
 {
     console.debug("PrivateJainSipCallConnector:PrivateJainSipCallConnector()");
     if (clientConnector instanceof PrivateJainSipClientConnector && webRTCommCall instanceof WebRTCommCall)
@@ -1278,7 +1276,7 @@ PrivateJainSipCallConnector.prototype.processInvitedSipResponseEvent = function(
  * @throw {String} Exception "bad argument"
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */
-var PrivateJainSipClientConnector = function(webRTCommClient)
+PrivateJainSipClientConnector = function(webRTCommClient)
 {
     console.debug("PrivateJainSipClientConnector:PrivateJainSipClientConnector()");
     if (webRTCommClient instanceof WebRTCommClient)
@@ -2189,7 +2187,7 @@ PrivateJainSipClientConnector.prototype.processSipOptionRequest = function(reque
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  * @author Jean Deruelle (jean.deruelle@telestax.com) 
  */
-var WebRTCommCall = function(webRTCommClient)
+WebRTCommCall = function(webRTCommClient)
 {
     if (webRTCommClient instanceof WebRTCommClient)
     {
@@ -4868,7 +4866,7 @@ WebRTCommCall.prototype.forceTurnMediaRelay = function(sessionDescription) {
  * @param  {WebRTCommCall} webRTCommCall WebRTComm call owner 
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */ 
-var WebRTCommMessage = function(webRTCommClient, webRTCommCall)
+WebRTCommMessage = function(webRTCommClient, webRTCommCall)
 {
     console.debug("WebRTCommMessage:WebRTCommMessage()");
     if((webRTCommClient instanceof WebRTCommClient) || (webRTCommCall instanceof WebRTCommCall))
@@ -4942,7 +4940,7 @@ WebRTCommMessage.prototype.getLinkedWebRTCommCall= function() {
  * @param  {WebRTCommCall} webRTCommCall WebRTComm call owner 
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */ 
-var WebRTCommDataMessage = function(webRTCommClient, webRTCommCall)
+WebRTCommDataMessage = function(webRTCommClient, webRTCommCall)
 {
     console.debug("WebRTCommDataMessage:WebRTCommDataMessage()");
     if((webRTCommClient instanceof WebRTCommClient) || (webRTCommCall instanceof WebRTCommCall))
@@ -5013,7 +5011,7 @@ WebRTCommDataMessage.prototype.getLinkedWebRTCommCall= function() {
  * @public
  * @param  {object} eventListener event listener object implementing WebRTCommClient and WebRTCommCall listener interface
  */
-var WebRTCommClient = function(eventListener)
+WebRTCommClient = function(eventListener)
 {
     if (typeof eventListener === 'object')
     {
@@ -5402,7 +5400,7 @@ WebRTCommClient.prototype.onPrivateClientConnectorClosedEvent = function()
  * @constructor
  * @public
  */ 
- var WebRTCommClientEventListenerInterface = function(){
+ WebRTCommClientEventListenerInterface = function(){
 };
  
 /**
@@ -5437,7 +5435,7 @@ WebRTCommClientEventListenerInterface.prototype.onWebRTCommClientClosedEvent= fu
  * @constructor
  * @public
  */
-var WebRTCommCallEventListenerInterface = function() {
+WebRTCommCallEventListenerInterface = function() {
 };
 
 /**
@@ -5502,7 +5500,7 @@ WebRTCommCallEventListenerInterface.prototype.onWebRTCommCallHangupEvent = funct
  * @constructor
  * @public
  */ 
- var WebRTCommMessageEventListenerInterface = function(){
+ WebRTCommMessageEventListenerInterface = function(){
 };
  
 
