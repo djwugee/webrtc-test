@@ -237,8 +237,8 @@ TelScaleWebRTCPhoneController.prototype.call=function(contact)
         var callConfiguration = {
             displayName:this.DEFAULT_SIP_DISPLAY_NAME,
             localMediaStream: this.localAudioVideoMediaStream,
-            audioMediaFlag:false,
-            videoMediaFlag:false,
+            audioMediaFlag:true,
+            videoMediaFlag:true,
             messageMediaFlag:true,
             audioCodecsFilter:null,
             videoCodecsFilter:null

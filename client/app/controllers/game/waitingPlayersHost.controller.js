@@ -8,10 +8,10 @@ angular.module('webrtcTestApp')
     $rootScope.$on("playmyband.webrtc.call.ringing",function(event){
     	$rootScope.telScaleWebRTCPhoneController.acceptCall();
       //let user check number of players
-    	$scope.digest();
+    	$scope.$digest();
       //send session init message so player may prepare song
       var sessionInitMsg = {data: {localPlayerId:$rootScope.telScaleWebRTCPhoneController.webRTCommActiveCalls.length, songURL:$rootScope.songURL, difficultyLevel:$rootScope.difficultyLevel}};
-      rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", JSON.stringify(sessionInitMsg));
+      $rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", JSON.stringify(sessionInitMsg));
     });
 
     $scope.startGame=function(){
