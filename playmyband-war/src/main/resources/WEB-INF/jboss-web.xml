@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>${webapp.context}</context-root>
+</jboss-web>

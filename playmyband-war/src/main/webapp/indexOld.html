@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style type="text/css">
+		</style>
+		<script src="resources/js/jain-sip.js" type="text/javascript"></script> 
+        	<script src="resources/js/WebRTComm.js" type="text/javascript"></script>  
+	        <script src="resources/js/TelScaleWebRTCPhoneController.js" type="text/javascript"></script>        
+   		<script>
+   		telScaleWebRTCPhoneController = new TelScaleWebRTCPhoneController(this);
+   		</script>
+		<title>TelScale WebRTC Example</title>
+	</head>
+	<body>
+		<div id="registration" class="container">
+			<input id="sipUserName"  type="text" size="30"/> 
+			<input id='Register' type='submit' name='Register' value='Register'  onclick="telScaleWebRTCPhoneController.onClickRegister();"/>
+			<input id='Unregister' type='submit' name='Unregister' value='Unregister'  onclick="telScaleWebRTCPhoneController.onClickUnregister();"/>
+			<input id="contactUserName"  type="text" size="30"/> 
+			<input id='Call' type='submit' name='Call' value='Call'  onclick="telScaleWebRTCPhoneController.onClickCall();"/>
+			<input id='DisconnectCall' type='submit' name='DisconnectCall' value='DisconnectCall'  onclick="telScaleWebRTCPhoneController.onClickDisconnectCall();"/>
+			<input id='Cancel' type='submit' name='Cancel' value='Cancel'  onclick="telScaleWebRTCPhoneController.onClickCancel();"/>
+			<input id='AcceptCall' disabled="disabled" type='submit' name='AcceptCall' value='AcceptCall'  onclick="telScaleWebRTCPhoneController.onClickAcceptCall();"/>
+			<input id='RejectCall' disabled="disabled" type='submit' name='RejectCall' value='RejectCall'  onclick="telScaleWebRTCPhoneController.onClickRejectCall();"/>
+		</div>						
+		<div id="chat">
+			<textarea id="chatBox" size="100"></textarea><br/>
+			<input id="messageToSend"  type="text" size="50"/> 
+			<input id='SendMessage' type='submit' name='SendMessage' value='SendMessage'  onclick="telScaleWebRTCPhoneController.onClickSendMessage();"/>
+		</div>
+		<div id="room">
+			<video id="localVideo" autoplay="autoplay" style="height:140px; width:140px;"></video>							
+			<video id="remoteVideo" width="640" height="400" autoplay="autoplay" style="margin-top: 10px;-webkit-transition-property: opacity; -webkit-transition-duration: 2s; display:block; margin: 0 auto;" controls></video>
+		</div>
+	</body>
+</html>
