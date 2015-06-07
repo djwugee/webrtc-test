@@ -1,9 +1,20 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,midiService,$http,$state,$midiService) {
+  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService) {
     //number of seconds in advance the notes are rendered in canvas
     $rootScope.secondsInAdvance = 10;
+
+    $scope.songs=[
+      {
+        label:'playmyband-PearlJamBetterMan',
+        src:'/playmyband/assets/midi/PearlJamBetterMan/notes.mid'
+      },
+      {
+        label:'PearlJamBetterMan',
+        src:'/assets/midi/PearlJamBetterMan/notes.mid'
+      }
+    ];
 
     function playMidi()
     {
@@ -43,7 +54,10 @@ angular.module('webrtcTestApp')
       //first user, this is related to instrument in song, but hardcoded now.
       $rootScope.localPlayerId=1;
       //this should come from the user selection, hardcoded now for testing
-      $rootScope.songURL = '/assets/midi/PearlJamBetterMan/notes.mid';
+
+      //$rootScope.songURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
+      $rootScope.songUrl=$scope.songs[0].src;
+      
       //again hardcoded but sohuld be from user selected
       $rootScope.difficultyLevel = [96, 100];
       playMidi();

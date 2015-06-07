@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('WaitingPlayersCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
+  .controller('WaitingPlayersCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
   	$rootScope.$on('playmyband.webrtc.data.message.received',function(){
         $log.debug('start game message received');
