@@ -1,21 +1,21 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('RegisteringPlayerCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
+  .controller('RegisteringPlayerCtrl', function ($rootScope,$scope,$log,midiService,$http,$state,$window,$webRtcService) {
 
-    $rootScope.$on("playmyband.webrtc.client.opened",function(event){
+    $rootScope.$on('playmyband.webrtc.client.opened',function(){
       $state.go('main.selectSong');
 
     });
 
-    $rootScope.$on("playmyband.webrtc.client.openError",function(event){
-      alert("conn failed");
+    $rootScope.$on('playmyband.webrtc.client.openError',function(){
+      $window.alert('conn failed');
     });    
 
 
     $scope.registerPlayer=function(userModel){
-      $rootScope.telScaleWebRTCPhoneController = new TelScaleWebRTCPhoneController($rootScope);
+      $rootScope.telScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
       $rootScope.telScaleWebRTCPhoneController.register(userModel.name);
-    }  
+    } ; 
 
   });

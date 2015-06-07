@@ -5028,6 +5028,9 @@ WebRTCommClient = function(eventListener)
     }
 };
 
+// fix to allow inject in Angular!!!
+window.WebRTCommClient=WebRTCommClient;
+
 /**
  * SIP call control protocol mode 
  * @public

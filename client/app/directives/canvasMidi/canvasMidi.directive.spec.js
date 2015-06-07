@@ -12,11 +12,13 @@ describe('Directive: canvasMidi', function () {
     scope = $rootScope.$new();   
   }));
   
-  /*
-  it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<canvas-midi></canvas-midi>');
+  
+  it('should create a div mainPlayerCanvas', inject(function ($compile) {
+    var element = angular.element('<canvas-midi></canvas-midi>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the canvasMidi directive');
+    var mainPlayerCanvas= element.find('.mainPlayerCanvas');
+    expect(typeof mainPlayerCanvas).toBe('object');
+
   }));
-*/
+
 });

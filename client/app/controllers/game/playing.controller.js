@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http) {
+  .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http,$audioService,$synthService,$replayerService) {
     $scope.globalScore = 0;
     $log.info('Loading canvas controller');
 
     $scope.idUserCanvas='mainPlayerCanvas';
     $scope.idOtherUserCanvas='otherPlayerCanvas';
     $scope.idThirdUserCanvas='idThirdUserCanvas';
+    //register all ids
+    $scope.canvasIds=[$scope.idUserCanvas,$scope.idOtherUserCanvas,$scope.idThirdUserCanvas];
 
-    $rootScope.$on("playmyband.webrtc.data.message.received",function(event, message){
+    $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
       $log.debug('playing message received');
       var msgContent = JSON.parse(message.getContent());
       var eventName='user.note.event.'+ msgContent.playerId;
@@ -52,7 +54,7 @@ angular.module('webrtcTestApp')
       }
       canvasId = canvasId || $scope.idUserCanvas;
       var userInputMsg = {data: {localPlayerId:$rootScope.localPlayerId, songURL:$rootScope.songURL, difficultyLevel:$rootScope.difficultyLevel}};
-      rootScope.telScaleWebRTCPhoneController.sendDataMessage("allContacts", JSON.stringify(sessionInitMsg));        
+      $rootScope.telScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));        
       var eventName='user.note.event.'+ canvasId;
       //$log.debug('sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
@@ -68,20 +70,14 @@ angular.module('webrtcTestApp')
     function sendNote(noteEvent){
       var normalizedNote = noteEvent.event.noteNumber - $rootScope.difficultyLevel[0];
       noteEvent.event.noteNumber = normalizedNote;
-      if (noteEvent.track == 1) {
-        var eventName='midi.note.event.'+$scope.idUserCanvas;
-        //$log.debug('sending midi note to user canvas '+eventName);
-        $rootScope.$broadcast(eventName,noteEvent);        
-      } else if (noteEvent.track == 2)
-      {
-        var eventName='midi.note.event.'+$scope.idOtherUserCanvas;
-        //$log.debug('sending midi note to user canvas '+eventName);
-        $rootScope.$broadcast(eventName,noteEvent);        
 
-      } else if (noteEvent.track == 3)
-      {
-        var eventName='midi.note.event.'+$scope.idThirdUserCanvas;
-       //$log.debug('sending midi note to user canvas '+eventName);
+
+      //if note track is between 1 and 3
+      if(noteEvent.track>=1 && noteEvent.track<=3){
+        var canvasIdIndex= noteEvent.track-1;
+        var eventName='midi.note.event.'+$scope.canvasIds[canvasIdIndex];
+
+        //send event
         $rootScope.$broadcast(eventName,noteEvent);        
 
       }
@@ -89,20 +85,21 @@ angular.module('webrtcTestApp')
     }
     $rootScope.sendNote = sendNote;
 
-    function cancelEvent(e){
-      e.stopPropagation();
-      e.preventDefault();
-    }
+    /* NOT USED
+      function cancelEvent(e){
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    */
 
     $scope.startDemo=function(){
 
-    }        
+    };        
 
-    function playMidi()
-    {
-      $rootScope.synth = FretsSynth(44100);
-      $rootScope.replayer = Replayer($rootScope.midiFile, $rootScope.synth, $rootScope);
-      $rootScope.audio = AudioPlayer($rootScope.replayer);
+    function playMidi() {
+      $rootScope.synth = new $synthService.FretsSynth(44100);
+      $rootScope.replayer = new $replayerService.Replayer($rootScope.midiFile, $rootScope.synth, $rootScope);
+      $rootScope.audio = new $audioService.AudioPlayer($rootScope.replayer);
       
 
       //start the sound later, this must be sync with midi and note rendering

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
+  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,midiService,$http,$state,$midiService) {
     //number of seconds in advance the notes are rendered in canvas
     $rootScope.secondsInAdvance = 10;
 
@@ -9,20 +9,21 @@ angular.module('webrtcTestApp')
     {
         $log.debug('downloading midi file');
 
-        // do the get request with response type "blobl" 
-        $http.get($rootScope.songURL,{responseType: "blob"}).
-          success(function(data, status, headers, config) {
+        // do the get request with response type 'blobl' 
+        $http.get($rootScope.songURL,{responseType: 'blob'}).
+          // success(function(data, status, headers, config) {
+          success(function(data) {
             // this callback will be called asynchronously
             // when the response is available
             $log.debug('loading demo from $http OK');
             $log.debug('data type: '+typeof data);
-            $log.debug('data.byteLength '+data.byteLength)
+            $log.debug('data.byteLength '+data.byteLength);
 
             //create a file from arraybuffer
             var reader = new FileReader();
             reader.onload = function(event) {
               var contents = event.target.result; 
-              $rootScope.midiFile = MidiFile(contents, $rootScope.difficultyLevel);
+              $rootScope.midiFile = new $midiService.MidiFile(contents, $rootScope.difficultyLevel);
             };
 
             
@@ -37,7 +38,8 @@ angular.module('webrtcTestApp')
           });      
     }
 
-    $scope.selectSong=function(selectSongModel){
+    //$scope.selectSong=function(selectSongModel){ NOT USED
+    $scope.selectSong=function(){
       //first user, this is related to instrument in song, but hardcoded now.
       $rootScope.localPlayerId=1;
       //this should come from the user selection, hardcoded now for testing
@@ -47,13 +49,13 @@ angular.module('webrtcTestApp')
       playMidi();
       $state.go('main.waitingPlayersHost');
 
-    }
+    };
 
 
 
     $scope.joinGame=function(joinModel){
       $rootScope.telScaleWebRTCPhoneController.call(joinModel.contact);
       $state.go('main.connectingToHost');      
-    }    
+    };
 
   });

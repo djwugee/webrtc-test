@@ -1,4 +1,3 @@
-
 (function(angular){
 
   'use strict';
@@ -6,7 +5,7 @@
   //constants
   var NOTE_HEIGHT=64;
   var NOTE_WIDTH=64;
-  var VERTICAL_SCROLL_INCREMENT=1;
+  //var VERTICAL_SCROLL_INCREMENT=1;
   var NUMBER_OF_DIFFERENT_NOTES=5;
 
   //init images
@@ -386,7 +385,4 @@
       };
     });
 
-
-
-})
-
+})(angular);
