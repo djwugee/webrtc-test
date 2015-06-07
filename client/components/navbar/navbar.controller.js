@@ -8,7 +8,7 @@ angular.module('webrtcTestApp')
     },
     {
       'title': 'Game',
-      'link': '/#/game'
+      'link': '#/game'
     }
     ];
 

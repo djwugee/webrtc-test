@@ -551,5 +551,8 @@ angular.module('webrtcTestApp')
         $rootScope.$broadcast('playmyband.webrtc.message.send.error',message);
     };
 
+    return {
+      TelScaleWebRTCPhoneController:TelScaleWebRTCPhoneController
+    };
 
   });
