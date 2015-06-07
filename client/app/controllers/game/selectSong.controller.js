@@ -16,7 +16,7 @@ angular.module('webrtcTestApp')
       }
     ];
 
-    function playMidi()
+    function downloadMidi()
     {
         $log.debug('downloading midi file');
 
@@ -45,7 +45,7 @@ angular.module('webrtcTestApp')
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-            $log.debug('loading demo from $http KO',data,status,headers,config);
+            $log.debug('loading demo from $http KO',$rootScope.songURL,data,status,headers,config);
           });      
     }
 
@@ -55,12 +55,12 @@ angular.module('webrtcTestApp')
       $rootScope.localPlayerId=1;
       //this should come from the user selection, hardcoded now for testing
 
-      //$rootScope.songURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
-      $rootScope.songUrl=$scope.songs[0].src;
-      
+      $rootScope.songURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
+      //$rootScope.songUrl=$scope.songs[0].src;
+
       //again hardcoded but sohuld be from user selected
       $rootScope.difficultyLevel = [96, 100];
-      playMidi();
+      downloadMidi();
       $state.go('main.waitingPlayersHost');
 
     };
@@ -68,7 +68,13 @@ angular.module('webrtcTestApp')
 
 
     $scope.joinGame=function(joinModel){
-      $rootScope.telScaleWebRTCPhoneController.call(joinModel.contact);
+
+      $rootScope.remotePlayerName = joinModel.contact;
+
+      var joinMsg = {playerId: $rootScope.localPlayerName};
+      $log.debug('Sending joinMsg', joinMsg);
+      $rootScope.telScaleWebRTCPhoneController.sendOfflineMessage(joinModel.contact, JSON.stringify(joinMsg));
+
       $state.go('main.connectingToHost');      
     };
 

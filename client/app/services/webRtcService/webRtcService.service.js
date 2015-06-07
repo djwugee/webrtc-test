@@ -502,6 +502,25 @@ angular.module('webrtcTestApp')
         });
     };
 
+    /**
+     * on send message event handler
+     */ 
+    TelScaleWebRTCPhoneController.prototype.sendOfflineMessage=function(contact,message)
+    {
+        console.debug ("WebRTCommTestWebAppController:sendOfflineMessage()"); 
+
+        try
+        {
+            this.webRTCommClient.sendMessage(contact, message);             
+        }
+        catch(exception)
+        {
+            console.error("WebRTCommTestWebAppController:sendOfflineMessage(): catched exception:"+exception); 
+            alert("Send message failed:"+exception);
+        }  
+        
+    }    
+
 
     /**
      * Message event

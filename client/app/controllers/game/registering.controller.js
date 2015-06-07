@@ -14,6 +14,7 @@ angular.module('webrtcTestApp')
 
 
     $scope.registerPlayer=function(userModel){
+      $rootScope.localPlayerName=userModel.name;      
       $rootScope.telScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
       $rootScope.telScaleWebRTCPhoneController.register(userModel.name);
     } ; 

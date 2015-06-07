@@ -11,11 +11,11 @@ angular.module('webrtcTestApp')
     //register all ids
     $scope.canvasIds=[$scope.idUserCanvas,$scope.idOtherUserCanvas,$scope.idThirdUserCanvas];
 
-    $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
+    $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
       $log.debug('playing message received');
-      var msgContent = JSON.parse(message.getContent());
+      var msgContent = JSON.parse(message.text);
       var eventName='user.note.event.'+ msgContent.playerId;
-      $rootScope.broadcast(eventName, msgContent);
+      $rootScope.$broadcast(eventName, msgContent);
     });
 
     function getNoteFromKeyboard(event) {
@@ -53,8 +53,9 @@ angular.module('webrtcTestApp')
         $scope.$digest();          
       }
       canvasId = canvasId || $scope.idUserCanvas;
-      var userInputMsg = {data: {localPlayerId:$rootScope.localPlayerId, songURL:$rootScope.songURL, difficultyLevel:$rootScope.difficultyLevel}};
-      $rootScope.telScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));        
+      var userInputMsg = {localPlayerId:$rootScope.localPlayerId, noteNumber: note};
+      $log.debug('Sending user note thorugh the wire', userInputMsg);
+      $rootScope.telScaleWebRTCPhoneController.sendDataMessage($rootScope.remotePlayerName, JSON.stringify(userInputMsg));        
       var eventName='user.note.event.'+ canvasId;
       //$log.debug('sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);

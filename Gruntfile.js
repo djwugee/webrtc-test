@@ -58,7 +58,7 @@ module.exports = function (grunt) {
     options: {
       mangle: false,
       compress: false,
-      beautify: false
+      beautify: true
     }},
     watch: {
       injectJS: {
