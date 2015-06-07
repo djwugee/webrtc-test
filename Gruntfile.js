@@ -58,7 +58,7 @@ module.exports = function (grunt) {
     options: {
       mangle: false,
       compress: false,
-      beautify: false
+      beautify: true
     }},
     watch: {
       injectJS: {
@@ -260,6 +260,8 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.client %>/index.html'],
       options: {
         dest: '<%= yeoman.dist %>/public'
+        //,flow: { steps: { js: ['concat', 'uglify'], css: ['concat', 'cssmin'] }, post: {} } // XXX quitar esto XXX
+        //,flow: {          js:{             steps: ['concat']          }          , post: {}         } // XXX quitar esto XXX
       }
     },
 
