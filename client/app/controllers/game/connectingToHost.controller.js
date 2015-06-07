@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('ConnectingToHostCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
+  .controller('ConnectingToHostCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
       $rootScope.$on('playmyband.webrtc.call.opened',function(event){
         $log.debug('connected to main game, wait for start session message', event);

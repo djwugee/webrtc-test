@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('PlayingCtrl', function ($rootScope,$scope,$log,midiService,$http,$audioService,$synthService,$replayerService) {
+  .controller('PlayingCtrl', function ($rootScope,$scope,$log,$http,$audioService,$synthService,$replayerService) {
     $scope.globalScore = 0;
     $log.info('Loading canvas controller');
 

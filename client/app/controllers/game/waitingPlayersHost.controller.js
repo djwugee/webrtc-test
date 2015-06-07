@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('WaitingPlayersHostCtrl', function ($rootScope,$scope,$log,midiService,$http,$state) {
+  .controller('WaitingPlayersHostCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
   	$scope.rootScope = $rootScope;
 
