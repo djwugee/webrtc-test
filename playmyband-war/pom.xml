@@ -23,7 +23,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <webResources>
                         <resource>
-                            <directory>C:\dev\webrtc-test\dist\public</directory>
+                            <directory>..\dist\public</directory>
                             <filtering>true</filtering>
                         </resource>
                         <resource>
