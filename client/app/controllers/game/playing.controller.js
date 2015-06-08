@@ -46,16 +46,16 @@ angular.module('webrtcTestApp')
     }
 
     function sendUserNote(note, canvasId){
-      var accumulatedNoteDelta = window.performance.now() - $rootScope.playingStartTimestamp;      
-      if ($rootScope.replayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
+      var accumulatedNoteDelta = window.performance.now() - $scope.$parent.playingStartTimestamp;      
+      if ($scope.$parent.replayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
       {
         $scope.globalScore = $scope.globalScore + 1;
         $scope.$digest();          
       }
       canvasId = canvasId || $scope.idUserCanvas;
-      var userInputMsg = {localPlayerId:$rootScope.localPlayerId, noteNumber: note};
+      var userInputMsg = {localPlayerId:$scope.$parent.localPlayerId, noteNumber: note};
       $log.debug('Sending user note thorugh the wire', userInputMsg);
-      $rootScope.telScaleWebRTCPhoneController.sendDataMessage($rootScope.remotePlayerName, JSON.stringify(userInputMsg));        
+      $scope.$parent.telScaleWebRTCPhoneController.sendDataMessage($scope.$parent.remotePlayerName, JSON.stringify(userInputMsg));        
       var eventName='user.note.event.'+ canvasId;
       //$log.debug('sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
@@ -68,8 +68,9 @@ angular.module('webrtcTestApp')
 
     }
 
-    function sendNote(noteEvent){
-      var normalizedNote = noteEvent.event.noteNumber - $rootScope.difficultyLevel[0];
+
+    $rootScope.$on('playmyband.midi.noteEvent',function(event, noteEvent){
+      var normalizedNote = noteEvent.event.noteNumber - $scope.$parent.difficultyLevel[0];
       noteEvent.event.noteNumber = normalizedNote;
 
 
@@ -83,32 +84,20 @@ angular.module('webrtcTestApp')
 
       }
 
-    }
-    $rootScope.sendNote = sendNote;
-
-    /* NOT USED
-      function cancelEvent(e){
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    */
-
-    $scope.startDemo=function(){
-
-    };        
+    });        
 
     function playMidi() {
-      $rootScope.synth = new $synthService.FretsSynth(44100);
-      $rootScope.replayer = new $replayerService.Replayer($rootScope.midiFile, $rootScope.synth, $rootScope);
-      $rootScope.audio = new $audioService.AudioPlayer($rootScope.replayer);
+      $scope.$parent.synth = new $synthService.FretsSynth(44100);
+      $scope.$parent.replayer = new $replayerService.Replayer($scope.$parent.midiFile, $scope.$parent.synth);
+      $scope.$parent.audio = new $audioService.AudioPlayer($scope.$parent.replayer);
       
 
       //start the sound later, this must be sync with midi and note rendering
       setTimeout(function(){
-        $rootScope.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
-        $rootScope.songAudio.play();
-        $rootScope.playingStartTimestamp = window.performance.now();
-        },$rootScope.secondsInAdvance * 1000);  
+        $scope.$parent.songAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
+        $scope.$parent.songAudio.play();
+        $scope.$parent.playingStartTimestamp = window.performance.now();
+        },$scope.$parent.secondsInAdvance * 1000);  
     }
 
     playMidi();

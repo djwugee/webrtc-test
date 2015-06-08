@@ -1,10 +1,10 @@
 'use strict';
 (function (angular){
   angular.module('webrtcTestApp')
-    .service('$replayerService', function () {
+    .service('$replayerService', function ($rootScope, $synthService) {
       // AngularJS will instantiate a singleton by calling 'new' on this function
 
-      function Replayer(midiFile, synth, rootScope, $synthService) {
+      function Replayer(midiFile, synth) {
         var trackStates = [];
         var trackAccumulatedDelta = [{noteNumber:0,total:0,track:0}];
         var beatsPerMinute = 120;
@@ -35,7 +35,7 @@
               generatorsByNote[noteEvent.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
             }
             //console.log('playing note' + note);
-            rootScope.sendNote(noteEvent);
+            $rootScope.$broadcast('playmyband.midi.noteEvent',noteEvent);
             var generator = currentProgram.createNote(noteEvent.noteNumber, noteEvent.velocity);
             synth.addGenerator(generator);
             generatorsByNote[noteEvent.noteNumber] = generator;
@@ -45,11 +45,9 @@
               generatorsByNote[noteEvent.noteNumber].noteOff(noteEvent.velocity);
             }
           }
-          /* NOT USED
             function setProgram(programNumber) {
               currentProgram = $synthService.PianoProgram; // TODO --> custom programs PROGRAMS[programNumber] || $synthService.PianoProgram;
             }
-          */
           
           return {
             'noteOn': noteOn,
@@ -102,7 +100,7 @@
             var secondsToNextEvent = beatsToNextEvent / (beatsPerMinute / 60);
             if (typeof(nextEvent.noteNumber) !== 'undefined')
             {
-              console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
+              //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
               var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + (secondsToNextEvent * 1000);
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
             }

@@ -5,7 +5,7 @@ angular.module('webrtcTestApp')
 
   	$rootScope.$on('playmyband.webrtc.message.received',function(event, message){
         $log.debug('start game message received');
-        $rootScope.$broadcast('playmyband.gameStarted', message);
+        $rootScope.$broadcast('playmyband.gameStarted', JSON.parse(message.text));
       });  
     
 	  $rootScope.$on('playmyband.gameStarted',function(event, message){

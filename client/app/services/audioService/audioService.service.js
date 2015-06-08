@@ -26,7 +26,6 @@ angular.module('webrtcTestApp')
         
         node.onaudioprocess = function(e) { process(e); };
 
-        /* NOT USED
         function process(e) {
           if (generator.finished) {
             node.disconnect();
@@ -44,7 +43,6 @@ angular.module('webrtcTestApp')
           }
         }
 
-        */
         
         //we don't want to hear the midi, just to lead the notes in canvas
         var gainNode = context.createGain();

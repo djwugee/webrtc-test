@@ -15,7 +15,7 @@ angular.module('webrtcTestApp')
         $log.debug('downloading midi file');
 
         // do the get request with response type 'blobl' 
-        $http.get($rootScope.songURL,{responseType: 'blob'}).
+        $http.get($scope.$parent.songURL,{responseType: 'blob'}).
           // success(function(data, status, headers, config) {
           success(function(data) {
             // this callback will be called asynchronously
@@ -28,7 +28,8 @@ angular.module('webrtcTestApp')
             var reader = new FileReader();
             reader.onload = function(event) {
               var contents = event.target.result; 
-              $rootScope.midiFile = new $midiService.MidiFile(contents, $rootScope.difficultyLevel);
+              $scope.$parent.midiFile = new $midiService.MidiFile(contents, $scope.$parent.difficultyLevel);
+              $state.go('main.waitingPlayers');
             };
 
             
@@ -39,7 +40,7 @@ angular.module('webrtcTestApp')
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-            $log.debug('loading demo from $http KO',$rootScope.songURL,data,status,headers,config);
+            $log.debug('loading demo from $http KO',$scope.$parent.songURL,data,status,headers,config);
           });      
     }
 
@@ -47,11 +48,10 @@ angular.module('webrtcTestApp')
 
       $rootScope.$on('playmyband.connected',function(event, message){
         $log.debug('connected to main game as player...',message);
-        $rootScope.localPlayerId=message.playerId;
-        $rootScope.songURL = message.songURL;
-  		  $rootScope.difficultyLevel = message.difficultyLevel;
+        $scope.$parent.localPlayerId=message.playerId;
+        $scope.$parent.songURL = message.songURL;
+  		  $scope.$parent.difficultyLevel = message.difficultyLevel;
         downloadMidi();
-        $state.go('main.waitingPlayers');
       });
 
   });

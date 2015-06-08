@@ -97,7 +97,7 @@
             */
 
           $rootScope.$on(midiEventName,function(event, noteEvent){
-            $log.debug('new midi note event',event,noteEvent);
+            //$log.debug('new midi note event',event,noteEvent);
             if(noteEvent.event.noteNumber>=0 && noteEvent.event.noteNumber <=4){
               _this.createMidiNote(noteEvent.event.noteNumber);
               //_this.releaseUserNote(note);
@@ -280,7 +280,9 @@
           var ctx=canvas.getContext('2d');
           var animationStartTime = 0;
           var msInASecond = 1000;
-          var msInadvance = $rootScope.secondsInAdvance * msInASecond;
+
+          //var msInadvance = $scope.$parent.$parent.$parent.$parent.secondsInAdvance * msInASecond;
+          var msInadvance = 10 * msInASecond;          
           //remove this duplicate calculation
           var horizontalUserCoord=(canvas.height/ 4) * 3;
 
