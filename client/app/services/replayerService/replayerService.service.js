@@ -24,7 +24,7 @@
             };
         }
         
-        function Channel() {
+        function Channel($synthService) {
           
           var generatorsByNote = {};
           var currentProgram = $synthService.PianoProgram; // NOT USED
