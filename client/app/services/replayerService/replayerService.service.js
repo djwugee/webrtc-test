@@ -1,10 +1,10 @@
 'use strict';
 (function (angular){
   angular.module('webrtcTestApp')
-    .service('$replayerService', function () {
+    .service('$replayerService', function ($synthService) {
       // AngularJS will instantiate a singleton by calling 'new' on this function
 
-      function Replayer(midiFile, synth, rootScope, $synthService) {
+      function Replayer(midiFile, synth, rootScope) {
         var trackStates = [];
         var trackAccumulatedDelta = [{noteNumber:0,total:0,track:0}];
         var beatsPerMinute = 120;
@@ -24,7 +24,7 @@
             };
         }
         
-        function Channel($synthService) {
+        function Channel() {
           
           var generatorsByNote = {};
           var currentProgram = $synthService.PianoProgram; // NOT USED
