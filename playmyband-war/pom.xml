@@ -29,6 +29,7 @@
                             <directory>..\dist\public</directory>
                             <includes>
                                     <include>index.html</include>
+                                    <include>index.htm</include>                                    
                             </includes>
                             <filtering>true</filtering>
                         </resource>
@@ -36,6 +37,7 @@
                             <directory>..\dist\public</directory>
                             <excludes>
                                     <exclude>index.html</exclude>
+                                    <exclude>index.htm</exclude>                                    
                             </excludes>
                             
                             <filtering>false</filtering>
