@@ -25,8 +25,8 @@ angular.module('webrtcTestApp')
       return self;
     }
 
-    /* NOT USED
 
+/** NOT USED
       function SquareGenerator(freq, phase) {
         var self = {'alive': true};
         var period = sampleRate / freq;
@@ -44,7 +44,7 @@ angular.module('webrtcTestApp')
         return self;
       }
 
-    */
+      **/
 
     function ADSRGenerator(child, attackAmplitude, sustainAmplitude, attackTimeS, decayTimeS, releaseTimeS) {
       var self = {'alive': true};

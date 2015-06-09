@@ -3,13 +3,21 @@
 angular.module('webrtcTestApp')
   .controller('WaitingPlayersCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
-  	$rootScope.$on('playmyband.webrtc.data.message.received',function(){
-        $log.debug('start game message received');
-        $rootScope.broadcast('playmyband.gameStarted');
-      });  
-    
-	  $rootScope.$on('playmyband.gameStarted',function(event){
-	    $log.debug('game started...',event);
-	    $state.go('main.playing');
-	  });
+
+      $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
+        if ($state.is('main.waitingPlayers')) {
+          $log.debug('message received', message);
+          var msgContent = JSON.parse(message.text);
+          if (msgContent.eventType && msgContent.eventType === 'startGame')
+          {
+            $log.debug('start game message received');
+            $state.go('main.playing');
+          } else {
+            $log.debug('another party joined');
+            $scope.$players= message.players;
+            $scope.$digest();
+          }
+        }
+      });
+
   });

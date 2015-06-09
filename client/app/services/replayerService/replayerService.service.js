@@ -1,10 +1,10 @@
 'use strict';
 (function (angular){
   angular.module('webrtcTestApp')
-    .service('$replayerService', function ($synthService) {
+    .service('$replayerService', function ($rootScope, $synthService) {
       // AngularJS will instantiate a singleton by calling 'new' on this function
 
-      function Replayer(midiFile, synth, rootScope) {
+      function Replayer(midiFile, synth) {
         var trackStates = [];
         var trackAccumulatedDelta = [{noteNumber:0,total:0,track:0}];
         var beatsPerMinute = 120;
@@ -35,7 +35,7 @@
               generatorsByNote[noteEvent.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
             }
             //console.log('playing note' + note);
-            rootScope.sendNote(noteEvent);
+            $rootScope.$broadcast('playmyband.midi.noteEvent',noteEvent);
             var generator = currentProgram.createNote(noteEvent.noteNumber, noteEvent.velocity);
             synth.addGenerator(generator);
             generatorsByNote[noteEvent.noteNumber] = generator;
@@ -45,13 +45,13 @@
               generatorsByNote[noteEvent.noteNumber].noteOff(noteEvent.velocity);
             }
           }
-          /* NOT USED
             function setProgram(programNumber) {
+              console.debug(programNumber);
               currentProgram = $synthService.PianoProgram; // TODO --> custom programs PROGRAMS[programNumber] || $synthService.PianoProgram;
             }
-          */
           
           return {
+            'setProgram': setProgram,
             'noteOn': noteOn,
             'noteOff': noteOff
           };
@@ -102,7 +102,7 @@
             var secondsToNextEvent = beatsToNextEvent / (beatsPerMinute / 60);
             if (typeof(nextEvent.noteNumber) !== 'undefined')
             {
-              console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
+              //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
               var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + (secondsToNextEvent * 1000);
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
             }
@@ -181,9 +181,12 @@
         function isANoteThere(noteNumber, accumulatedDelta, marginOfError, track)
         {
           var isThere = false;
-          for (var i = 0; i < trackAccumulatedDelta.length; i++) {
+          var i = trackAccumulatedDelta.length;
+          //start from the back, where more recent notes should match
+          while (i--) {
+          //for (var i = 0; i < trackAccumulatedDelta.length; i++) {
             var userNoteDif = Math.abs(trackAccumulatedDelta[i].total - accumulatedDelta);
-            console.debug('UserNoteDif:' + userNoteDif);
+            //console.debug('UserNoteDif:' + userNoteDif);
             if ( trackAccumulatedDelta[i].track === track &&
               trackAccumulatedDelta[i].noteNumber === noteNumber && 
               userNoteDif <= marginOfError) {
@@ -191,6 +194,9 @@
               break;
             } else if (userNoteDif > 10000) {
               //remove accumulated, no longer required. reduces comparisons on next note
+              //trackAccumulatedDelta.splice(i,1);
+              //by now just stop
+              break;
             }
           }
           return isThere;
