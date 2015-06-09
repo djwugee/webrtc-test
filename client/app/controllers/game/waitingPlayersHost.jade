@@ -1,5 +1,5 @@
 .col-md-12()
-	h1.page-header WaitingPlayers({{$parent.players}}), Press start to start the game...
+	h1.page-header WaitingPlayers({{$rootScope.pMBplayers}}), Press start to start the game...
 	div.col-lg-4()
 		form(id="selectSongForm")
 			input(id="startGameSubmit" type="submit" ng-click="startGame()" value="StartGame")

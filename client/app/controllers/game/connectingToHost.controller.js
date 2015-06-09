@@ -49,7 +49,7 @@ angular.module('webrtcTestApp')
       $rootScope.$on('playmyband.connected',function(event, message){
         $log.debug('connected to main game as player...',message);
         $rootScope.pMBlocalPlayerId=message.players.indexOf($rootScope.pMBlocalPlayerName) + 1;
-        $scope.$players= message.players;
+        $rootScope.pMBplayers= message.players;
         $rootScope.pMBsongURL = message.songURL;
   		  $rootScope.pMBdifficultyLevel = message.difficultyLevel;
         downloadMidi();      

@@ -181,9 +181,12 @@
         function isANoteThere(noteNumber, accumulatedDelta, marginOfError, track)
         {
           var isThere = false;
-          for (var i = 0; i < trackAccumulatedDelta.length; i++) {
+          var i = trackAccumulatedDelta.length;
+          //start from the back, where more recent notes should match
+          while (i--) {
+          //for (var i = 0; i < trackAccumulatedDelta.length; i++) {
             var userNoteDif = Math.abs(trackAccumulatedDelta[i].total - accumulatedDelta);
-            console.debug('UserNoteDif:' + userNoteDif);
+            //console.debug('UserNoteDif:' + userNoteDif);
             if ( trackAccumulatedDelta[i].track === track &&
               trackAccumulatedDelta[i].noteNumber === noteNumber && 
               userNoteDif <= marginOfError) {
@@ -191,6 +194,9 @@
               break;
             } else if (userNoteDif > 10000) {
               //remove accumulated, no longer required. reduces comparisons on next note
+              //trackAccumulatedDelta.splice(i,1);
+              //by now just stop
+              break;
             }
           }
           return isThere;

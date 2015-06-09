@@ -51,7 +51,7 @@ angular.module('webrtcTestApp')
 
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, 1))
+          if ($rootScope.pMBreplayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, $rootScope.pMBlocalPlayerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
@@ -71,7 +71,7 @@ angular.module('webrtcTestApp')
     }
 
     function sendUserNoteRelease(note){
-      var eventName='playmyband.canvas.usernote.instrument' + $rootScope.pMBlocalPlayerId;
+      var eventName='playmyband.canvas.usernoterelease.instrument' + $rootScope.pMBlocalPlayerId;
       //$log.debug('sending release note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
 

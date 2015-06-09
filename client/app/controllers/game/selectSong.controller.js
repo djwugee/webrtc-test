@@ -53,7 +53,7 @@ angular.module('webrtcTestApp')
     //$scope.selectSong=function(selectSongModel){ NOT USED
     $scope.selectSong=function(){
       //im host,so im the first player, position relates to instrument and canvas
-      $scope.localPlayerId = 0;
+      $rootScope.pMBlocalPlayerId = 1;
       $rootScope.pMBplayers.push($rootScope.pMBlocalPlayerName);  
       //this should come from the user selection, hardcoded now for testing
 
