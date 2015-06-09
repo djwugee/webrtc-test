@@ -233,7 +233,7 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       target: {
-        src: '<%= yeoman.client %>/index.html',
+        src: ['<%= yeoman.client %>/index.html','<%= yeoman.client %>/index.htm'],
         ignorePath: '<%= yeoman.client %>/',
         exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/', /bootstrap.css/, /font-awesome.css/ ]
       }
@@ -257,7 +257,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: ['<%= yeoman.client %>/index.html'],
+      html: ['<%= yeoman.client %>/index.html','<%= yeoman.client %>/index.htm'],
       options: {
         dest: '<%= yeoman.dist %>/public'
         //,flow: { steps: { js: ['concat', 'uglify'], css: ['concat', 'cssmin'] }, post: {} } // XXX quitar esto XXX
@@ -267,7 +267,7 @@ module.exports = function (grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
-      html: ['<%= yeoman.dist %>/public/{,*/}*.html'],
+      html: ['<%= yeoman.dist %>/public/{,*/}*.html','<%= yeoman.dist %>/public/{,*/}*.htm'],
       css: ['<%= yeoman.dist %>/public/{,*/}*.css'],
       js: ['<%= yeoman.dist %>/public/{,*/}*.js'],
       options: {
@@ -371,7 +371,8 @@ module.exports = function (grunt) {
             'assets/fonts/**/*',
             'assets/midi/**/*',
             'externalScripts/**/*',
-            'index.html'
+            'index.html',
+            'index.htm'
           ]
         }, {
           expand: true,
@@ -534,14 +535,20 @@ module.exports = function (grunt) {
           starttag: '<!-- injector:js -->',
           endtag: '<!-- endinjector -->'
         },
-        files: {
+        files: [{
           '<%= yeoman.client %>/index.html': [
               ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
                '!{.tmp,<%= yeoman.client %>}/app/app.js',
                '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
                '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
+            ],
+          '<%= yeoman.client %>/index.htm': [
+              ['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+               '!{.tmp,<%= yeoman.client %>}/app/app.js',
+               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
+               '!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js']
             ]
-        }
+        }]
       },
 
       // Inject component scss into app.scss
@@ -574,11 +581,18 @@ module.exports = function (grunt) {
           starttag: '<!-- injector:css -->',
           endtag: '<!-- endinjector -->'
         },
-        files: {
+        files: [{
           '<%= yeoman.client %>/index.html': [
             '<%= yeoman.client %>/{app,components}/**/*.css'
-          ]
-        }
+            ]
+          },
+          {
+            '<%= yeoman.client %>/index.html': [
+              '<%= yeoman.client %>/{app,components}/**/*.css'
+            ]
+          }
+        ]
+
       }
     },
   });
