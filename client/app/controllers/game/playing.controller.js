@@ -12,6 +12,14 @@ angular.module('webrtcTestApp')
     $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
       $log.debug('playing message received');
       var msgContent = JSON.parse(message.text);
+      //calculate score async to prevent canvas to be interrupted
+      setTimeout(function(){
+          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + 96,msgContent.delta, 100, msgContent.playerId))
+          {
+            $scope.globalScore = $scope.globalScore + 1;
+            $scope.$digest();          
+          }
+        },10);      
       var eventName='playmyband.canvas.usernote.instrument'+ msgContent.playerId;
       $rootScope.$broadcast(eventName, msgContent);
     });
@@ -58,7 +66,7 @@ angular.module('webrtcTestApp')
           }
         },10); 
 
-      var userInputMsg = {localPlayerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta};
+      var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta};
       $log.debug('Sending user note thorugh the wire', userInputMsg);
       setTimeout(function(){
         $rootScope.pMBplayers.forEach(function(entry) {
