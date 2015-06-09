@@ -507,19 +507,21 @@ angular.module('webrtcTestApp')
      */ 
     TelScaleWebRTCPhoneController.prototype.sendOfflineMessage=function(contact,message)
     {
-        console.debug ("WebRTCommTestWebAppController:sendOfflineMessage()"); 
+        console.debug ('WebRTCommTestWebAppController:sendOfflineMessage()'); 
 
         try
         {
+          //do not send messages to yourself
+          if (contact !== this.webRTCommClientConfiguration.sip.sipUserName) {
             this.webRTCommClient.sendMessage(contact, message);             
+          }
         }
         catch(exception)
         {
-            console.error("WebRTCommTestWebAppController:sendOfflineMessage(): catched exception:"+exception); 
-            alert("Send message failed:"+exception);
+            console.error('WebRTCommTestWebAppController:sendOfflineMessage(): catched exception:'+exception); 
         }  
         
-    }    
+    };   
 
 
     /**

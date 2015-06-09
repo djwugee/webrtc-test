@@ -4,20 +4,26 @@ angular.module('webrtcTestApp')
   .controller('WaitingPlayersHostCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
     $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
+      if ($state.is('main.waitingPlayersHost')) {
       $log.debug('Received joinMsg:', message);
       var joinMsg = JSON.parse(message.text);
-      $scope.$parent.remotePlayerName = joinMsg.playerId;
+      $rootScope.pMBplayers.push(joinMsg.playerId);
       $scope.$digest();
-      //send session init message so player may prepare song
-      var sessionInitMsg = {playerId:2, songURL:$scope.$parent.songURL, difficultyLevel:$scope.$parent.difficultyLevel};
-      $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
-      $scope.$parent.telScaleWebRTCPhoneController.sendOfflineMessage(joinMsg.playerId, JSON.stringify(sessionInitMsg));
+      //send session init message so player may prepare song, send every time one player joins
+      $rootScope.pMBplayers.forEach(function(entry) {
+          var sessionInitMsg = {players:$rootScope.pMBplayers, songURL:$rootScope.pMBsongURL, difficultyLevel:$rootScope.pMBdifficultyLevel};
+          $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
+          $rootScope.pMBtelScaleWebRTCPhoneController.sendOfflineMessage(entry, JSON.stringify(sessionInitMsg));
+      });     
+      } 
     });  
 
     $scope.startGame=function(){
-      var startGameMsg = {data: 'startGame'};
+      var startGameMsg = {eventType: 'startGame'};
       $log.debug('Sending starGamemsg', startGameMsg);
-      $scope.$parent.telScaleWebRTCPhoneController.sendOfflineMessage($scope.$parent.remotePlayerName, JSON.stringify(startGameMsg));      
+      $rootScope.pMBplayers.forEach(function(entry) {
+        $rootScope.pMBtelScaleWebRTCPhoneController.sendOfflineMessage(entry, JSON.stringify(startGameMsg));      
+      });
       $state.go('main.playing');
     };
   });

@@ -14,9 +14,10 @@ angular.module('webrtcTestApp')
 
 
     $scope.registerPlayer=function(userModel){
-      $scope.$parent.localPlayerName=userModel.name;      
-      $scope.$parent.telScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
-      $scope.$parent.telScaleWebRTCPhoneController.register(userModel.name);
+      $rootScope.pMBlocalPlayerName=userModel.name;
+      $rootScope.pMBplayers= [];      
+      $rootScope.pMBtelScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
+      $rootScope.pMBtelScaleWebRTCPhoneController.register(userModel.name);
     } ; 
 
   });

@@ -64,9 +64,9 @@
           /**
             * capture a note (keyboard) event
            */
-          var eventName='user.note.event.'+$scope.canvasId;
-          var releaseEventName='user.note.release.event.'+$scope.canvasId;
-          var midiEventName='midi.note.event.'+$scope.canvasId;
+          var eventName='playmyband.canvas.usernote.'+$scope.canvasId;
+          var releaseEventName='playmyband.canvas.usernoterelease.'+$scope.canvasId;
+          var midiEventName='playmyband.canvas.midinote.'+$scope.canvasId;
           $log.debug('Register user note events for '+eventName);
           var _this=this;
 
@@ -281,7 +281,7 @@
           var animationStartTime = 0;
           var msInASecond = 1000;
 
-          //var msInadvance = $scope.$parent.$parent.$parent.$parent.secondsInAdvance * msInASecond;
+          //var msInadvance = $rootScope.pMB$parent.$parent.$parent.secondsInAdvance * msInASecond;
           var msInadvance = 10 * msInASecond;          
           //remove this duplicate calculation
           var horizontalUserCoord=(canvas.height/ 4) * 3;

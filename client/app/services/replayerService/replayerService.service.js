@@ -46,10 +46,12 @@
             }
           }
             function setProgram(programNumber) {
+              console.debug(programNumber);
               currentProgram = $synthService.PianoProgram; // TODO --> custom programs PROGRAMS[programNumber] || $synthService.PianoProgram;
             }
           
           return {
+            'setProgram': setProgram,
             'noteOn': noteOn,
             'noteOff': noteOff
           };

@@ -23,8 +23,7 @@ angular.module('webrtcTestApp')
         var bufferSize = 4096*4; // Higher for less gitches, lower for less latency
         
         var node = context.createScriptProcessor(bufferSize, 0, channelCount);
-        
-        node.onaudioprocess = function(e) { process(e); };
+
 
         function process(e) {
           if (generator.finished) {
@@ -43,7 +42,8 @@ angular.module('webrtcTestApp')
           }
         }
 
-        
+        node.onaudioprocess = function(e) { process(e); };
+
         //we don't want to hear the midi, just to lead the notes in canvas
         var gainNode = context.createGain();
         gainNode.gain.value = 0;

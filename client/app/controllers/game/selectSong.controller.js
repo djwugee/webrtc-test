@@ -3,7 +3,7 @@
 angular.module('webrtcTestApp')
   .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService) {
     //number of seconds in advance the notes are rendered in canvas
-    $scope.$parent.secondsInAdvance = 10;
+    $rootScope.pMBsecondsInAdvance = 10;
 
     $scope.songs=[
       {
@@ -21,7 +21,7 @@ angular.module('webrtcTestApp')
         $log.debug('downloading midi file');
 
         // do the get request with response type 'blobl' 
-        $http.get($scope.$parent.songURL,{responseType: 'blob'}).
+        $http.get($rootScope.pMBsongURL,{responseType: 'blob'}).
           // success(function(data, status, headers, config) {
           success(function(data) {
             // this callback will be called asynchronously
@@ -34,7 +34,7 @@ angular.module('webrtcTestApp')
             var reader = new FileReader();
             reader.onload = function(event) {
               var contents = event.target.result; 
-              $scope.$parent.midiFile = new $midiService.MidiFile(contents, $scope.$parent.difficultyLevel);
+              $rootScope.pMBmidiFile = new $midiService.MidiFile(contents, $rootScope.pMBdifficultyLevel);
               $state.go('main.waitingPlayersHost');              
             };
 
@@ -46,21 +46,22 @@ angular.module('webrtcTestApp')
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-            $log.debug('loading demo from $http KO',$scope.$parent.songURL,data,status,headers,config);
+            $log.debug('loading demo from $http KO',$rootScope.pMBsongURL,data,status,headers,config);
           });      
     }
 
     //$scope.selectSong=function(selectSongModel){ NOT USED
     $scope.selectSong=function(){
-      //first user, this is related to instrument in song, but hardcoded now.
-      $scope.$parent.localPlayerId=1;
+      //im host,so im the first player, position relates to instrument and canvas
+      $scope.localPlayerId = 0;
+      $rootScope.pMBplayers.push($rootScope.pMBlocalPlayerName);  
       //this should come from the user selection, hardcoded now for testing
 
-      $scope.$parent.songURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
+      $rootScope.pMBsongURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
       //$rootScope.songUrl=$scope.songs[0].src;
 
       //again hardcoded but sohuld be from user selected
-      $scope.$parent.difficultyLevel = [96, 100];
+      $rootScope.pMBdifficultyLevel = [96, 100];
       downloadMidi();
       
 
@@ -70,12 +71,11 @@ angular.module('webrtcTestApp')
 
     $scope.joinGame=function(joinModel){
 
-      $scope.$parent.remotePlayerName = joinModel.contact;
+      $rootScope.pMBremotePlayerName = joinModel.contact;
 
-      var joinMsg = {playerId: $scope.$parent.localPlayerName};
+      var joinMsg = {playerId: $rootScope.pMBlocalPlayerName};
       $log.debug('Sending joinMsg', joinMsg);
-      $scope.$parent.telScaleWebRTCPhoneController.sendOfflineMessage(joinModel.contact, JSON.stringify(joinMsg));
-
+      $rootScope.pMBtelScaleWebRTCPhoneController.sendOfflineMessage(joinModel.contact, JSON.stringify(joinMsg));
       $state.go('main.connectingToHost');      
     };
 
