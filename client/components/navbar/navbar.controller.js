@@ -9,7 +9,12 @@ angular.module('webrtcTestApp')
     {
       'title': 'Game',
       'link': '#/game'
+    },
+    { 
+      'title': 'Demo',
+      'link': '#/demo'
     }
+
     ];
 
     $scope.isCollapsed = true;

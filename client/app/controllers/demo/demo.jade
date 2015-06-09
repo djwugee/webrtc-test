@@ -1,0 +1,10 @@
+.col-md-12
+    h2(ng-show="midiFile===null && error===null") Loading midi midiFile
+    div(ng-show="pMBmidiFile===null && error!==null")
+      h2(ng-bind="error")
+      pre errorData:{{errorData | json}}
+    div(ng-show="pMBmidiFile!==null")
+        h2(ng-show="pMBmidiFile!==null") Midi file loaded OK 
+        input(id="continue",type="button", ng-click="continue()", value="Start")
+.col-md-12(style="margin-top:2em")
+  pre pMBmidiFile:{{pMBmidiFile | json}}

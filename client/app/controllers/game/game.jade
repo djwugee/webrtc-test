@@ -1,0 +1,8 @@
+// var divStyle='text-align:center;border:1px dashed red;'; 
+- var divStyle=''; 
+.col-md-12
+    // in index.html there is a global var with demo=true
+    h1.page-header(ng-show="!demo") LET's PLAY
+    h1.page-header(ng-show="demo",style="color:firebrick;") IN DEMO MODE
+    h2(ng-show="user" ng-cloak="") Hello {{user.name}}
+    .col-md-12(ui-view="")

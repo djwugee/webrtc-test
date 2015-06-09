@@ -2,7 +2,7 @@
 /*jslint bitwise: true */
 
 angular.module('webrtcTestApp')
-  .service('$midiService', function ($streamService) {
+  .service('$midiService', function ($streamService,$q,$log,$http) {
     // AngularJS will instantiate a singleton by calling 'new' on this function
 
     function MidiFile(data) { // octaveRangeInclude --> no se utiliza lo quito
@@ -250,15 +250,59 @@ angular.module('webrtcTestApp')
           //console.log(event);
         }
       }
-    
+
     return {
       'header': header,
       'tracks': tracks
     };
   }
 
+  function downloadMidi(songURL,difficultyLevel){
+    //return a promise      
+    return $q(function(resolve,reject){
+      $log.debug('$midiService - download midi file promise');
+
+      // do the get request with response type 'blobl' 
+      $http.get(songURL,{responseType: 'blob'}).
+        // success(function(data, status, headers, config) {
+        success(function(data) {
+          // this callback will be called asynchronously
+          // when the response is available
+          $log.debug('$midiService - loading midi from $http OK');
+          $log.debug('$midiService - data type: '+typeof data);
+          $log.debug('$midiService - data.byteLength '+data.byteLength);
+
+          //create a file from arraybuffer
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var contents = event.target.result; 
+            $log.debug('$midiService - midi promise OK!!');
+            var midiFile = new MidiFile(contents, difficultyLevel);
+            $log.debug('$midiService - resolving promise');
+            resolve(midiFile);
+
+          };
+
+          
+          reader.readAsBinaryString(data);
+
+
+        }).
+        error(function(data, status, headers, config) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+          $log.debug('$midiService - loading demo from $http KO',data,status,headers,config);
+          reject(data, status, headers, config);
+        });      
+
+      });
+
+  }
+
   return {
-    MidiFile:MidiFile
+    MidiFile:MidiFile,
+    'downloadMidi':downloadMidi
+
   };
 
 });
