@@ -2,7 +2,7 @@
 	h1.page-header Select a Song...
 	div.col-lg-4()
 		form(id="selectSongForm")
-			select(ng-model='selectSong.songs')
+			select(ng-model='selectSong.songs' ng-options='song.src as song.label for song in songs')
 			select(ng-model='selectSong.difficulty')
 				option(value="1") Easy
 				option(value="2") Medium
