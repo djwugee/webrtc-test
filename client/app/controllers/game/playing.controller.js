@@ -9,21 +9,6 @@ angular.module('webrtcTestApp')
     $scope.instrument2='instrument2';
     $scope.instrument3='instrument3';
 
-    $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
-      $log.debug('playing message received');
-      var msgContent = JSON.parse(message.text);
-      //calculate score async to prevent canvas to be interrupted
-      setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + 96,msgContent.delta, 100, msgContent.playerId))
-          {
-            $scope.globalScore = $scope.globalScore + 1;
-            $scope.$digest();          
-          }
-        },10);      
-      var eventName='playmyband.canvas.usernote.instrument'+ msgContent.playerId;
-      $rootScope.$broadcast(eventName, msgContent);
-    });
-
     $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
       $log.debug('playing message received');
       var msgContent = JSON.parse(message.content);
@@ -84,9 +69,7 @@ angular.module('webrtcTestApp')
       var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta};
       $log.debug('Sending user note thorugh the wire', userInputMsg);
       setTimeout(function(){
-        $rootScope.pMBplayers.forEach(function(entry) {
-          $rootScope.pMBtelScaleWebRTCPhoneController.sendOfflineMessage(entry, JSON.stringify(userInputMsg));
-        });
+          $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
         },1);         
       var eventName='playmyband.canvas.usernote.instrument'+ $rootScope.pMBlocalPlayerId;
       //$log.debug('sending user note to user canvas '+eventName);

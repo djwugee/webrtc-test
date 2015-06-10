@@ -10,15 +10,7 @@ angular.module('webrtcTestApp')
           $rootScope.$broadcast('playmyband.connected', msgContent);
         }
       });
-
-
-      $rootScope.$on('playmyband.webrtc.message.received',function(event, message){
-        if ($state.is('main.connectingToHost')) {
-          $log.debug('start session message received', message);
-          var msgContent = JSON.parse(message.text);
-          $rootScope.$broadcast('playmyband.connected', msgContent);
-        }
-      });             
+            
 
     function downloadMidi()
     {

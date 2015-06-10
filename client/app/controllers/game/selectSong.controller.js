@@ -73,11 +73,6 @@ angular.module('webrtcTestApp')
 
       $rootScope.pMBremotePlayerName = joinModel.contact;
       $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBremotePlayerName);
-
-
-      /*var joinMsg = {playerId: $rootScope.pMBlocalPlayerName};
-      $log.debug('Sending joinMsg', joinMsg);
-      $rootScope.pMBtelScaleWebRTCPhoneController.sendOfflineMessage(joinModel.contact, JSON.stringify(joinMsg));*/
       $state.go('main.connectingToHost');      
     };
 
