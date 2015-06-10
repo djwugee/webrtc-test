@@ -26,13 +26,11 @@
   var userPurpleNote= new Image();
   var userYellowNote= new Image();
 
-  var userNoteBase='record_dark';
-
-  userRedNote.src='assets/images/ic_action_'+userNoteBase+'_red.png';
-  userBlueNote.src='assets/images/ic_action_'+userNoteBase+'_blue.png';
-  userGreenNote.src='assets/images/ic_action_'+userNoteBase+'_green.png';
-  userPurpleNote.src='assets/images/ic_action_'+userNoteBase+'_purple.png';
-  userYellowNote.src='assets/images/ic_action_'+userNoteBase+'_yellow.png';
+  userRedNote.src='assets/images/ic_action_record_dark_red.png';
+  userBlueNote.src='assets/images/ic_action_record_dark_blue.png';
+  userGreenNote.src='assets/images/ic_action_record_dark_green.png';
+  userPurpleNote.src='assets/images/ic_action_record_dark_purple.png';
+  userYellowNote.src='assets/images/ic_action_record_dark_yellow.png';
 
 
   var noteImages=[redNote,blueNote,greenNote,purpleNote,yellowNote];
