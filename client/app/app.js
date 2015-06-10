@@ -17,7 +17,7 @@ angular.module('webrtcTestApp', [
   })
   .run(function ($rootScope,$log,$state){
     $rootScope.$on('$stateChangeSuccess', 
-      function(event, toState, toParams, fromState, fromParams){
+      function(event, toState){
         //$log.debug('new state: ',toState);
 
         //redirect to playing if main state
