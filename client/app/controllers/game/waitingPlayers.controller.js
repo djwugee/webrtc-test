@@ -14,7 +14,7 @@ angular.module('webrtcTestApp')
             $state.go('main.playing');
           } else {
             $log.debug('another party joined');
-            $scope.$players= message.players;
+            $rootScope.$pMBplayers= message.players;
             $scope.$digest();
           }
         }
