@@ -2,17 +2,21 @@
 
 angular.module('webrtcTestApp')
   .controller('NavbarCtrl', function ($scope, $location) {
-    $scope.menu = [{
+    $scope.menu = [
+    /*{
       'title': 'Home',
       'link': '/'
     },
+    */
     {
       'title': 'Game',
-      'link': '#/game'
+      'link': '#/game',
+      'name':'main.registeringPlayer'
     },
     { 
       'title': 'Demo',
-      'link': '#/demo'
+      'link': '#/demo',
+      'name':'main.demo'
     }
 
     ];
