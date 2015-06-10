@@ -7,7 +7,7 @@ angular.module('webrtcTestApp')
       $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
         if ($state.is('main.waitingPlayers')) {
           $log.debug('message received', message);
-          var msgContent = JSON.parse(message.text);
+          var msgContent = JSON.parse(message.content);
           if (msgContent.eventType && msgContent.eventType === 'startGame')
           {
             $log.debug('start game message received');

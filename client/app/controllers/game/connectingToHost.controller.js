@@ -6,7 +6,7 @@ angular.module('webrtcTestApp')
       $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
         if ($state.is('main.connectingToHost')) {
           $log.debug('start session message received', message);
-          var msgContent = JSON.parse(message.text);
+          var msgContent = JSON.parse(message.content);
           $rootScope.$broadcast('playmyband.connected', msgContent);
         }
       });

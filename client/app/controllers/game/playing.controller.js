@@ -24,6 +24,21 @@ angular.module('webrtcTestApp')
       $rootScope.$broadcast(eventName, msgContent);
     });
 
+    $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
+      $log.debug('playing message received');
+      var msgContent = JSON.parse(message.content);
+      //calculate score async to prevent canvas to be interrupted
+      setTimeout(function(){
+          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + 96,msgContent.delta, 100, msgContent.playerId))
+          {
+            $scope.globalScore = $scope.globalScore + 1;
+            $scope.$digest();          
+          }
+        },10);      
+      var eventName='playmyband.canvas.usernote.instrument'+ msgContent.playerId;
+      $rootScope.$broadcast(eventName, msgContent);
+    });    
+
     function getNoteFromKeyboard(event) {
       var keyID = (event.charCode) ? event.charCode : ((event.which) ? event.which : event.keyCode);
       var note = keyID - 49; // 49 = key 1
