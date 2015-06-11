@@ -1,2 +1,11 @@
-.col-md-12()
-	h1.page-header Connecting to host, please wait...	
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  | Connecting to host, please wait...
+
+//content
+block content
+  +form({id:'selectSongForm'})
+    +input-group
+      +progress-bar

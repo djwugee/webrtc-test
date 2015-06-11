@@ -1,2 +1,11 @@
-.col-md-12()
-	h1.page-header WaitingPlayers({{$root.pMBplayers}}), wait until host starts the game...	
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  | WaitingPlayers({{$root.pMBplayers}}), wait until host starts the game...  
+
+
+//content
+block content
+  +form({id:'selectSongForm'})
+    +progress-bar

@@ -1,5 +1,14 @@
-.col-md-12()
-	h1.page-header WaitingPlayers({{$root.pMBplayers}}), Press start to start the game...
-	div.col-lg-4()
-		form(id="selectSongForm")
-			input(id="startGameSubmit" type="submit" ng-click="startGame()" value="StartGame")
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  | WaitingPlayers({{$root.pMBplayers}}), Press start to start the game...
+
+//content
+block content
+  +form({id:'startGameForm'})
+    +input-group()
+      input.btn.btn-primary.btn-lg(id="startGameSubmit" type="submit" ng-click="startGame()" value="Start Game")
+    hr
+    +input-group
+      +progress-bar
