@@ -64,7 +64,7 @@ angular.module('webrtcTestApp')
 
       $rootScope.pMBsongURL = '/playmyband/assets/midi/' + $scope.selectedSong + '/guitar.ogg';
       $rootScope.pMBmidiURL = '/playmyband/assets/midi/' + $scope.selectedSong + '/notes.mid';
-      $rootScope.pMBnoteErrorMarginMS = 100;
+      $rootScope.pMBnoteErrorMarginMS = 300;
 
       //again hardcoded but sohuld be from user selected
       $rootScope.pMBdifficultyLevel = [96, 100];

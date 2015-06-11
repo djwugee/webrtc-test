@@ -14,7 +14,8 @@ angular.module('webrtcTestApp')
       var msgContent = JSON.parse(message.content);
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + $rootScope.pMBdifficultyLevel[0],msgContent.delta, 100, msgContent.playerId))
+          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + $rootScope.pMBdifficultyLevel[0],
+            msgContent.delta, $rootScope.pMBnoteErrorMarginMS, msgContent.playerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
@@ -59,7 +60,8 @@ angular.module('webrtcTestApp')
 
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(note + $rootScope.pMBdifficultyLevel[0],accumulatedNoteDelta, 100, $rootScope.pMBlocalPlayerId))
+          if ($rootScope.pMBreplayer.isANoteThere(note + $rootScope.pMBdifficultyLevel[0],
+            accumulatedNoteDelta, $rootScope.pMBnoteErrorMarginMS, $rootScope.pMBlocalPlayerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          

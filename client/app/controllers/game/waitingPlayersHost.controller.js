@@ -14,7 +14,11 @@ angular.module('webrtcTestApp')
       $log.debug('Call established:', event,webRTCommCall);
       
       setTimeout(function(){
-        var sessionInitMsg = {players:$rootScope.pMBplayers, songURL:$rootScope.pMBsongURL, midiURL:$rootScope.pMBmidiURL, difficultyLevel:$rootScope.pMBdifficultyLevel};
+        var sessionInitMsg = {players:$rootScope.pMBplayers, 
+          songURL:$rootScope.pMBsongURL, 
+          midiURL:$rootScope.pMBmidiURL, 
+          difficultyLevel:$rootScope.pMBdifficultyLevel,
+          noteErrorMarginMS:$rootScope.pMBnoteErrorMarginMS};
         $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
         $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(sessionInitMsg));
       },5000);       
