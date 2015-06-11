@@ -19,6 +19,7 @@ angular.module('webrtcTestApp')
         src:'DisturbedTheSicknes'
       }      
     ];
+    $scope.selectedSong = $scope.songs[0].label;
 
     function downloadMidi()
     {
@@ -55,14 +56,14 @@ angular.module('webrtcTestApp')
     }
 
     //$scope.selectSong=function(selectSongModel){ NOT USED
-    $scope.selectSong=function(selectSongModel){
+    $scope.selectSong=function(){
       //im host,so im the first player, position relates to instrument and canvas
       $rootScope.pMBlocalPlayerId = 1;
       $rootScope.pMBplayers.push($rootScope.pMBlocalPlayerName);  
       //this should come from the user selection, hardcoded now for testing
 
-      $rootScope.pMBsongURL = '/playmyband/assets/midi/' + selectSongModel.songs + '/guitar.ogg';
-      $rootScope.pMBmidiURL = '/playmyband/assets/midi/' + selectSongModel.songs + '/notes.mid';
+      $rootScope.pMBsongURL = '/playmyband/assets/midi/' + $scope.selectedSong + '/guitar.ogg';
+      $rootScope.pMBmidiURL = '/playmyband/assets/midi/' + $scope.selectedSong + '/notes.mid';
       $rootScope.pMBnoteErrorMarginMS = 100;
 
       //again hardcoded but sohuld be from user selected

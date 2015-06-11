@@ -2,8 +2,8 @@
 	h1.page-header Select a Song...
 	div.col-lg-4()
 		form(id="selectSongForm")
-			select(ng-model='selectSong.songs' ng-options='song.src as song.label for song in songs')
-			input(id="selectSongSubmit" type="submit" ng-click="selectSong(selectSong)" value="Select Song")
+			select(ng-model='selectedSong' ng-options='song.src as song.label for song in songs')
+			input(id="selectSongSubmit" type="submit" ng-click="selectSong()" value="Select Song")
 	h1.page-header Join existing game...
 	div.col-lg-4()
 		form(id="joinGameForm")
