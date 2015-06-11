@@ -53,6 +53,7 @@ angular.module('webrtcTestApp')
         $rootScope.pMBsongURL = message.songURL;
         $rootScope.pMBmidiURL = message.midiURL;
   		  $rootScope.pMBdifficultyLevel = message.difficultyLevel;
+        $rootScope.pMBnoteErrorMarginMS = message.noteErrorMarginMS;
         downloadMidi();      
       });
 

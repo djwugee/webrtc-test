@@ -13,16 +13,9 @@ angular.module('webrtcTestApp')
       $log.debug('playing message received');
       var msgContent = JSON.parse(message.content);
       //calculate score async to prevent canvas to be interrupted
-      setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + $rootScope.pMBdifficultyLevel[0],
-            msgContent.delta, $rootScope.pMBnoteErrorMarginMS, msgContent.playerId))
-          {
-            $scope.globalScore = $scope.globalScore + 1;
-            $scope.$digest();          
-          }
-        },1);      
-      var eventName='playmyband.canvas.usernote.instrument'+ msgContent.playerId;
-      $rootScope.$broadcast(eventName, msgContent);
+      $rootScope.$broadcast('playmyband.user.' + msgContent.noteAction,
+        msgContent.noteNumber, msgContent.delta, msgContent.playerId);
+
     });    
 
     function getNoteFromKeyboard(event) {
@@ -32,6 +25,8 @@ angular.module('webrtcTestApp')
     }
 
     function doKeyDown(event){
+        //take time as soon as possible to reduce any delay
+        var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
         var keyCode = event.keyCode;
         if($scope.keysStatus[keyCode]){
           //ignore hold key
@@ -41,49 +36,57 @@ angular.module('webrtcTestApp')
           var note = getNoteFromKeyboard(event);
           //$log.debug('onkeydown: ',event,note);
           if(note>=0 && note <=4){
-            sendUserNote(note);
+            $rootScope.$broadcast('playmyband.user.noteDown',note, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
+            sendNoteRemotely(note, accumulatedNoteDelta, 'noteDown');
           }
         }      
     }
 
     function doKeyUp(event){
+      var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;      
       $scope.keysStatus[event.keyCode] = false;
       var note = getNoteFromKeyboard(event);
       //$log.debug('onkeyup: ',event,note);
       if(note>=0 && note <=4){
-        sendUserNoteRelease(note);
+        $rootScope.$broadcast('playmyband.user.noteUp',note, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
+        sendNoteRemotely(note, accumulatedNoteDelta, 'noteUp');
       }
     }
 
-    function sendUserNote(note){
-      var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
+    function sendNoteRemotely(note, accumulatedNoteDelta,nAction)
+    {
+      var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta,noteAction:nAction};
+      $log.debug('Sending user note thorugh the wire', userInputMsg);
+      setTimeout(function(){
+          $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
+        },1);       
+    }
+
+    $rootScope.$on('playmyband.user.noteUp',function(event, note, accumulatedNoteDelta, playerId){
+
+        
+      var eventName='playmyband.canvas.usernoterelease.instrument'+ playerId;
+      //$log.debug('sending user note to user canvas '+eventName);
+      $rootScope.$broadcast(eventName,note);
+    });    
+
+    $rootScope.$on('playmyband.user.noteDown',function(event, note, accumulatedNoteDelta, playerId){
 
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
           if ($rootScope.pMBreplayer.isANoteThere(note + $rootScope.pMBdifficultyLevel[0],
-            accumulatedNoteDelta, $rootScope.pMBnoteErrorMarginMS, $rootScope.pMBlocalPlayerId))
+            accumulatedNoteDelta, $rootScope.pMBnoteErrorMarginMS, playerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
           }
         },1); 
 
-      var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta};
-      $log.debug('Sending user note thorugh the wire', userInputMsg);
-      setTimeout(function(){
-          $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
-        },1);         
-      var eventName='playmyband.canvas.usernote.instrument'+ $rootScope.pMBlocalPlayerId;
+        
+      var eventName='playmyband.canvas.usernote.instrument'+ playerId;
       //$log.debug('sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
-    }
-
-    function sendUserNoteRelease(note){
-      var eventName='playmyband.canvas.usernoterelease.instrument' + $rootScope.pMBlocalPlayerId;
-      //$log.debug('sending release note to user canvas '+eventName);
-      $rootScope.$broadcast(eventName,note);
-
-    }
+    });
 
 
     $rootScope.$on('playmyband.midi.noteEvent',function(event, noteEvent){
