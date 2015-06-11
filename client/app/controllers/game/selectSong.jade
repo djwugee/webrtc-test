@@ -3,14 +3,6 @@
 	div.col-lg-4()
 		form(id="selectSongForm")
 			select(ng-model='selectSong.songs' ng-options='song.src as song.label for song in songs')
-			select(ng-model='selectSong.difficulty')
-				option(value="1") Easy
-				option(value="2") Medium
-				option(value="3") Hard
-			select(ng-model='selectSong.instrument')
-				option(value="1") Guitar
-				option(value="2") Bass
-				option(value="3") Drums	
 			input(id="selectSongSubmit" type="submit" ng-click="selectSong(selectSong)" value="Select Song")
 	h1.page-header Join existing game...
 	div.col-lg-4()

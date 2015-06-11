@@ -7,13 +7,14 @@ angular.module('webrtcTestApp')
     $rootScope.$on('playmyband.webrtc.call.ringing',function(event, webRTCommCall) {
       $rootScope.pMBtelScaleWebRTCPhoneController.acceptCall();
       $rootScope.pMBplayers.push(webRTCommCall.getCallerPhoneNumber());
+      $scope.$digest();
     });
 
     $rootScope.$on('playmyband.webrtc.call.opened',function(event, webRTCommCall) {
       $log.debug('Call established:', event,webRTCommCall);
       
       setTimeout(function(){
-        var sessionInitMsg = {players:$rootScope.pMBplayers, songURL:$rootScope.pMBsongURL, difficultyLevel:$rootScope.pMBdifficultyLevel};
+        var sessionInitMsg = {players:$rootScope.pMBplayers, songURL:$rootScope.pMBsongURL, midiURL:$rootScope.pMBmidiURL, difficultyLevel:$rootScope.pMBdifficultyLevel};
         $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
         $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(sessionInitMsg));
       },5000);       

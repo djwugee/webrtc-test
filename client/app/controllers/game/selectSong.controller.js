@@ -7,13 +7,17 @@ angular.module('webrtcTestApp')
 
     $scope.songs=[
       {
-        label:'playmyband-PearlJamBetterMan',
-        src:'/playmyband/assets/midi/PearlJamBetterMan/notes.mid'
+        label:'PearlJamBetterMan',
+        src:'PearlJamBetterMan'
       },
       {
-        label:'PearlJamBetterMan',
-        src:'/assets/midi/PearlJamBetterMan/notes.mid'
-      }
+        label:'NeverAgainNickelback',
+        src:'NeverAgainNickelback'
+      },
+      {
+        label:'DisturbedTheSicknes',
+        src:'DisturbedTheSicknes'
+      }      
     ];
 
     function downloadMidi()
@@ -21,7 +25,7 @@ angular.module('webrtcTestApp')
         $log.debug('downloading midi file');
 
         // do the get request with response type 'blobl' 
-        $http.get($rootScope.pMBsongURL,{responseType: 'blob'}).
+        $http.get($rootScope.pMBmidiURL,{responseType: 'blob'}).
           // success(function(data, status, headers, config) {
           success(function(data) {
             // this callback will be called asynchronously
@@ -51,14 +55,15 @@ angular.module('webrtcTestApp')
     }
 
     //$scope.selectSong=function(selectSongModel){ NOT USED
-    $scope.selectSong=function(){
+    $scope.selectSong=function(selectSongModel){
       //im host,so im the first player, position relates to instrument and canvas
       $rootScope.pMBlocalPlayerId = 1;
       $rootScope.pMBplayers.push($rootScope.pMBlocalPlayerName);  
       //this should come from the user selection, hardcoded now for testing
 
-      $rootScope.pMBsongURL = '/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
-      //$rootScope.songUrl=$scope.songs[0].src;
+      $rootScope.pMBsongURL = '/playmyband/assets/midi/' + selectSongModel.songs + '/guitar.ogg';
+      $rootScope.pMBmidiURL = '/playmyband/assets/midi/' + selectSongModel.songs + '/notes.mid';
+      $rootScope.pMBnoteErrorMarginMS = 100;
 
       //again hardcoded but sohuld be from user selected
       $rootScope.pMBdifficultyLevel = [96, 100];

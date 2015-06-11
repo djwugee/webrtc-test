@@ -14,12 +14,12 @@ angular.module('webrtcTestApp')
       var msgContent = JSON.parse(message.content);
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + 96,msgContent.delta, 100, msgContent.playerId))
+          if ($rootScope.pMBreplayer.isANoteThere(msgContent.noteNumber + $rootScope.pMBdifficultyLevel[0],msgContent.delta, 100, msgContent.playerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
           }
-        },10);      
+        },1);      
       var eventName='playmyband.canvas.usernote.instrument'+ msgContent.playerId;
       $rootScope.$broadcast(eventName, msgContent);
     });    
@@ -59,12 +59,12 @@ angular.module('webrtcTestApp')
 
       //calculate score async to prevent canvas to be interrupted
       setTimeout(function(){
-          if ($rootScope.pMBreplayer.isANoteThere(note + 96,accumulatedNoteDelta, 100, $rootScope.pMBlocalPlayerId))
+          if ($rootScope.pMBreplayer.isANoteThere(note + $rootScope.pMBdifficultyLevel[0],accumulatedNoteDelta, 100, $rootScope.pMBlocalPlayerId))
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
           }
-        },10); 
+        },1); 
 
       var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta};
       $log.debug('Sending user note thorugh the wire', userInputMsg);
@@ -108,7 +108,7 @@ angular.module('webrtcTestApp')
 
       //start the sound later, this must be sync with midi and note rendering
       setTimeout(function(){
-        $rootScope.pMBsongAudio = new Audio('./assets/midi/PearlJamBetterMan/guitar.ogg');
+        $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
         $rootScope.pMBsongAudio.play();
         $rootScope.pMBplayingStartTimestamp = window.performance.now();
         },$rootScope.pMBsecondsInAdvance * 1000);  

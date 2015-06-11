@@ -17,7 +17,7 @@ angular.module('webrtcTestApp')
         $log.debug('downloading midi file');
 
         // do the get request with response type 'blobl' 
-        $http.get($rootScope.pMBsongURL,{responseType: 'blob'}).
+        $http.get($rootScope.pMBmidiURL,{responseType: 'blob'}).
           // success(function(data, status, headers, config) {
           success(function(data) {
             // this callback will be called asynchronously
@@ -51,6 +51,7 @@ angular.module('webrtcTestApp')
         $rootScope.pMBlocalPlayerId=message.players.indexOf($rootScope.pMBlocalPlayerName) + 1;
         $rootScope.pMBplayers= message.players;
         $rootScope.pMBsongURL = message.songURL;
+        $rootScope.pMBmidiURL = message.midiURL;
   		  $rootScope.pMBdifficultyLevel = message.difficultyLevel;
         downloadMidi();      
       });
