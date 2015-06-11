@@ -1,11 +1,20 @@
-.col-md-12()
-	h1.page-header Select a Song...
-	div.col-lg-4()
-		form(id="selectSongForm")
-			select(ng-model='selectedSong' ng-options='song.src as song.label for song in songs')
-			input(id="selectSongSubmit" type="submit" ng-click="selectSong()" value="Select Song")
-	h1.page-header Join existing game...
-	div.col-lg-4()
-		form(id="joinGameForm")
-			input(id="gameURLText" type="text" ng-model='join.contact')
-			input(id="joinGameSubmit" type="submit" ng-click="joinGame(join)" value="Join Game")
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  | Select a song... or join a game
+
+
+//content
+block content
+  +form({id:'selectSongForm'})
+    +input-group
+      select.form-control(ng-model='selectedSong' ng-options='song.src as song.label for song in songs')
+      span.input-group-btn
+        input.btn.btn-primary.btn-lg(id="selectSongSubmit" type="submit" ng-click="selectSong()" value="Select Song")
+
+    hr
+    +input-group()
+      input.form-control(id="gameURLText" type="text" ng-model='join.contact')
+      span.input-group-btn
+        input.btn.btn-primary.btn-lg(id="joinGameSubmit" type="submit" ng-click="joinGame(join)" value="Join Game")

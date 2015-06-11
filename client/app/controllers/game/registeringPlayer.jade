@@ -1,6 +1,14 @@
-.col-md-12()
-  h1.page-header Register player to start game, type any name...
-  div.col-lg-4
-    form(id="userForm")
-      input(id="userText" type='text' ng-model='user.name' required )
-      input(id="registerSubmit" type='submit' ng-click="registerPlayer(user)" value='Register')
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  | Register player to start game!!
+
+
+//content
+block content
+  +form({id:'userForm'})
+    +input-group
+      input.form-control(id="playerName" type='text' ng-model='user.name' required , placeholder="Player name...")
+      span.input-group-btn
+        input.btn.btn-primary.btn-lg(id="registerSubmit", type="button", ng-click="registerPlayer(user)" value="Register") 
