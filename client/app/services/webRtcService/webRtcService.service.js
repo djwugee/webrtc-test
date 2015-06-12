@@ -245,8 +245,8 @@ angular.module('webrtcTestApp')
             var callConfiguration = {
                 displayName:this.DEFAULT_SIP_DISPLAY_NAME,
                 localMediaStream: this.localAudioVideoMediaStream,
-                audioMediaFlag:true,
-                videoMediaFlag:true,
+                audioMediaFlag:false,
+                videoMediaFlag:false,
                 messageMediaFlag:true,
                 audioCodecsFilter:null,
                 videoCodecsFilter:null
