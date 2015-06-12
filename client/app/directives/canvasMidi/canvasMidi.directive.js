@@ -376,6 +376,30 @@
           //element.text('this is the canvasMidi directive');
           $log.info('loading canvas user notes directive');
 
+          element.bind('mousedown',function(event){
+            $log.debug('mouse down received', event);
+            var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
+            var rect = canvas.getBoundingClientRect();
+            var actualCoorX = event.clientX - rect.left;
+            var notePressed = Math.floor(actualCoorX / (element[0].clientWidth / NUMBER_OF_DIFFERENT_NOTES)) % NUMBER_OF_DIFFERENT_NOTES;
+            $rootScope.$broadcast('playmyband.user.noteDown',notePressed, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
+            //controller.createMidiNote(scope.lastNote);
+            //scope.lastNote= (scope.lastNote+1)%NUMBER_OF_DIFFERENT_NOTES;
+
+          });
+
+          element.bind('mouseup',function(event){
+            $log.debug('mouseup received', event);
+            var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
+            var rect = canvas.getBoundingClientRect();
+            var actualCoorX = event.clientX - rect.left;
+            var notePressed = Math.floor(actualCoorX / (element[0].clientWidth / NUMBER_OF_DIFFERENT_NOTES)) % NUMBER_OF_DIFFERENT_NOTES;
+            $rootScope.$broadcast('playmyband.user.noteUp',notePressed, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
+            //controller.createMidiNote(scope.lastNote);
+            //scope.lastNote= (scope.lastNote+1)%NUMBER_OF_DIFFERENT_NOTES;
+
+          });          
+
           var eventName='controller.userNote.event.'+scope.canvasId;
           $log.debug('Registering for new user notes event '+'controller.userNote.event.'+scope.canvasId);
           $rootScope.$on(eventName,function(){

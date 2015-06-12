@@ -2,11 +2,13 @@ extends ../../layouts/gameLayout.jade
 
 //header
 block header
-  | Playing, GlobalScore={{globalScore}}
+  | Playing. Use Mouse or Keyboard(12345) to hit dropping notes
 
 //content
 block content
-  // var divStyle='text-align:center;border:1px dashed red;'; 
+  // var divStyle='text-align:center;border:1px dashed red;';
+  div.col-md-12.col-sm-12
+    pre Global Score= {{globalScore}}
   div.col-md-4.col-sm-12(canvas-midi="instrument1",style=divStyle)
   div.col-md-4.col-sm-12(canvas-midi="instrument2",style=divStyle)
   div.col-md-4.col-sm-12(canvas-midi="instrument3",style=divStyle)
@@ -16,8 +18,7 @@ block content
     img(src='assets/images/bass.jpg')
   div.col-md-4.col-sm-12(style=divStyle)  
     img(src='assets/images/drums.jpg')
-  div.col-md-12.col-sm-12
-    pre Global Score= {{globalScore}}
+
 
 
 //
