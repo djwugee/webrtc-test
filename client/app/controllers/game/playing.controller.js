@@ -81,7 +81,7 @@ angular.module('webrtcTestApp')
             $scope.$digest();          
           } else {
             //user failed,let him know by sound
-            var noteFailedFX = new Audio('/playmyband/assets/fretsFX/fiba' + $rootScope.pMBlocalPlayerId + '.ogg');
+            var noteFailedFX = new Audio('/playmyband/assets/fretsFX/fiba' + playerId + '.ogg');
             noteFailedFX.play();            
           }
         },1); 
