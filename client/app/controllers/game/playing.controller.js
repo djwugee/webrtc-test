@@ -79,6 +79,10 @@ angular.module('webrtcTestApp')
           {
             $scope.globalScore = $scope.globalScore + 1;
             $scope.$digest();          
+          } else {
+            //user failed,let him know by sound
+            var noteFailedFX = new Audio('/playmyband/assets/fretsFX/fiba' + $rootScope.pMBlocalPlayerId + '.ogg');
+            noteFailedFX.play();            
           }
         },1); 
 
@@ -109,12 +113,14 @@ angular.module('webrtcTestApp')
       $rootScope.pMBsynth = new $synthService.FretsSynth(44100);
       $rootScope.pMBreplayer = new $replayerService.Replayer($rootScope.pMBmidiFile, $rootScope.pMBsynth);
       $rootScope.pMBaudio = new $audioService.AudioPlayer($rootScope.pMBreplayer);
-      
+      var songStartedFX = new Audio('/playmyband/assets/fretsFX/start.ogg');
+      songStartedFX.play();       
 
       //start the sound later, this must be sync with midi and note rendering
       setTimeout(function(){
         $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
         $rootScope.pMBsongAudio.play();
+           
         $rootScope.pMBplayingStartTimestamp = window.performance.now();
         },$rootScope.pMBsecondsInAdvance * 1000);  
     }
