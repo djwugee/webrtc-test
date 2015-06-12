@@ -296,7 +296,7 @@
           var msInASecond = 1000;
 
           //var msInadvance = $rootScope.pMB$parent.$parent.$parent.secondsInAdvance * msInASecond;
-          var msInadvance = 10 * msInASecond;          
+          var msInadvance = $rootScope.pMBsecondsInAdvance * msInASecond;          
           //remove this duplicate calculation
           var horizontalUserCoord=(canvas.height/ 4) * 3;
 

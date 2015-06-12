@@ -3,7 +3,7 @@
 angular.module('webrtcTestApp')
   .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService) {
     //number of seconds in advance the notes are rendered in canvas
-    $rootScope.pMBsecondsInAdvance = 10;
+    $rootScope.pMBsecondsInAdvance = 5;
 
     $scope.songs=[
       {
