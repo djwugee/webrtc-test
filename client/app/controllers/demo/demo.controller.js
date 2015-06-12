@@ -4,10 +4,19 @@ angular.module('webrtcTestApp')
   .controller('DemoCtrl', function ($rootScope,$scope,$log,$midiService,$q,$state) {
     $log.debug('Loading demo controller');
 
+    var serverRuntime=$rootScope.serverRuntime;
+
     //loading demo info
-    var localUrl='/assets/midi/PearlJamBetterMan/notes.mid';
-    var serverUrl='/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
-    $rootScope.songUrl=localUrl;
+    var localMidiUrl='/assets/midi/PearlJamBetterMan/notes.mid';
+    var serverMidiUrl='/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
+
+    var localSongUrl='/assets/midi/PearlJamBetterMan/guitar.ogg';
+    var serverSongUrl='/playmyband/assets/midi/PearlJamBetterMan/guitar.ogg';
+
+    $rootScope.pMBmidiURL = serverRuntime?serverMidiUrl:localMidiUrl;
+    $rootScope.pMBsongURL = serverRuntime?serverSongUrl:localSongUrl;
+
+
     $rootScope.pMBdifficultyLevel = [96, 100];
     $rootScope.pMBplayers=[];
     $rootScope.pMBlocalPlayerId=2;
@@ -17,7 +26,7 @@ angular.module('webrtcTestApp')
 
     //load midi async
     function handleMidi(){
-      var midiPromise= $midiService.downloadMidi($rootScope.songUrl,$rootScope.difficultyLevel);
+      var midiPromise= $midiService.downloadMidi($rootScope.pMBmidiURL,$rootScope.difficultyLevel);
       midiPromise.then(
         function(pMBmidiFile){
           //midi load OK
@@ -30,9 +39,9 @@ angular.module('webrtcTestApp')
           //midi load KO
           $log.debug('DemoCtrl - Error loading midi');
 
-          if(status===404 &&  $scope.songUrl===localUrl){
+          if(status===404 &&  $scope.pMBmidiURL===localMidiUrl){
             $log.debug('Trying with serverUrl');
-            $rootScope.songUrl=serverUrl;
+            $rootScope.pMBmidiURL=serverMidiUrl;
             handleMidi();
 
           }

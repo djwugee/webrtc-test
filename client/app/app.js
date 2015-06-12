@@ -15,7 +15,13 @@ angular.module('webrtcTestApp', [
 
 
   })
-  .run(function ($rootScope,$log,$state){
+  .run(function ($rootScope,$log,$state,$location){
+
+    var currentUrl= $location.absUrl();
+
+    $rootScope.serverRuntime= currentUrl.indexOf('playmyband')>-1;
+    $log.info($rootScope.serverRuntime?'... in SERVER runtime':'... in LOCAL runtime');
+
     $rootScope.$on('$stateChangeSuccess', 
       function(event, toState){
         //$log.debug('new state: ',toState);

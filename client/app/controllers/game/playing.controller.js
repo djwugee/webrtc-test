@@ -10,7 +10,7 @@ angular.module('webrtcTestApp')
     $scope.instrument3='instrument3';
 
     $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
-      $log.debug('playing message received');
+      $log.debug('PlayingCtrl - playing message received');
       var msgContent = JSON.parse(message.content);
       //calculate score async to prevent canvas to be interrupted
       $rootScope.$broadcast('playmyband.user.' + msgContent.noteAction,
@@ -34,7 +34,7 @@ angular.module('webrtcTestApp')
           //this is first evet for this key, process
           $scope.keysStatus[keyCode] = new Date();
           var note = getNoteFromKeyboard(event);
-          //$log.debug('onkeydown: ',event,note);
+          //$log.debug('PlayingCtrl - onkeydown: ',event,note);
           if(note>=0 && note <=4){
             $rootScope.$broadcast('playmyband.user.noteDown',note, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
             sendNoteRemotely(note, accumulatedNoteDelta, 'noteDown');
@@ -46,7 +46,7 @@ angular.module('webrtcTestApp')
       var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;      
       $scope.keysStatus[event.keyCode] = false;
       var note = getNoteFromKeyboard(event);
-      //$log.debug('onkeyup: ',event,note);
+      //$log.debug('PlayingCtrl - onkeyup: ',event,note);
       if(note>=0 && note <=4){
         $rootScope.$broadcast('playmyband.user.noteUp',note, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
         sendNoteRemotely(note, accumulatedNoteDelta, 'noteUp');
@@ -56,7 +56,7 @@ angular.module('webrtcTestApp')
     function sendNoteRemotely(note, accumulatedNoteDelta,nAction)
     {
       var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta,noteAction:nAction};
-      $log.debug('Sending user note thorugh the wire', userInputMsg);
+      $log.debug('PlayingCtrl - Sending user note thorugh the wire', userInputMsg);
       setTimeout(function(){
           $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
         },1);       
@@ -66,7 +66,7 @@ angular.module('webrtcTestApp')
 
         
       var eventName='playmyband.canvas.usernoterelease.instrument'+ playerId;
-      //$log.debug('sending user note to user canvas '+eventName);
+      //$log.debug('PlayingCtrl - sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
     });    
 
@@ -88,7 +88,7 @@ angular.module('webrtcTestApp')
 
         
       var eventName='playmyband.canvas.usernote.instrument'+ playerId;
-      //$log.debug('sending user note to user canvas '+eventName);
+      //$log.debug('PlayingCtrl - sending user note to user canvas '+eventName);
       $rootScope.$broadcast(eventName,note);
     });
 
@@ -117,12 +117,16 @@ angular.module('webrtcTestApp')
       songStartedFX.play();       
 
       //start the sound later, this must be sync with midi and note rendering
-      setTimeout(function(){
-        $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
-        $rootScope.pMBsongAudio.play();
-           
-        $rootScope.pMBplayingStartTimestamp = window.performance.now();
-        },$rootScope.pMBsecondsInAdvance * 1000);  
+      $log.debug('PlayingCtrl - song to play'+$rootScope.pMBsongURL);
+      $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
+      setTimeout(
+        function(){
+          $rootScope.pMBsongAudio.play();
+             
+          $rootScope.pMBplayingStartTimestamp = window.performance.now();
+        },
+        $rootScope.pMBsecondsInAdvance * 1000
+      );  
     }
 
     playMidi();
