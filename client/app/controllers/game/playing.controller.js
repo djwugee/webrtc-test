@@ -58,7 +58,9 @@ angular.module('webrtcTestApp')
       var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta,noteAction:nAction};
       $log.debug('PlayingCtrl - Sending user note thorugh the wire', userInputMsg);
       setTimeout(function(){
-          $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
+          if($rootScope.serverRuntime){
+            $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
+          }
         },1);       
     }
 
@@ -81,7 +83,11 @@ angular.module('webrtcTestApp')
             $scope.$digest();          
           } else {
             //user failed,let him know by sound
-            var noteFailedFX = new Audio('/playmyband/assets/fretsFX/fiba' + playerId + '.ogg');
+            var fretsUrl='/assets/fretsFX/fiba' + playerId + '.ogg';
+            if($rootScope.serverRuntime){
+              fretsUrl='/playmyband'+fretsUrl;
+            }
+            var noteFailedFX = new Audio(fretsUrl);
             noteFailedFX.play();            
           }
         },1); 
@@ -113,7 +119,13 @@ angular.module('webrtcTestApp')
       $rootScope.pMBsynth = new $synthService.FretsSynth(44100);
       $rootScope.pMBreplayer = new $replayerService.Replayer($rootScope.pMBmidiFile, $rootScope.pMBsynth);
       $rootScope.pMBaudio = new $audioService.AudioPlayer($rootScope.pMBreplayer);
-      var songStartedFX = new Audio('/playmyband/assets/fretsFX/start.ogg');
+
+      var startSongUrl='/assets/fretsFX/start.ogg';
+      if($rootScope.serverRuntime){
+        startSongUrl='/playmyband'+startSongUrl;
+      }
+
+      var songStartedFX = new Audio(startSongUrl);
       songStartedFX.play();       
 
       //start the sound later, this must be sync with midi and note rendering

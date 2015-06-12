@@ -9,6 +9,9 @@
   var NUMBER_OF_DIFFERENT_NOTES=5;
 
   //init images
+  var guitarTextureImage= new Image();
+  guitarTextureImage.src='assets/images/guitar_texture.jpg';
+
   var redNote= new Image();
   var blueNote= new Image();
   var greenNote= new Image();
@@ -234,7 +237,12 @@
           var canvas=element[0];
           var ctx=canvas.getContext('2d');
 
+
           ctx.clearRect(0,0,canvas.width, canvas.height);
+
+          //add background
+          ctx.drawImage(guitarTextureImage,0,0,canvas.width, canvas.height);
+
           //ctx.beginPath();
           ctx.strokeStyle='#FFFFFF';
           ctx.fillStyle='#FFFFFF';
@@ -244,6 +252,7 @@
           $log.debug('canvas.width: '+canvas.width+', colWidth: '+colWidth+', colOffset: '+colOffset);
 
           //ctx.fillRect(25,25,100,100);
+
 
           var i;
           for(i=1;i<=5;i++){

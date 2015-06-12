@@ -20,6 +20,7 @@ angular.module('webrtcTestApp')
     $rootScope.pMBdifficultyLevel = [96, 100];
     $rootScope.pMBplayers=[];
     $rootScope.pMBlocalPlayerId=2;
+    $rootScope.pMBsecondsInAdvance = 5
 
     $rootScope.pMBmidiFile=null;
     $scope.error=null;
@@ -34,6 +35,7 @@ angular.module('webrtcTestApp')
           $rootScope.pMBmidiFile=pMBmidiFile;
           $scope.error=null;
 
+          $state.go('main.playing');
 
         }, function(data,status){
           //midi load KO

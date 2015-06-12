@@ -1,10 +1,19 @@
-.col-md-12
-    h2(ng-show="midiFile===null && error===null") Loading midi midiFile
-    div(ng-show="pMBmidiFile===null && error!==null")
-      h2(ng-bind="error")
-      pre errorData:{{errorData | json}}
-    div(ng-show="pMBmidiFile!==null")
-        h2(ng-show="pMBmidiFile!==null") Midi file loaded OK 
-        input(id="continue",type="button", ng-click="continue()", value="Start")
-.col-md-12(style="margin-top:2em")
-  pre pMBmidiFile:{{pMBmidiFile | json}}
+extends ../../layouts/panelLayout.jade
+
+//header
+block header
+  div(ng-show="midiFile===null && error===null") Loading midi midiFile
+  div(ng-show="pMBmidiFile!==null") Midi file loaded OK 
+  div(ng-show="pMBmidiFile===null && error!==null") Error loading midi
+
+
+
+//content
+block content
+  div(ng-show="pMBmidiFile===null && error!==null")
+    pre errorData:{{errorData | json}}
+  div(ng-show="pMBmidiFile!==null")
+      +form({id:'selectSongForm'})
+        +input-group
+          input.btn.btn-primary.btn-lg.col-sm-offset-4.col-sm-4(id="continue",type="button", ng-click="continue()", value="Start")
+  // pre(style="margin-top:20px;") pMBmidiFile:{{pMBmidiFile | json}}
