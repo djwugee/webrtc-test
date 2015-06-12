@@ -2383,7 +2383,9 @@ WebRTCommCall.prototype.open = function(calleePhoneNumber, configuration) {
 
                         // Setup RTCPeerConnection first
                         this.createRTCPeerConnection();
-                        this.peerConnection.addStream(this.configuration.localMediaStream);
+                        if (configuration.audioMediaFlag || configuration.videoMediaFlag) {
+                            this.peerConnection.addStream(this.configuration.localMediaStream);
+                        }
                         if (this.configuration.messageMediaFlag)
                         {
                             if (this.peerConnection.createDataChannel)
@@ -2572,7 +2574,9 @@ WebRTCommCall.prototype.accept = function(configuration) {
                     try
                     {
                         this.createRTCPeerConnection();
-                        this.peerConnection.addStream(this.configuration.localMediaStream);
+                        if(configuration.audioMediaFlag || configuration.videoMediaFlag) {
+                            audiothis.peerConnection.addStream(this.configuration.localMediaStream);
+                        }
                         var sdpOffer = undefined;
                         if (window.webkitRTCPeerConnection)
                         {
@@ -3093,7 +3097,7 @@ WebRTCommCall.prototype.checkConfiguration = function(configuration) {
     var check = true;
     // displayName, audioCodecsFilter, videoCodecsFilter NOT mandatoty in configuration
 
-    if (configuration.localMediaStream === undefined)
+    if ((configuration.audioMediaFlag || configuration.videoMediaFlag) && configuration.localMediaStream === undefined)
     {
         check = false;
         console.error("WebRTCommCall:checkConfiguration(): missing localMediaStream");

@@ -163,7 +163,7 @@ angular.module('webrtcTestApp')
         // Get local user media
         try
         {
-            this.getLocalUserMedia(TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT);
+            //this.getLocalUserMedia(TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT);
         }
         catch(exception)
         {
