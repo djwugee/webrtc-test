@@ -105,6 +105,7 @@
               //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
               var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + (secondsToNextEvent * 1000);
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
+              nextEvent.accumulatedDelta=nextAccumulatedDelta;
             }
             samplesToNextEvent += secondsToNextEvent * synth.sampleRate;
           } else {

@@ -51,7 +51,9 @@
         templateUrl: 'app/directives/canvasMidi/canvasMidiDirective.html',
         restrict: 'EA',
         scope:{
-          canvasId:'=canvasMidi'
+          canvasId:'=canvasMidi',
+          audio:'=canvasMidiAudio',
+          debug:'=canvasMidiDebug'
         },
         controller: function ($scope, $element, $attrs) {
           //element.text('this is the canvasMidi directive');
@@ -116,7 +118,7 @@
           $rootScope.$on(midiEventName,function(event, noteEvent){
             //$log.debug('new midi note event',event,noteEvent);
             if(noteEvent.event.noteNumber>=0 && noteEvent.event.noteNumber <=4){
-              _this.createMidiNote(noteEvent.event.noteNumber);
+              _this.createMidiNote(noteEvent.event);
               //_this.releaseUserNote(note);
             }
 
@@ -185,7 +187,9 @@
           /**
             * Creates a new note to be rendered scrolling down
            */
-          this.createMidiNote=   function (noteIndex){
+          this.createMidiNote=   function (noteEvent){
+            $log.debug('Creating midi note accumulatedDelta: '+noteEvent.accumulatedDelta,noteEvent);
+            var noteIndex=noteEvent.noteNumber;
             //calculate iamge vars
             var image= noteImages[noteIndex];
             var left= noteIndex*NOTE_WIDTH+ NOTE_WIDTH/2;
@@ -196,6 +200,8 @@
               id:$scope.notesCounter++,
               image:image,
               left: left,
+              delta:noteEvent.deltaTime,
+              accumulatedDelta:noteEvent.accumulatedDelta,
               top:0
             };
             //$log.debug('creating midi note',note);
@@ -293,7 +299,7 @@
         restrict: 'EA',
         require:'^canvasMidiMain',
         scope:true,
-        link: function (scope, element) {
+        link: function (scope, element,attrs,canvasMidiController) {
           //element.text('this is the canvasMidi directive');
           $log.info('loading canvas notes directive');
 
@@ -324,6 +330,9 @@
            * Draws a frame. The idea is to traverse all the notes objects, scroll down n pixels or remove it if is on the bottom of the canvas.
            * IMPORTANT  !!! the top coordinate will be calculated with timestamps in future versions to sync all the notes!!!
            */
+          ctx.font = '16px courier';
+          ctx.fillStyle='#FFFFFF';
+          ctx.strokeStyle='#FFFFFF';
           function drawNoteFrame(renderTimeStamp){
             var elapsedTimeMS = renderTimeStamp - animationStartTime;
             var pixelsToMove = (elapsedTimeMS * horizontalUserCoord) / msInadvance;
@@ -349,9 +358,26 @@
                 //$log.debug('draw note '+note.id);
                 ctx.drawImage(note.image,note.left,note.top);
 
+                if(scope.debug){
+                  ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top);
+                  //ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top+32);
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(note.left,note.top);
+                ctx.lineTo(note.left+NOTE_WIDTH,note.top);
+                ctx.stroke();
+                ctx.closePath();
+
+
               }
 
             });
+
+            if(scope.debug){
+              var hztalTop=canvasMidiController.getUserTop();
+              ctx.fillText('Song time: '+scope.audio.currentTime, -10, hztalTop);
+            }
 
 
             //if there are any note to draw
