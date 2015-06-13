@@ -356,7 +356,7 @@
               } else {
                 //draw the musical note
                 //$log.debug('draw note '+note.id);
-                ctx.drawImage(note.image,note.left,note.top);
+                ctx.drawImage(note.image,note.left,note.top-(NOTE_HEIGHT/2));
 
                 if(scope.debug){
                   var text= ''+note.accumulatedDelta;

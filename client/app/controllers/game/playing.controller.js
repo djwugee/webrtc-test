@@ -133,6 +133,7 @@ angular.module('webrtcTestApp')
       $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
       setTimeout(
         function(){
+          $rootScope.pMBsongAudio.playbackRate=1;
           $rootScope.pMBsongAudio.play();
              
           $rootScope.pMBplayingStartTimestamp = window.performance.now();

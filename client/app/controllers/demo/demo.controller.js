@@ -13,6 +13,14 @@ angular.module('webrtcTestApp')
     var localSongUrl='/assets/midi/PearlJamBetterMan/guitar.ogg';
     var serverSongUrl='/playmyband/assets/midi/PearlJamBetterMan/guitar.ogg';
 
+    //var localMidiUrl='/assets/midi/bangbang/notes.mid';
+    //var serverMidiUrl='/playmyband/assets/midi/bangbang/notes.mid';
+
+    //var localSongUrl='/assets/midi/bangbang/guitar.ogg';
+    //var serverSongUrl='/playmyband/assets/midi/bangbang/guitar.ogg';
+
+
+
     $rootScope.pMBmidiURL = serverRuntime?serverMidiUrl:localMidiUrl;
     $rootScope.pMBsongURL = serverRuntime?serverSongUrl:localSongUrl;
 
