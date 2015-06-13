@@ -28,7 +28,7 @@ angular.module('webrtcTestApp')
     $rootScope.pMBdifficultyLevel = [96, 100];
     $rootScope.pMBplayers=[];
     $rootScope.pMBlocalPlayerId=2;
-    $rootScope.pMBsecondsInAdvance = 5;
+    $rootScope.pMBsecondsInAdvance = 6;
 
     $rootScope.pMBmidiFile=null;
     $scope.error=null;

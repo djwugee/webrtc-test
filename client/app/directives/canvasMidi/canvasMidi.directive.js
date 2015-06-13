@@ -7,6 +7,7 @@
   var NOTE_WIDTH=64;
   //var VERTICAL_SCROLL_INCREMENT=1;
   var NUMBER_OF_DIFFERENT_NOTES=5;
+  var PIXELS_PER_MILLISECOND= NOTE_HEIGHT/1000;
 
   //init images
   var guitarTextureImage= new Image();
@@ -53,7 +54,9 @@
         scope:{
           canvasId:'=canvasMidi',
           audio:'=canvasMidiAudio',
-          debug:'=canvasMidiDebug'
+          debug:'=canvasMidiDebug',
+          deltaZeroMidi:'=canvasMidiDeltaZero',
+          songDelay:'=canvasSongDelay'
         },
         controller: function ($scope, $element, $attrs) {
           //element.text('this is the canvasMidi directive');
@@ -339,11 +342,33 @@
             //first clear the canvas (we are rendering a new frame)
             ctx.clearRect(0,0,canvas.width, canvas.height);
 
+            //calculate delta to dwar Y coord
+            var currentDelta=0;
+            var audio= scope.audio;
+            //if song has not started (previous 6 seconds)
+            if(!audio || audio.currentTime<=0){
+              //user the delta zero midi
+              currentDelta= window.performance.now()-scope.deltaZeroMidi;
+            }else{
+              //get the song time
+              currentDelta= (audio.currentTime+scope.songDelay)*1000;
+            }
+
             //for each note
             angular.forEach(scope.notes,function(note, index){
 
               //update top to scroll down SEE IMPORTANT NOTE ABOVE!!!
               note.top=note.top+pixelsToMove;
+
+
+
+              if(currentDelta>0){
+                var noteDelta= currentDelta-note.accumulatedDelta;
+                var yCoord= noteDelta*PIXELS_PER_MILLISECOND;
+                note.top= yCoord;
+              }
+              
+
               //$log.debug('update note '+note.id+', top='+note.top);
 
               //check if the note is out of bounds

@@ -24,9 +24,14 @@ angular.module('webrtcTestApp')
       return note;
     }
 
+    function getAccumulatedNoteDelta($scope){
+      // return window.performance.now() - $scope.pMBplayingStartTimestamp;      
+      return $scope.pMBsongAudio.currentTime*1000;
+    }
+
     function doKeyDown(event){
         //take time as soon as possible to reduce any delay
-        var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
+        var accumulatedNoteDelta = getAccumulatedNoteDelta($rootScope);      
         var keyCode = event.keyCode;
         if($scope.keysStatus[keyCode]){
           //ignore hold key
@@ -43,7 +48,8 @@ angular.module('webrtcTestApp')
     }
 
     function doKeyUp(event){
-      var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;      
+      //var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;      
+      var accumulatedNoteDelta = getAccumulatedNoteDelta($rootScope);      
       $scope.keysStatus[event.keyCode] = false;
       var note = getNoteFromKeyboard(event);
       //$log.debug('PlayingCtrl - onkeyup: ',event,note);
@@ -52,6 +58,7 @@ angular.module('webrtcTestApp')
         sendNoteRemotely(note, accumulatedNoteDelta, 'noteUp');
       }
     }
+
 
     function sendNoteRemotely(note, accumulatedNoteDelta,nAction)
     {
@@ -131,6 +138,7 @@ angular.module('webrtcTestApp')
       //start the sound later, this must be sync with midi and note rendering
       $log.debug('PlayingCtrl - song to play'+$rootScope.pMBsongURL);
       $rootScope.pMBsongAudio = new Audio($rootScope.pMBsongURL);
+      $scope.deltaZeroMidi=window.performance.now();
       setTimeout(
         function(){
           $rootScope.pMBsongAudio.playbackRate=1;
