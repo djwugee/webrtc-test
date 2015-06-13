@@ -8,6 +8,7 @@
         var trackStates = [];
         var trackAccumulatedDelta = [{noteNumber:0,total:0,track:0}];
         var beatsPerMinute = 120;
+        var millisecondsPerBeat= beatsPerMinute * 60000000;
         var ticksPerBeat = midiFile.header.ticksPerBeat;
         var channelCount = 16;
 
@@ -103,7 +104,10 @@
             if (typeof(nextEvent.noteNumber) !== 'undefined')
             {
               //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
-              var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + (secondsToNextEvent * 1000);
+              var millisecondsToNextEvent= beatsToNextEvent * millisecondsPerBeat;
+              console.log('seconds/milli toNextEvent: '+secondsToNextEvent+'/'+millisecondsToNextEvent);
+
+              var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + millisecondsToNextEvent;
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
               nextEvent.accumulatedDelta=nextAccumulatedDelta;
             }
@@ -154,6 +158,8 @@
               switch (event.subtype) {
                 case 'setTempo':
                   beatsPerMinute = 60000000 / event.microsecondsPerBeat;
+                  millisecondsPerBeat= event.microsecondsPerBeat/1000;
+                  console.log('\n\n\nSET TEMPO!!! '+millisecondsPerBeat);
               }
               break;
             case 'channel':
