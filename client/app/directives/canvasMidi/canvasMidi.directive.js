@@ -361,13 +361,13 @@
                 if(scope.debug){
                   ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top);
                   //ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top+32);
+                  ctx.beginPath();
+                  ctx.moveTo(note.left,note.top);
+                  ctx.lineTo(note.left+NOTE_WIDTH,note.top);
+                  ctx.stroke();
+                  ctx.closePath();
                 }
 
-                ctx.beginPath();
-                ctx.moveTo(note.left,note.top);
-                ctx.lineTo(note.left+NOTE_WIDTH,note.top);
-                ctx.stroke();
-                ctx.closePath();
 
 
               }
