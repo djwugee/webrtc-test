@@ -359,7 +359,12 @@
                 ctx.drawImage(note.image,note.left,note.top);
 
                 if(scope.debug){
-                  ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top);
+                  var text= ''+note.accumulatedDelta;
+                  text=text.replace(/^(.*)\..*$/g,'$1');
+                  if(text.length>3){
+                    text=text.substring(0,text.length-3)+'.'+text.substring(text.length-3,text.length-1);
+                  }
+                  ctx.fillText(text, note.left+NOTE_WIDTH, note.top);
                   //ctx.fillText(note.accumulatedDelta, note.left+NOTE_WIDTH, note.top+32);
                   ctx.beginPath();
                   ctx.moveTo(note.left,note.top);
@@ -376,7 +381,7 @@
 
             if(scope.debug){
               var hztalTop=canvasMidiController.getUserTop();
-              ctx.fillText('Song time: '+scope.audio.currentTime, -10, hztalTop);
+              ctx.fillText('Song time: '+scope.audio.currentTime, 0, hztalTop);
             }
 
 
