@@ -2575,7 +2575,7 @@ WebRTCommCall.prototype.accept = function(configuration) {
                     {
                         this.createRTCPeerConnection();
                         if(configuration.audioMediaFlag || configuration.videoMediaFlag) {
-                            audiothis.peerConnection.addStream(this.configuration.localMediaStream);
+                            this.peerConnection.addStream(this.configuration.localMediaStream);
                         }
                         var sdpOffer = undefined;
                         if (window.webkitRTCPeerConnection)

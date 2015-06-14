@@ -9,6 +9,26 @@ angular.module('webrtcTestApp')
     $scope.instrument2='instrument2';
     $scope.instrument3='instrument3';
 
+    for (var i = 0 ; i < $rootScope.pMBplayers.length; i++)
+    {
+      var videoId = i + 1;
+      var video =  document.getElementById('video' + videoId);
+      if (i + 1 === $rootScope.pMBlocalPlayerId)
+      {
+          video.src = $rootScope.pMBlocalStream;
+      } else {
+          var remotePlayerId = $rootScope.pMBplayers[i];
+          var remoteCall = $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommActiveCalls.get(remotePlayerId);
+          video.src = URL.createObjectURL(
+          remoteCall.getRemoteBundledAudioVideoMediaStream() ||
+          remoteCall.getRemoteVideoMediaStream() ||
+          remoteCall.getRemoteAudioMediaStream()); 
+      }
+
+    }
+    
+   
+
     $rootScope.$on('playmyband.webrtc.data.message.received',function(event, message){
       $log.debug('PlayingCtrl - playing message received');
       var msgContent = JSON.parse(message.content);
