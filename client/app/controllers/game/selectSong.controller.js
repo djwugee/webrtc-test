@@ -21,6 +21,11 @@ angular.module('webrtcTestApp')
     ];
     $scope.selectedSong = $scope.songs[0].label;
 
+    
+    $rootScope.$on('playmyband.webrtc.usermedia.sucess',function(event, stream) {
+      $rootScope.pMBlocalStream = URL.createObjectURL(stream);
+    });    
+
     function downloadMidi()
     {
         $log.debug('downloading midi file');

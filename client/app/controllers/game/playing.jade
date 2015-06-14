@@ -19,6 +19,15 @@ block content
   div.col-md-4.col-sm-12(style=divStyle)  
     img(src='assets/images/drums.jpg')
 
+  div.col-md-4.col-sm-12(style=divStyle)
+    video(id='video1', ng-src='{{$root.pMBlocalStream}}' autoplay='autoplay')
+  div.col-md-4.col-sm-12(style=divStyle)
+    video(id='video2',ng-src='{{$root.pMBlocalStream}}' autoplay='autoplay')
+  div.col-md-4.col-sm-12(style=divStyle)  
+    video(id='video3',ng-src='{{$root.pMBlocalStream}}' autoplay='autoplay')    
+
+<video ></video>    
+
 
 
 //

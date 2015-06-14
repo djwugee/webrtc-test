@@ -163,7 +163,7 @@ angular.module('webrtcTestApp')
         // Get local user media
         try
         {
-            //this.getLocalUserMedia(TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT);
+            this.getLocalUserMedia(TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT);
         }
         catch(exception)
         {
@@ -245,8 +245,8 @@ angular.module('webrtcTestApp')
             var callConfiguration = {
                 displayName:this.DEFAULT_SIP_DISPLAY_NAME,
                 localMediaStream: this.localAudioVideoMediaStream,
-                audioMediaFlag:false,
-                videoMediaFlag:false,
+                audioMediaFlag:true,
+                videoMediaFlag:true,
                 messageMediaFlag:true,
                 audioCodecsFilter:null,
                 videoCodecsFilter:null
@@ -318,8 +318,8 @@ angular.module('webrtcTestApp')
                 var callConfiguration = {
                     displayName:this.DEFAULT_SIP_DISPLAY_NAME,
                     localMediaStream: this.localAudioVideoMediaStream,
-                    audioMediaFlag:false,
-                    videoMediaFlag:false,
+                    audioMediaFlag:true,
+                    videoMediaFlag:true,
                     messageMediaFlag:true
                 };
                 this.webRTCommCall.accept(callConfiguration);            
