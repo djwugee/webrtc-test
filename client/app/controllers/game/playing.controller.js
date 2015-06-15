@@ -19,10 +19,12 @@ angular.module('webrtcTestApp')
       } else {
           var remotePlayerId = $rootScope.pMBplayers[i];
           var remoteCall = $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommActiveCalls.get(remotePlayerId);
-          video.src = URL.createObjectURL(
-          remoteCall.getRemoteBundledAudioVideoMediaStream() ||
-          remoteCall.getRemoteVideoMediaStream() ||
-          remoteCall.getRemoteAudioMediaStream()); 
+          if (remoteCall) {
+            video.src = URL.createObjectURL(
+            remoteCall.getRemoteBundledAudioVideoMediaStream() ||
+            remoteCall.getRemoteVideoMediaStream() ||
+            remoteCall.getRemoteAudioMediaStream()); 
+          }
       }
 
     }

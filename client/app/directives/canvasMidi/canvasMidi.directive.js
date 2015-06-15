@@ -188,7 +188,7 @@
             * Creates a new note to be rendered scrolling down
            */
           this.createMidiNote=   function (noteEvent){
-            $log.debug('Creating midi note accumulatedDelta: '+noteEvent.accumulatedDelta,noteEvent);
+            //$log.debug('Creating midi note accumulatedDelta: '+noteEvent.accumulatedDelta,noteEvent);
             var noteIndex=noteEvent.noteNumber;
             //calculate iamge vars
             var image= noteImages[noteIndex];

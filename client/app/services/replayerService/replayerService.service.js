@@ -105,7 +105,7 @@
             {
               //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
               var millisecondsToNextEvent= beatsToNextEvent * millisecondsPerBeat;
-              console.log('seconds/milli toNextEvent: '+secondsToNextEvent+'/'+millisecondsToNextEvent);
+              //console.log('seconds/milli toNextEvent: '+secondsToNextEvent+'/'+millisecondsToNextEvent);
 
               var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + millisecondsToNextEvent;
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
