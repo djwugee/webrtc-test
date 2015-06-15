@@ -9,9 +9,9 @@ block content
   // var divStyle='text-align:center;border:1px dashed red;';
   div.col-md-12.col-sm-12
     pre Global Score= {{globalScore}}
-  div.col-md-4.col-sm-12(canvas-midi="instrument1",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",style=divStyle)
-  div.col-md-4.col-sm-12(canvas-midi="instrument2",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",style=divStyle)
-  div.col-md-4.col-sm-12(canvas-midi="instrument3",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",style=divStyle)
+  div.col-md-4.col-sm-12(canvas-midi="instrument1",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",canvas-midi-delta-zero="deltaZeroMidi",canvas-song-delay="pMBsecondsInAdvance",style=divStyle)
+  div.col-md-4.col-sm-12(canvas-midi="instrument2",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",canvas-midi-delta-zero="deltaZeroMidi",canvas-song-delay="pMBsecondsInAdvance",style=divStyle)
+  div.col-md-4.col-sm-12(canvas-midi="instrument3",canvas-midi-audio="pMBsongAudio",canvas-midi-debug="!serverRuntime",canvas-midi-delta-zero="deltaZeroMidi",canvas-song-delay="pMBsecondsInAdvance",style=divStyle)
   div.col-md-2.col-sm-6(style=divStyle)
     img(src='assets/images/guitar.jpg' style="width: 90%; height: 90%")
   div.col-md-2.col-sm-6(style=divStyle)
@@ -24,19 +24,3 @@ block content
     img(src='assets/images/drums.jpg' style="width: 90%; height: 90%")
   div.col-md-2.col-sm-6(style=divStyle)
     video(id='video3',ng-src='{{$root.pMBlocalStream}}' autoplay='autoplay' height="100px" width="100px")
-       
-
-<video ></video>    
-
-
-
-//
-  - var divStyle=''; 
-  .col-md-12
-      h1.page-header(ng-controller='PlayingCtrl') Playing, GlobalScore={{globalScore}}
-
-      div.col-md-4.col-sm-12(canvas-midi="instrument1",style=divStyle)
-      div.col-md-4.col-sm-12(canvas-midi="instrument2",style=divStyle)
-      div.col-md-4.col-sm-12(canvas-midi="instrument3",style=divStyle)
-      div.col-md-12.col-sm-12
-        pre Global Score= {{globalScore}}

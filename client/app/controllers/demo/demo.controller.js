@@ -7,17 +7,17 @@ angular.module('webrtcTestApp')
     var serverRuntime=$rootScope.serverRuntime;
 
     //loading demo info
-    //var localMidiUrl='/assets/midi/PearlJamBetterMan/notes.mid';
-    //var serverMidiUrl='/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
+    var localMidiUrl='/assets/midi/PearlJamBetterMan/notes.mid';
+    var serverMidiUrl='/playmyband/assets/midi/PearlJamBetterMan/notes.mid';
 
-    //var localSongUrl='/assets/midi/PearlJamBetterMan/guitar.ogg';
-    //var serverSongUrl='/playmyband/assets/midi/PearlJamBetterMan/guitar.ogg';
+    var localSongUrl='/assets/midi/PearlJamBetterMan/guitar.ogg';
+    var serverSongUrl='/playmyband/assets/midi/PearlJamBetterMan/guitar.ogg';
 
-    var localMidiUrl='/assets/midi/bangbang/notes.mid';
-    var serverMidiUrl='/playmyband/assets/midi/bangbang/notes.mid';
+    //var localMidiUrl='/assets/midi/bangbang/notes.mid';
+    //var serverMidiUrl='/playmyband/assets/midi/bangbang/notes.mid';
 
-    var localSongUrl='/assets/midi/bangbang/guitar.ogg';
-    var serverSongUrl='/playmyband/assets/midi/bangbang/guitar.ogg';
+    //var localSongUrl='/assets/midi/bangbang/guitar.ogg';
+    //var serverSongUrl='/playmyband/assets/midi/bangbang/guitar.ogg';
 
 
 
@@ -27,8 +27,8 @@ angular.module('webrtcTestApp')
 
     $rootScope.pMBdifficultyLevel = [96, 100];
     $rootScope.pMBplayers=[];
-    $rootScope.pMBlocalPlayerId=2;
-    $rootScope.pMBsecondsInAdvance = 5;
+    $rootScope.pMBlocalPlayerId=1;
+    $rootScope.pMBsecondsInAdvance = 6;
 
     $rootScope.pMBmidiFile=null;
     $scope.error=null;

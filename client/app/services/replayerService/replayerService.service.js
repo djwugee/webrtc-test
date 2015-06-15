@@ -101,16 +101,17 @@
             };
             var beatsToNextEvent = ticksToNextEvent / ticksPerBeat;
             var secondsToNextEvent = beatsToNextEvent / (beatsPerMinute / 60);
-            if (typeof(nextEvent.noteNumber) !== 'undefined')
-            {
+            //if (typeof(nextEvent.noteNumber) !== 'undefined')            {
               //console.debug('track:' + nextEventTrack + 'last accumulated:' + trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + 'secondToNextEvet:' + (secondsToNextEvent * 1000));
               var millisecondsToNextEvent= beatsToNextEvent * millisecondsPerBeat;
-              //console.log('seconds/milli toNextEvent: '+secondsToNextEvent+'/'+millisecondsToNextEvent);
 
               var nextAccumulatedDelta = trackAccumulatedDelta[trackAccumulatedDelta.length - 1].total + millisecondsToNextEvent;
+              //console.log(nextEventTrack+') nextAccumulatedDelta: '+nextAccumulatedDelta);
+
+
               trackAccumulatedDelta[trackAccumulatedDelta.length] = { noteNumber : nextEvent.noteNumber, total : nextAccumulatedDelta, track : nextEventTrack};  
               nextEvent.accumulatedDelta=nextAccumulatedDelta;
-            }
+            //}
             samplesToNextEvent += secondsToNextEvent * synth.sampleRate;
           } else {
             nextEventInfo = null;
@@ -159,7 +160,7 @@
                 case 'setTempo':
                   beatsPerMinute = 60000000 / event.microsecondsPerBeat;
                   millisecondsPerBeat= event.microsecondsPerBeat/1000;
-                  console.log('\n\n\nSET TEMPO!!! '+millisecondsPerBeat);
+                  console.log('\n\n\nBeats per minute '+beatsPerMinute);
               }
               break;
             case 'channel':
@@ -195,13 +196,15 @@
             var userNoteDif = Math.abs(trackAccumulatedDelta[i].total - accumulatedDelta);
             //console.debug('UserNoteDif:' + userNoteDif);
             if ( trackAccumulatedDelta[i].track === track &&
+              trackAccumulatedDelta[i].noteNumber &&
+              trackAccumulatedDelta[i].noteNumber>0 &&
               trackAccumulatedDelta[i].noteNumber === noteNumber && 
               userNoteDif <= marginOfError) {
               isThere = true;
               break;
             } else if (userNoteDif > 10000) {
               //remove accumulated, no longer required. reduces comparisons on next note
-              //trackAccumulatedDelta.splice(i,1);
+              trackAccumulatedDelta.splice(i,1);
               //by now just stop
               break;
             }

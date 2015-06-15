@@ -3,7 +3,8 @@
 angular.module('webrtcTestApp')
   .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService) {
     //number of seconds in advance the notes are rendered in canvas
-    $rootScope.pMBsecondsInAdvance = 5;
+    $rootScope.pMBsecondsInAdvance = 6;
+    $rootScope.pMBlocalStream = null;
 
     $scope.songs=[
       {
@@ -17,7 +18,12 @@ angular.module('webrtcTestApp')
       {
         label:'DisturbedTheSicknes',
         src:'DisturbedTheSicknes'
+      },
+      {
+        label:'bangbang',
+        src:'bangbang'
       }      
+
     ];
     $scope.selectedSong = $scope.songs[0].label;
 
