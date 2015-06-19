@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .service('$webRtcService', function ($rootScope,$window,$log) {
+  .service('$webRtcService', function ($rootScope,$window,$log,$http) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     /*
      * TeleStax, Open Source Cloud Communications
@@ -46,6 +46,29 @@ angular.module('webrtcTestApp')
         this.webRTCommCall=undefined;
         this.sipContact=TelScaleWebRTCPhoneController.prototype.DEFAULT_SIP_CONTACT;
         this.arrayToStoreChunks = [];
+        $rootScope.iceServers = undefined;
+        var postData = $.param({
+                  domain: 'www.104.155.83.241', // FIXME: what should go here ?
+                  room: 'default',
+                  application: 'playmyband',
+                  ident: this.DEFAULT_TURN_LOGIN,
+                  secret: this.DEFAULT_TURN_PASSWORD,
+                  secure: '1'
+                });
+        var postReq = {
+            method :'POST',
+            url:this.DEFAULT_TURN_SERVER,
+            data: postData,
+            headers : {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}                
+        };        
+        $http(postReq).
+          success(function(data, status, headers, config) {
+            $log.debug('IceServers set to...', data, status,headers, config);            
+            $rootScope.iceServers = data.d.iceServers;
+          }).
+          error(function(data, status, headers, config) {
+            $log.debug('error getting iceServers', data, status, headers, config);
+          });         
     }
 
     TelScaleWebRTCPhoneController.prototype.constructor=TelScaleWebRTCPhoneController;
@@ -81,6 +104,7 @@ angular.module('webrtcTestApp')
     TelScaleWebRTCPhoneController.prototype.register=function(sipUserName)
     {
         console.debug ('TelScaleWebRTCPhoneController:onClickRegister()');
+
         if(this.webRTCommClientConfiguration === undefined) {
           // Setup SIP default Profile
           this.webRTCommClientConfiguration =  { 
@@ -99,7 +123,7 @@ angular.module('webrtcTestApp')
               },
               RTCPeerConnection:
               {
-                  iceServers:this.DEFAULT_ICE_SERVERS,
+                  iceServers:$rootScope.iceServers,
                   stunServer:this.DEFAULT_STUN_SERVER,
                   turnServer:this.DEFAULT_TURN_SERVER, 
                   turnLogin:this.DEFAULT_TURN_LOGIN,

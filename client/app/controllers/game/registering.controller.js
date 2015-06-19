@@ -12,11 +12,12 @@ angular.module('webrtcTestApp')
       $window.alert('conn failed');
     });    
 
+    
+    $rootScope.pMBplayers= [];      
+    $rootScope.pMBtelScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
 
     $scope.registerPlayer=function(userModel){
       $rootScope.pMBlocalPlayerName=userModel.name;
-      $rootScope.pMBplayers= [];      
-      $rootScope.pMBtelScaleWebRTCPhoneController = new $webRtcService.TelScaleWebRTCPhoneController();
       $rootScope.pMBtelScaleWebRTCPhoneController.register(userModel.name);
     } ; 
 
