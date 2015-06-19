@@ -65,8 +65,8 @@ angular.module('webrtcTestApp')
     TelScaleWebRTCPhoneController.prototype.DEFAULT_ICE_SERVERS=undefined;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_STUN_SERVER='stun.l.google.com:19302'; 
     TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_SERVER='https://api.xirsys.com/getIceServers';
-    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_LOGIN=''; 
-    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_PASSWORD=''; 
+    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_LOGIN='jaimehomer'; 
+    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_PASSWORD='6d879ff7-96ac-45c7-a408-a998c197dee3'; 
     TelScaleWebRTCPhoneController.prototype.DEFAULT_AUDIO_CODECS_FILTER=undefined; // RTCPeerConnection default codec filter
     TelScaleWebRTCPhoneController.prototype.DEFAULT_VIDEO_CODECS_FILTER=undefined; // RTCPeerConnection default codec filter
     TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT='{\'mandatory\': {\'maxWidth\': 500}}';
