@@ -10,10 +10,7 @@ angular.module('webrtcTestApp')
       $scope.$digest();
     });
 
-    $rootScope.$on('playmyband.webrtc.call.opened',function(event, webRTCommCall) {
-      $log.debug('Call established:', event,webRTCommCall);
-      
-      setTimeout(function(){
+    $rootScope.$on('playmyband.webrtc.datachannel.open',function() {
         var sessionInitMsg = {players:$rootScope.pMBplayers, 
           songURL:$rootScope.pMBsongURL, 
           midiURL:$rootScope.pMBmidiURL, 
@@ -21,7 +18,22 @@ angular.module('webrtcTestApp')
           noteErrorMarginMS:$rootScope.pMBnoteErrorMarginMS};
         $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
         $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(sessionInitMsg));
-      },5000);       
+    });    
+
+    
+
+    $rootScope.$on('playmyband.webrtc.call.opened',function(event, webRTCommCall) {
+      $log.debug('Call established:', event,webRTCommCall);
+      
+      /*setTimeout(function(){
+        var sessionInitMsg = {players:$rootScope.pMBplayers, 
+          songURL:$rootScope.pMBsongURL, 
+          midiURL:$rootScope.pMBmidiURL, 
+          difficultyLevel:$rootScope.pMBdifficultyLevel,
+          noteErrorMarginMS:$rootScope.pMBnoteErrorMarginMS};
+        $log.debug('Sending sessionInitMsg:' + sessionInitMsg);
+        $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(sessionInitMsg));
+      },5000); */      
 
     }); 
 

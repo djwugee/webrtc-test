@@ -594,6 +594,12 @@ angular.module('webrtcTestApp')
         $rootScope.$broadcast('playmyband.webrtc.message.send.error',message);
     };
 
+    TelScaleWebRTCPhoneController.prototype.onWebRTCommDataMessageChannelOnOpenEvent = function() {
+        $rootScope.$broadcast('playmyband.webrtc.datachannel.open');
+    };    
+
+    
+
     return {
       TelScaleWebRTCPhoneController:TelScaleWebRTCPhoneController
     };
