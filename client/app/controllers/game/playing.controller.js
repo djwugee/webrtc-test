@@ -10,27 +10,31 @@ angular.module('webrtcTestApp')
     $scope.instrument3='instrument3';
 
 
-    for (var i = 0 ; i < $rootScope.pMBplayers.length; i++)
-    {
-      var videoId = i + 1;
-      var video =  document.getElementById('video' + videoId);
-      if (i + 1 === $rootScope.pMBlocalPlayerId)
-      {
-        // control no video errors
-        if($rootScope.pMBlocalStream){
-          video.src = $rootScope.pMBlocalStream;
-        }
-      } else {
-          var remotePlayerId = $rootScope.pMBplayers[i];
-          var remoteCall = $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommActiveCalls.get(remotePlayerId);
-          if (remoteCall) {
-            video.src = URL.createObjectURL(
-            remoteCall.getRemoteBundledAudioVideoMediaStream() ||
-            remoteCall.getRemoteVideoMediaStream() ||
-            remoteCall.getRemoteAudioMediaStream()); 
-          }
-      }
 
+    function prepareVideoSrc()
+    {
+      for (var i = 0 ; i < $rootScope.pMBplayers.length; i++)
+      {
+        var videoId = i + 1;
+        var video =  document.getElementById('video' + videoId);
+        if (i + 1 === $rootScope.pMBlocalPlayerId)
+        {
+          // control no video errors
+          if($rootScope.pMBlocalStream){
+            video.src = $rootScope.pMBlocalStream;
+          }
+        } else {
+            var remotePlayerId = $rootScope.pMBplayers[i];
+            var remoteCall = $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommActiveCalls.get(remotePlayerId);
+            if (remoteCall) {
+              video.src = URL.createObjectURL(
+              remoteCall.getRemoteBundledAudioVideoMediaStream() ||
+              remoteCall.getRemoteVideoMediaStream() ||
+              remoteCall.getRemoteAudioMediaStream()); 
+            }
+        }
+
+      }      
     }
     
    
@@ -177,6 +181,11 @@ angular.module('webrtcTestApp')
     }
 
     playMidi();
+
+    if ($rootScope.pMBtelScaleWebRTCPhoneController.audio || $rootScope.pMBtelScaleWebRTCPhoneController.video)
+    {
+      prepareVideoSrc();  
+    }
 
 
 

@@ -46,6 +46,8 @@ angular.module('webrtcTestApp')
         this.webRTCommCall=undefined;
         this.sipContact=TelScaleWebRTCPhoneController.prototype.DEFAULT_SIP_CONTACT;
         this.arrayToStoreChunks = [];
+        this.audio = false;
+        this.video=false;
         $rootScope.iceServers = undefined;
         var postData = $.param({
                   domain: 'www.104.155.83.241', // FIXME: what should go here ?
@@ -183,17 +185,7 @@ angular.module('webrtcTestApp')
     TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenedEvent=function()
     {
         console.debug ('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent()');
-        $rootScope.$broadcast('playmyband.webrtc.client.opened');     
-        // Get local user media
-        try
-        {
-            this.getLocalUserMedia(TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT);
-        }
-        catch(exception)
-        {
-            console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
-            console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
-        }   
+        $rootScope.$broadcast('playmyband.webrtc.client.opened');
     };
         
     TelScaleWebRTCPhoneController.prototype.onWebRTCommClientOpenErrorEvent=function(error)
@@ -220,8 +212,8 @@ angular.module('webrtcTestApp')
         if(navigator.getMedia)
         {
             navigator.getMedia({
-                audio:true, 
-                video: true,
+                audio:that.audio, 
+                video: that.audio,
             }, function(localMediaStream) {
                 that.onGetUserMediaSuccessEventHandler(localMediaStream);
             }, function(error) {
@@ -269,8 +261,8 @@ angular.module('webrtcTestApp')
             var callConfiguration = {
                 displayName:this.DEFAULT_SIP_DISPLAY_NAME,
                 localMediaStream: this.localAudioVideoMediaStream,
-                audioMediaFlag:true,
-                videoMediaFlag:true,
+                audioMediaFlag:this.audio,
+                videoMediaFlag:this.video,
                 messageMediaFlag:true,
                 audioCodecsFilter:null,
                 videoCodecsFilter:null
@@ -342,8 +334,8 @@ angular.module('webrtcTestApp')
                 var callConfiguration = {
                     displayName:this.DEFAULT_SIP_DISPLAY_NAME,
                     localMediaStream: this.localAudioVideoMediaStream,
-                    audioMediaFlag:true,
-                    videoMediaFlag:true,
+                    audioMediaFlag:this.audio,
+                    videoMediaFlag:this.video,
                     messageMediaFlag:true
                 };
                 this.webRTCommCall.accept(callConfiguration);            
@@ -487,7 +479,6 @@ angular.module('webrtcTestApp')
                 catch(exception)
                 {
                     console.error('WebRTCommTestWebAppController:onClickSendMessage(): catched exception:'+exception); 
-                    $window.alert('Send message failed:'+exception);
                 }
             }
             else
@@ -516,7 +507,6 @@ angular.module('webrtcTestApp')
                 catch(exception)
                 {
                     console.error('WebRTCommTestWebAppController:onClickSendDataMessage(): catched exception:'+exception); 
-                    $window.alert('Send message failed:'+exception);
                 }
             }
             else
