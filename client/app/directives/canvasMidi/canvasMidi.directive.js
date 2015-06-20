@@ -219,16 +219,6 @@
           };
 
 
-        },link:function(scope, element,attrs,controller){
-          /*
-           * create random notes onclik
-          */
-          element.bind('click',function(){
-            controller.createMidiNote(scope.lastNote);
-            scope.lastNote= (scope.lastNote+1)%NUMBER_OF_DIFFERENT_NOTES;
-
-          });
-
         }
       };
     })
@@ -444,7 +434,7 @@
           element.bind('mousedown',function(event){
             $log.debug('mouse down received', event);
             var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
-            var rect = canvas.getBoundingClientRect();
+            var rect = element[0].getBoundingClientRect();
             var actualCoorX = event.clientX - rect.left;
             var notePressed = Math.floor(actualCoorX / (element[0].clientWidth / NUMBER_OF_DIFFERENT_NOTES)) % NUMBER_OF_DIFFERENT_NOTES;
             $rootScope.$broadcast('playmyband.user.noteDown',notePressed, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
@@ -456,7 +446,7 @@
           element.bind('mouseup',function(event){
             $log.debug('mouseup received', event);
             var accumulatedNoteDelta = window.performance.now() - $rootScope.pMBplayingStartTimestamp;
-            var rect = canvas.getBoundingClientRect();
+            var rect = element[0].getBoundingClientRect();
             var actualCoorX = event.clientX - rect.left;
             var notePressed = Math.floor(actualCoorX / (element[0].clientWidth / NUMBER_OF_DIFFERENT_NOTES)) % NUMBER_OF_DIFFERENT_NOTES;
             $rootScope.$broadcast('playmyband.user.noteUp',notePressed, accumulatedNoteDelta, $rootScope.pMBlocalPlayerId);
