@@ -25,23 +25,7 @@ angular.module('webrtcTestApp')
       }      
 
     ];
-    $scope.selectedSong = $scope.songs[0].label;
-
-    $rootScope.$on('playmyband.webrtc.client.opened',function(event, stream) {
-      $rootScope.pMBlocalStream = URL.createObjectURL(stream);
-        try
-        {
-          if ($rootScope.pMBtelScaleWebRTCPhoneController.audio || $rootScope.pMBtelScaleWebRTCPhoneController.video)
-          {
-            this.getLocalUserMedia($rootScope.pMBtelScaleWebRTCPhoneController.DEFAULT_LOCAL_VIDEO_FORMAT);
-          }
-        }
-        catch(exception)
-        {
-            console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
-            console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
-        }       
-    });     
+    $scope.selectedSong = $scope.songs[0].label;  
 
     $rootScope.$on('playmyband.webrtc.usermedia.sucess',function(event, stream) {
       $rootScope.pMBlocalStream = URL.createObjectURL(stream);

@@ -44,4 +44,10 @@ angular.module('webrtcTestApp')
         templateUrl: 'app/controllers/game/playing.html',
         controller: 'PlayingCtrl'
       });
+    $stateProvider
+      .state('main.error', {
+        url: 'game',
+        templateUrl: 'app/controllers/game/error.html',
+        controller: 'ErrorCtrl'
+      });      
   });

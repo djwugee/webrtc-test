@@ -49,28 +49,6 @@ angular.module('webrtcTestApp')
         this.audio = false;
         this.video=false;
         $rootScope.iceServers = undefined;
-        var postData = $.param({
-                  domain: 'www.104.155.83.241', // FIXME: what should go here ?
-                  room: 'default',
-                  application: 'playmyband',
-                  ident: this.DEFAULT_TURN_LOGIN,
-                  secret: this.DEFAULT_TURN_PASSWORD,
-                  secure: '1'
-                });
-        var postReq = {
-            method :'POST',
-            url:this.DEFAULT_TURN_SERVER,
-            data: postData,
-            headers : {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}                
-        };        
-        $http(postReq).
-          success(function(data, status, headers, config) {
-            $log.debug('IceServers set to...', data, status,headers, config);            
-            $rootScope.iceServers = data.d.iceServers;
-          }).
-          error(function(data, status, headers, config) {
-            $log.debug('error getting iceServers', data, status, headers, config);
-          });         
     }
 
     TelScaleWebRTCPhoneController.prototype.constructor=TelScaleWebRTCPhoneController;
@@ -89,16 +67,46 @@ angular.module('webrtcTestApp')
     //TelScaleWebRTCPhoneController.prototype.DEFAULT_STUN_SERVER='undefined'; // stun.l.google.com:19302
     TelScaleWebRTCPhoneController.prototype.DEFAULT_ICE_SERVERS=undefined;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_STUN_SERVER='stun.l.google.com:19302'; 
-    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_SERVER='https://api.xirsys.com/getIceServers';
-    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_LOGIN='jaimehomer'; 
-    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_PASSWORD='6d879ff7-96ac-45c7-a408-a998c197dee3'; 
+    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_SERVER='turn2.xirsys.com:443?transport=tcp';
+    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_LOGIN='22d6e7ba-5a0e-4674-9762-caafe43c1df2'; 
+    TelScaleWebRTCPhoneController.prototype.DEFAULT_TURN_PASSWORD='5119438d-0f3e-4a01-8b22-e88dbf3f49ef'; 
     TelScaleWebRTCPhoneController.prototype.DEFAULT_AUDIO_CODECS_FILTER=undefined; // RTCPeerConnection default codec filter
     TelScaleWebRTCPhoneController.prototype.DEFAULT_VIDEO_CODECS_FILTER=undefined; // RTCPeerConnection default codec filter
     TelScaleWebRTCPhoneController.prototype.DEFAULT_LOCAL_VIDEO_FORMAT='{\'mandatory\': {\'maxWidth\': 500}}';
     TelScaleWebRTCPhoneController.prototype.DEFAULT_SIP_URI_CONTACT_PARAMETERS=undefined;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_DTLS_SRTP_KEY_AGREEMENT_MODE=true;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_FORCE_TURN_MEDIA_RELAY_MODE=false;
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_URL='https://api.xirsys.com/getIceServers'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_LOGIN='jaimehomer'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_PASSWORD='6d879ff7-96ac-45c7-a408-a998c197dee3';     
 
+    TelScaleWebRTCPhoneController.prototype.retrieveIceServers=function()
+    {
+        var postData = $.param({
+                  domain: 'www.104.155.83.241', // FIXME: what should go here ?
+                  room: 'default',
+                  application: 'playmyband',
+                  ident: this.XIRSYS_LOGIN,
+                  secret: this.XIRSYS_PASSWORD,
+                  secure: '1'
+                });
+        var postReq = {
+            method :'POST',
+            url:this.XIRSYS_URL,
+            data: postData,
+            headers : {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}                
+        };        
+        $http(postReq).
+          success(function(data, status, headers, config) {
+            $log.debug('IceServers set to...', data, status,headers, config);            
+            $rootScope.iceServers = data.d.iceServers;
+            $rootScope.$broadcast('playmyband.webrtc.iceservers.retrieved',data);
+          }).
+          error(function(data, status, headers, config) {
+            $log.debug('error getting iceServers', data, status, headers, config);
+            $rootScope.$broadcast('playmyband.webrtc.iceservers.error',data);
+          }); 
+    };
 
     /**
      * on connect event handler
