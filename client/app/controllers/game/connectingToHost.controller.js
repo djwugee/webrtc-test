@@ -48,13 +48,21 @@ angular.module('webrtcTestApp')
 
       $rootScope.$on('playmyband.connected',function(event, message){
         $log.debug('connected to main game as player...',message);
-        $rootScope.pMBlocalPlayerId=message.players.indexOf($rootScope.pMBlocalPlayerName) + 1;
+        var localPlayerIndex = message.players.indexOf($rootScope.pMBlocalPlayerName);
+        $rootScope.pMBlocalPlayerId=localPlayerIndex + 1;
         $rootScope.pMBplayers= message.players;
         $rootScope.pMBsongURL = message.songURL;
         $rootScope.pMBmidiURL = message.midiURL;
   		  $rootScope.pMBdifficultyLevel = message.difficultyLevel;
         $rootScope.pMBnoteErrorMarginMS = message.noteErrorMarginMS;
-        downloadMidi();      
+        downloadMidi();
+        //last player calls to previous player to close the Mesh network
+        var previousPlayerIndex = localPlayerIndex - 1;
+        //prevent second player to call first again.
+        if (previousPlayerIndex > 0)
+        {
+          $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBplayers[previousPlayerIndex]);
+        }
       });
 
   });
