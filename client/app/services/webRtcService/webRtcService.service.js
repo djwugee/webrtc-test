@@ -86,13 +86,13 @@ angular.module('webrtcTestApp')
                   domain: 'www.104.155.83.241', // FIXME: what should go here ?
                   room: 'default',
                   application: 'playmyband',
-                  ident: this.XIRSYS_LOGIN,
-                  secret: this.XIRSYS_PASSWORD,
+                  ident: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_LOGIN,
+                  secret: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_PASSWORD,
                   secure: '1'
                 });
         var postReq = {
             method :'POST',
-            url:this.XIRSYS_URL,
+            url:$rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_URL,
             data: postData,
             headers : {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}                
         };        
@@ -100,10 +100,13 @@ angular.module('webrtcTestApp')
           success(function(data, status, headers, config) {
             $log.debug('IceServers set to...', data, status,headers, config);            
             $rootScope.iceServers = data.d.iceServers;
+            $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommClient.configuration.RTCPeerConnection.iceServers = data.d.iceServers; 
             $rootScope.$broadcast('playmyband.webrtc.iceservers.retrieved',data);
           }).
           error(function(data, status, headers, config) {
             $log.debug('error getting iceServers', data, status, headers, config);
+            $rootScope.iceServers = undefined;
+            $rootScope.pMBtelScaleWebRTCPhoneController.webRTCommClient.configuration.RTCPeerConnection.iceServers = undefined;
             $rootScope.$broadcast('playmyband.webrtc.iceservers.error',data);
           }); 
     };

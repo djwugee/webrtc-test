@@ -3,11 +3,23 @@
 angular.module('webrtcTestApp')
   .controller('WaitingPlayersHostCtrl', function ($rootScope,$scope,$log,$http,$state) {
 
+
+    $rootScope.$on('playmyband.webrtc.iceservers.error',function(){
+      if ($state.is('main.waitingPlayersHost')) {
+        $rootScope.pMBtelScaleWebRTCPhoneController.acceptCall();
+      }
+    });     
+
+    $rootScope.$on('playmyband.webrtc.iceservers.retrieved',function(){
+      if ($state.is('main.waitingPlayersHost')) {      
+        $rootScope.pMBtelScaleWebRTCPhoneController.acceptCall();
+      }
+    });
     
     $rootScope.$on('playmyband.webrtc.call.ringing',function(event, webRTCommCall) {
-      $rootScope.pMBtelScaleWebRTCPhoneController.acceptCall();
       $rootScope.pMBplayers.push(webRTCommCall.getCallerPhoneNumber());
       $scope.$digest();
+      $rootScope.pMBtelScaleWebRTCPhoneController.retrieveIceServers();
     });
 
     $rootScope.$on('playmyband.webrtc.datachannel.open',function() {

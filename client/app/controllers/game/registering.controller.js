@@ -19,15 +19,7 @@ angular.module('webrtcTestApp')
       }       
     });
 
-    $rootScope.$on('playmyband.webrtc.iceservers.retrieved',function(){
-      $rootScope.pMBtelScaleWebRTCPhoneController.register($rootScope.pMBlocalPlayerName);
-    });
 
-    $rootScope.$on('playmyband.webrtc.iceservers.error',function(){
-      //try with default conf anyway, myabe STUN works
-      $rootScope.pMBtelScaleWebRTCPhoneController.register($rootScope.pMBlocalPlayerName);
-    }); 
-    
 
     $rootScope.$on('playmyband.webrtc.client.openError',function(){
       $state.go('main.error');
@@ -39,7 +31,7 @@ angular.module('webrtcTestApp')
 
     $scope.registerPlayer=function(userModel){
       $rootScope.pMBlocalPlayerName=userModel.name;
-      $rootScope.pMBtelScaleWebRTCPhoneController.retrieveIceServers();      
+      $rootScope.pMBtelScaleWebRTCPhoneController.register($rootScope.pMBlocalPlayerName);
     } ; 
 
   });

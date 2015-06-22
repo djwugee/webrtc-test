@@ -83,13 +83,24 @@ angular.module('webrtcTestApp')
 
     };
 
+    $rootScope.$on('playmyband.webrtc.iceservers.error',function(){
+      if ($state.is('main.selectSong')) {
+        $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBremotePlayerName);
+        $state.go('main.connectingToHost');
+      }
+    });     
 
+    $rootScope.$on('playmyband.webrtc.iceservers.retrieved',function(){
+      if ($state.is('main.selectSong')) {      
+        $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBremotePlayerName);
+        $state.go('main.connectingToHost');
+      }
+    });
 
     $scope.joinGame=function(joinModel){
-
       $rootScope.pMBremotePlayerName = joinModel.contact;
-      $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBremotePlayerName);
-      $state.go('main.connectingToHost');      
+      $rootScope.pMBtelScaleWebRTCPhoneController.retrieveIceServers(); 
+      
     };
 
   });
