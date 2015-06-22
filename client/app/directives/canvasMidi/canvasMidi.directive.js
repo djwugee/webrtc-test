@@ -7,7 +7,7 @@
   var NOTE_WIDTH=64;
   //var VERTICAL_SCROLL_INCREMENT=1;
   var NUMBER_OF_DIFFERENT_NOTES=5;
-  var PIXELS_PER_MILLISECOND= NOTE_HEIGHT/1000;
+  var PIXELS_PER_MILLISECOND= NOTE_HEIGHT/500;
 
   //init images
   var guitarTextureImage= new Image();
@@ -18,11 +18,22 @@
   var greenNote= new Image();
   var purpleNote= new Image();
   var yellowNote= new Image();
-  redNote.src='assets/images/ic_action_record_red.png';
-  blueNote.src='assets/images/ic_action_record_blue.png';
-  greenNote.src='assets/images/ic_action_record_green.png';
-  purpleNote.src='assets/images/ic_action_record_purple.png';
-  yellowNote.src='assets/images/ic_action_record_yellow.png';
+  redNote.src='assets/images/ic_action_record_dark_red.png';
+  blueNote.src='assets/images/ic_action_record_dark_blue.png';
+  greenNote.src='assets/images/ic_action_record_dark_green.png';
+  purpleNote.src='assets/images/ic_action_record_dark_purple.png';
+  yellowNote.src='assets/images/ic_action_record_dark_yellow.png';
+
+  var redNoteOff= new Image();
+  var blueNoteOff= new Image();
+  var greenNoteOff= new Image();
+  var purpleNoteOff= new Image();
+  var yellowNoteOff= new Image();
+  redNoteOff.src='assets/images/ic_action_sun_dark_red.png';
+  blueNoteOff.src='assets/images/ic_action_sun_dark_blue.png';
+  greenNoteOff.src='assets/images/ic_action_sun_dark_green.png';
+  purpleNoteOff.src='assets/images/ic_action_sun_dark_purple.png';
+  yellowNoteOff.src='assets/images/ic_action_sun_dark_yellow.png';
 
   var userRedNote= new Image();
   var userBlueNote= new Image();
@@ -30,14 +41,15 @@
   var userPurpleNote= new Image();
   var userYellowNote= new Image();
 
-  userRedNote.src='assets/images/ic_action_record_dark_red.png';
-  userBlueNote.src='assets/images/ic_action_record_dark_blue.png';
-  userGreenNote.src='assets/images/ic_action_record_dark_green.png';
-  userPurpleNote.src='assets/images/ic_action_record_dark_purple.png';
-  userYellowNote.src='assets/images/ic_action_record_dark_yellow.png';
+  userRedNote.src='assets/images/ic_action_record_red.png';
+  userBlueNote.src='assets/images/ic_action_record_blue.png';
+  userGreenNote.src='assets/images/ic_action_record_green.png';
+  userPurpleNote.src='assets/images/ic_action_record_purple.png';
+  userYellowNote.src='assets/images/ic_action_record_yellow.png';
 
 
   var noteImages=[redNote,blueNote,greenNote,purpleNote,yellowNote];
+  var noteOffImages=[redNoteOff,blueNoteOff,greenNoteOff,purpleNoteOff,yellowNoteOff];
   var userNoteImages=[userRedNote,userBlueNote,userGreenNote,userPurpleNote,userYellowNote];
 
 
@@ -89,6 +101,7 @@
           var eventName='playmyband.canvas.usernote.'+$scope.canvasId;
           var releaseEventName='playmyband.canvas.usernoterelease.'+$scope.canvasId;
           var midiEventName='playmyband.canvas.midinote.'+$scope.canvasId;
+          var midiOffEventName='playmyband.canvas.midinoteoff.'+$scope.canvasId;
           $log.debug('Register user note events for '+eventName);
           var _this=this;
 
@@ -112,20 +125,19 @@
 
           });
 
-
-
           /**
             * capture midi event
             */
-
           $rootScope.$on(midiEventName,function(event, noteEvent){
-            //$log.debug('new midi note event',event,noteEvent);
-            if(noteEvent.event.noteNumber>=0 && noteEvent.event.noteNumber <=4){
-              _this.createMidiNote(noteEvent.event);
-              //_this.releaseUserNote(note);
-            }
-
+              _this.createMidiNote(noteEvent.event, noteImages);
           });
+
+          /**
+            * capture midi note offevent
+            */
+          $rootScope.$on(midiOffEventName,function(event, noteEvent){
+              _this.createMidiNote(noteEvent.event, noteOffImages);
+          });          
 
 
           /**
@@ -190,11 +202,11 @@
           /**
             * Creates a new note to be rendered scrolling down
            */
-          this.createMidiNote=   function (noteEvent){
+          this.createMidiNote=   function (noteEvent, noteImagesArray){
             //$log.debug('Creating midi note accumulatedDelta: '+noteEvent.accumulatedDelta,noteEvent);
             var noteIndex=noteEvent.noteNumber;
             //calculate iamge vars
-            var image= noteImages[noteIndex];
+            var image= noteImagesArray[noteIndex];
             var left= noteIndex*NOTE_WIDTH+ NOTE_WIDTH/2;
 
 
@@ -335,7 +347,7 @@
             //calculate delta to dwar Y coord
             var currentDelta=0;
             var audio= scope.audio;
-            //if song has not started (previous 6 seconds)
+            //if song has not started (previous pMBsecondsInAdvance)
             if(!audio || audio.currentTime<=0){
               //user the delta zero midi
               currentDelta= window.performance.now()-scope.deltaZeroMidi;

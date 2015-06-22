@@ -34,7 +34,6 @@
             if (generatorsByNote[noteEvent.noteNumber] && !generatorsByNote[noteEvent.noteNumber].released) {
               /* playing same note before releasing the last one. BOO */
               generatorsByNote[noteEvent.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
-              $rootScope.$broadcast('playmyband.midi.noteOffEvent',noteEvent);
             }
             //console.log('playing note' + note);
             $rootScope.$broadcast('playmyband.midi.noteEvent',noteEvent);
@@ -162,7 +161,7 @@
                 case 'setTempo':
                   beatsPerMinute = 60000000 / event.microsecondsPerBeat;
                   millisecondsPerBeat= event.microsecondsPerBeat/1000;
-                  console.log('\n\n\nBeats per minute '+beatsPerMinute);
+                  //console.log('\n\n\nBeats per minute '+beatsPerMinute);
               }
               break;
             case 'channel':

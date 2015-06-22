@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('PlayingCtrl', function ($rootScope,$scope,$log,$http,$audioService,$synthService,$replayerService) {
+  .controller('PlayingCtrl', function ($rootScope,$scope,$log,$http,$audioService,$synthService,$replayerService,$fxService) {
     $scope.globalScore = 0;
     //keep state of keys hold/down
     $scope.keysStatus = [];
@@ -120,12 +120,7 @@ angular.module('webrtcTestApp')
             $scope.$digest();          
           } else {
             //user failed,let him know by sound
-            var fretsUrl='/assets/fretsFX/fiba' + playerId + '.ogg';
-            if($rootScope.serverRuntime){
-              fretsUrl='/playmyband'+fretsUrl;
-            }
-            var noteFailedFX = new Audio(fretsUrl);
-            noteFailedFX.play();            
+            $fxService.playUserFailedNoteFXSound(playerId);            
           }
         },1); 
 
@@ -135,6 +130,19 @@ angular.module('webrtcTestApp')
       $rootScope.$broadcast(eventName,note);
     });
 
+    $rootScope.$on('playmyband.midi.noteOffEvent',function(event, noteEvent){
+      var normalizedNote = noteEvent.event.noteNumber - $rootScope.pMBdifficultyLevel[0];
+      noteEvent.event.noteNumber = normalizedNote;
+
+      //if note track is between 1 and 3
+      if(noteEvent.track>=1 && noteEvent.track<=3 && noteEvent.event.noteNumber >= 0 ){
+        //var eventName='playmyband.canvas.midinoteoff.instrument'+ noteEvent.track;
+
+        //send event
+        //$rootScope.$broadcast(eventName,noteEvent);        
+
+      }      
+    });
 
     $rootScope.$on('playmyband.midi.noteEvent',function(event, noteEvent){
       var normalizedNote = noteEvent.event.noteNumber - $rootScope.pMBdifficultyLevel[0];
@@ -142,7 +150,7 @@ angular.module('webrtcTestApp')
 
 
       //if note track is between 1 and 3
-      if(noteEvent.track>=1 && noteEvent.track<=3){
+      if(noteEvent.track>=1 && noteEvent.track<=3 && noteEvent.event.noteNumber >= 0 ){
         var eventName='playmyband.canvas.midinote.instrument'+ noteEvent.track;
 
         //send event
@@ -157,13 +165,7 @@ angular.module('webrtcTestApp')
       $rootScope.pMBreplayer = new $replayerService.Replayer($rootScope.pMBmidiFile, $rootScope.pMBsynth);
       $rootScope.pMBaudio = new $audioService.AudioPlayer($rootScope.pMBreplayer);
 
-      var startSongUrl='/assets/fretsFX/start.ogg';
-      if($rootScope.serverRuntime){
-        startSongUrl='/playmyband'+startSongUrl;
-      }
-
-      var songStartedFX = new Audio(startSongUrl);
-      songStartedFX.play();       
+      $fxService.playStartGameFXSound();       
 
       //start the sound later, this must be sync with midi and note rendering
       $log.debug('PlayingCtrl - song to play'+$rootScope.pMBsongURL);
