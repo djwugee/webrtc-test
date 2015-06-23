@@ -22,8 +22,8 @@ public class PMBGoogleOauthResource {
     public Response handleOauthCallback(@QueryParam("state") String state, @QueryParam("code") String code)
     {
         LOGGER.log(Level.INFO, "outhCall From google{},{}", new Object[]{state, code});
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder();
-        URI userUri = ub.path("../").build();        
+        UriBuilder ub = uriInfo.getBaseUriBuilder();
+        URI userUri = ub.path("../").build();     
         return Response.temporaryRedirect(userUri).build();
     }
 }

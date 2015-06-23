@@ -22,7 +22,7 @@ public class PMBFacebookOauthResource {
     public Response handleOauthCallback(@QueryParam("state") String state, @QueryParam("access-token") String code)
     {
         LOGGER.log(Level.INFO, "outhCall From facebook{},{}", new Object[]{state, code});
-        UriBuilder ub = uriInfo.getAbsolutePathBuilder();
+        UriBuilder ub = uriInfo.getBaseUriBuilder();
         URI userUri = ub.path("../").build();        
         return Response.temporaryRedirect(userUri).build();
     }
