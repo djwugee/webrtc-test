@@ -27,8 +27,8 @@ angular.module('webrtcTestApp', [
         //$log.debug('new state: ',toState);
 
         //redirect to playing if main state
-        if(toState.name==='main'){
-          $state.go('main.registeringPlayer');
+        if(toState.name==='main' || toState.name==='main.game'){
+          $state.go('main.game.login');
         }
 
       });

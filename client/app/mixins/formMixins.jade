@@ -1,6 +1,7 @@
 
-mixin form(formData)
-  form.form-inline(id=formData.id)
+mixin form(formData,formAttrs)
+  -formAttrs= formAttrs || {};
+  form.form-inline(id=formData.id)&attributes(formAttrs)
     block
 mixin input-group()
   .input-group.input-group-lg.col-xs-10.col-xs-offset-1

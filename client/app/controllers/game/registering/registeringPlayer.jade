@@ -1,0 +1,11 @@
+extends ../../../layouts/panelLayout.jade
+
+//header
+block header
+  | Hello {{user.name}}, we are registering your user, please wait!!
+
+
+//content
+block content
+  +form({id:"waitingRegistering"})
+    +progress-bar

@@ -1,0 +1,39 @@
+extends ../../../layouts/panelLayout.jade
+
+//header
+block header
+  | Who are you?
+
+//content
+block content
+  //normal login
+  +form({id:'normalLoginForm'})
+    +input-group
+      input.form-control#playerName(type='text' ng-model='user.name' required , placeholder="Player name...")
+      span.input-group-btn
+        input.btn.btn-primary.btn-lg#normalLogin(type="submit", ng-click="registerPlayer()" value="Login")
+  // g+ login
+  hr
+  +form({id:'normalLoginForm'},{style:'margin-top:1em;'})
+    +input-group
+      a.btn.btn-facebook.btn-lg(href='rest/facebookRegister')
+        i.fa.fa-facebook
+        |  Connect with Facebook
+  +form({id:'normalLoginForm'},{style:'margin-top:1em;'})
+    +input-group
+      a.btn.btn-google-plus.btn-lg(href='rest/googleRegister')
+        i.fa.fa-google-plus
+        |  Connect with Google+
+//
+  div
+    a.btn.btn-facebook(href='rest/googleRegister')
+      i.fa.fa-facebook
+      |  Connect with Facebook
+    = ' '
+    a.btn.btn-google-plus(href='', ng-click='loginOauth("google")')
+      i.fa.fa-google-plus
+      |  Connect with Google+
+    = ' '
+    a.btn.btn-twitter(href='', ng-click='loginOauth("twitter")')
+      i.fa.fa-twitter
+      |  Connect with Twitter
