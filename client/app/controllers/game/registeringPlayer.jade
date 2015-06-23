@@ -12,3 +12,9 @@ block content
       input.form-control(id="playerName" type='text' ng-model='user.name' required , placeholder="Player name...")
       span.input-group-btn
         input.btn.btn-primary.btn-lg(id="registerSubmit", type="button", ng-click="registerPlayer(user)" value="Register")
+  form(action='rest/googleRegister' method='get')
+    span.input-group-btn
+      input.btn.btn-primary.btn-lg(id="googleSubmit", type="submit",  value="LoginWithGoogle")  
+  form(action='rest/facebookRegister' method='get')
+    span.input-group-btn
+      input.btn.btn-primary.btn-lg(id="facebookSubmit", type="submit", value="LoginWithFacebook")  

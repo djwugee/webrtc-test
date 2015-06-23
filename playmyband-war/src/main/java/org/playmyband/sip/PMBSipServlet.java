@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.sip.Address;
@@ -19,6 +21,7 @@ import javax.servlet.sip.SipSession;
 import javax.servlet.sip.SipSession.State;
 import javax.servlet.sip.SipURI;
 import javax.servlet.sip.TimerListener;
+import org.plymyband.PMBRegistry;
 
 
 public class PMBSipServlet extends SipServlet implements TimerListener {
@@ -32,7 +35,8 @@ public class PMBSipServlet extends SipServlet implements TimerListener {
 
     HashMap<SipSession, SipSession> sessions = new HashMap<SipSession, SipSession>();
 
-    HashMap<String, Address> registeredUsersToIp = new HashMap<String, Address>();
+    @EJB()
+    private PMBRegistry registry;
     
     private static final String LAST_REQ_ATT = "lastRequest";
     private static final String LAST_RES_ATT = "lastResponse";
@@ -58,7 +62,8 @@ public class PMBSipServlet extends SipServlet implements TimerListener {
         SipServletRequest outRequest = sipFactory.createRequest(request.getApplicationSession(),
                 "INVITE", request.getFrom().getURI(), request.getTo().getURI());
         String user = ((SipURI) request.getTo().getURI()).getUser();
-        Address calleeAddress = registeredUsersToIp.get(user);
+        SipFactory sipFactory = (SipFactory) getServletContext().getAttribute(SIP_FACTORY);
+        Address calleeAddress = sipFactory.createAddress(registry.retrieveAddres(user));
         if (calleeAddress != null) {
             outRequest.setRequestURI(calleeAddress.getURI());
             if (request.getContent() != null) {
@@ -89,7 +94,7 @@ public class PMBSipServlet extends SipServlet implements TimerListener {
 
         Address addr = request.getAddressHeader("Contact");
         String user = ((SipURI) request.getFrom().getURI()).getUser();
-        registeredUsersToIp.put(user, addr);
+        registry.register(user, addr.toString());
         LOGGER.log(Level.INFO, "Address registered {}", addr);
         SipServletResponse sipServletResponse = request.createResponse(SipServletResponse.SC_OK);
         sipServletResponse.send();
@@ -117,7 +122,8 @@ public class PMBSipServlet extends SipServlet implements TimerListener {
             SipServletRequest outRequest = sipFactory.createRequest(request.getApplicationSession(),
                     "MESSAGE", request.getFrom().getURI(), request.getTo().getURI());
             String user = ((SipURI) request.getTo().getURI()).getUser();
-            Address calleeAddress = registeredUsersToIp.get(user);
+            SipFactory sipFactory = (SipFactory) getServletContext().getAttribute(SIP_FACTORY);
+            Address calleeAddress = sipFactory.createAddress(registry.retrieveAddres(user));            
             if (calleeAddress == null) {
                 request.createResponse(SipServletResponse.SC_NOT_FOUND).send();
                 return;
@@ -160,6 +166,7 @@ public class PMBSipServlet extends SipServlet implements TimerListener {
      * (non-Javadoc)
      * @see javax.servlet.sip.TimerListener#timeout(javax.servlet.sip.ServletTimer)
      */
+    @Override
     public void timeout(ServletTimer servletTimer) {
         SipSession sipSession = servletTimer.getApplicationSession().getSipSession((String) servletTimer.getInfo());
         if (!State.TERMINATED.equals(sipSession.getState())) {
