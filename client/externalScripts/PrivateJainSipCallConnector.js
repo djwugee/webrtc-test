@@ -47,7 +47,7 @@
  * @throw {String} Exception "bad argument"
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */
-PrivateJainSipCallConnector = function(clientConnector, webRTCommCall, sipCallId)
+var PrivateJainSipCallConnector = function(clientConnector, webRTCommCall, sipCallId)
 {
     console.debug("PrivateJainSipCallConnector:PrivateJainSipCallConnector()");
     if (clientConnector instanceof PrivateJainSipClientConnector && webRTCommCall instanceof WebRTCommCall)

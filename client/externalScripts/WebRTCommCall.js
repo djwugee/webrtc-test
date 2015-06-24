@@ -8,7 +8,7 @@
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  * @author Jean Deruelle (jean.deruelle@telestax.com) 
  */
-WebRTCommCall = function(webRTCommClient)
+var WebRTCommCall = function(webRTCommClient)
 {
     if (webRTCommClient instanceof WebRTCommClient)
     {

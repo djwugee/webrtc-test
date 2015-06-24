@@ -7,7 +7,7 @@
  * @param  {WebRTCommCall} webRTCommCall WebRTComm call owner 
  * @author Jean Deruelle (jean.deruelle@telestax.com) 
  */ 
-WebRTCommDataMessage = function(webRTCommClient, webRTCommCall)
+var WebRTCommDataMessage = function(webRTCommClient, webRTCommCall)
 {
     console.debug("WebRTCommDataMessage:WebRTCommDataMessage()");
     if((webRTCommClient instanceof WebRTCommClient) || (webRTCommCall instanceof WebRTCommCall))

@@ -5,7 +5,7 @@
  * @public
  * @param  {object} eventListener event listener object implementing WebRTCommClient and WebRTCommCall listener interface
  */
-WebRTCommClient = function(eventListener)
+var WebRTCommClient = function(eventListener)
 {
     if (typeof eventListener === 'object')
     {

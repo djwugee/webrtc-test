@@ -7,7 +7,7 @@
  * @param  {WebRTCommCall} webRTCommCall WebRTComm call owner 
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */ 
-WebRTCommMessage = function(webRTCommClient, webRTCommCall)
+var WebRTCommMessage = function(webRTCommClient, webRTCommCall)
 {
     console.debug("WebRTCommMessage:WebRTCommMessage()");
     if((webRTCommClient instanceof WebRTCommClient) || (webRTCommCall instanceof WebRTCommCall))

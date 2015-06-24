@@ -7,7 +7,7 @@
  * @throw {String} Exception "bad argument"
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  */
-PrivateJainSipClientConnector = function(webRTCommClient)
+var PrivateJainSipClientConnector = function(webRTCommClient)
 {
     console.debug("PrivateJainSipClientConnector:PrivateJainSipClientConnector()");
     if (webRTCommClient instanceof WebRTCommClient)

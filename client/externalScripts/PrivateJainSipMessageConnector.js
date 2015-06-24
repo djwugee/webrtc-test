@@ -10,7 +10,7 @@
  * @author Laurent STRULLU (laurent.strullu@orange.com) 
  * @author Jean Deruelle (jean.deruelle@ŧelestax.com)
  */
-PrivateJainSipMessageConnector = function(clientConnector, webRTCommMessage, sipCallId)
+var PrivateJainSipMessageConnector = function(clientConnector, webRTCommMessage, sipCallId)
 {
     console.debug("PrivateJainSipMessageConnector:PrivateJainSipMessageConnector()");
     if (clientConnector instanceof PrivateJainSipClientConnector && webRTCommMessage instanceof WebRTCommMessage)

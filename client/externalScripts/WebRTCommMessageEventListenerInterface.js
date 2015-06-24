@@ -5,8 +5,7 @@
  * @constructor
  * @public
  */ 
- WebRTCommMessageEventListenerInterface = function(){
-};
+ var WebRTCommMessageEventListenerInterface = function(){};
  
 
 /**
