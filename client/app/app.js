@@ -5,13 +5,14 @@ angular.module('webrtcTestApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'hateoas'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider
       .otherwise('/');
 
-    $locationProvider.html5Mode(false);
+    $locationProvider.html5Mode(true);
 
 
   })

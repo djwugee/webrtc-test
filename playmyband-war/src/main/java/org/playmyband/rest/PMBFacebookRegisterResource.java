@@ -15,7 +15,8 @@ import javax.ws.rs.core.Context;
 public class PMBFacebookRegisterResource {
 
     private static final String CLIENT_ID="1451789471806244";
-    private static final String REDIRECT_URI = "http://playmybandnow.ddns.net:8080/playmyband/rest/facebookOauth2callback";
+    private static final String REDIRECT_URI = "http://192.168.59.103:8080/playmyband/#/game/registering";
+//    private static final String REDIRECT_URI = "http://playmybandnow.ddns.net:8080/playmyband/rest/facebookOauth2callback";
     private static final String OAUTH_URL = "https://www.facebook.com/dialog/oauth";
     private static final String OAUTH_SCOPE= "public_profile";
     

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('RegisteringPlayerCtrl', function ($stateParams,$rootScope,$scope,$log,$midiService,$http,$state) {
+  .controller('RegisteringPlayerCtrl', function ($stateParams,$rootScope,$scope,$log,$midiService,$http,$state,$location) {
 
     var loginState='main.game.login';
 
@@ -9,6 +9,12 @@ angular.module('webrtcTestApp')
     //get name from scope or url
     $log.debug('Retrieving username from scope or stateParams',$scope.user,$stateParams.userName);
     $scope.user.name= $scope.user.name || $stateParams.userName;
+
+    //handle facebook login
+    if($scope.user.name==='facebook'){
+      // TODO handle facebook login
+      $log.debug('handling facebook login, redirect url: '+$location.path());
+    }
 
 
     function registerPlayer(userName){

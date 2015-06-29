@@ -1,0 +1,10 @@
+.col-md-10.col-md-offset-1(style='background-color:#FFFFFF;margin-top:2em')
+  #fb-root
+  h3 facebookCode: {{facebookCode}}
+  h3 access_token: {{access_token}}
+  //h3 
+    a(ng-href="{{confirmationUrl}}")
+      | Confirmation url
+  pre userData:{{userData | json}}
+  pre(ng-view="error") error:{{error | json}}
+
