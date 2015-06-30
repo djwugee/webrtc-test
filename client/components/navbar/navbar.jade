@@ -11,5 +11,5 @@ div.navbar.navbar-default.navbar-static-top(ng-controller='NavbarCtrl')
     div#navbar-main.navbar-collapse.collapse(collapse='isCollapsed')
       ul.nav.navbar-nav
         li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}', ui-sref-active="active")
-          p(ui-sref="{{item.name}}", ng-hide="true")
-          a(ng-href='{{item.link}}') {{item.title}}
+          a(ui-sref="{{item.name}}", ng-hide="false") {{item.title}}
+          a(ng-href='{{item.link}}', ng-hide="true") {{item.title}}

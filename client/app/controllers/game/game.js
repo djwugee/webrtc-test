@@ -16,13 +16,13 @@ angular.module('webrtcTestApp')
         templateUrl: 'app/controllers/game/registeringPlayer.html',
         controller: 'RegisteringPlayerCtrl'
       });   
-    */
     $stateProvider
       .state('main.selectSong', {
         url: 'game',
         templateUrl: 'app/controllers/game/selectSong.html',
         controller: 'SelectSongCtrl'
       });
+    */
     $stateProvider
       .state('main.waitingPlayersHost', {
         url: 'game',
