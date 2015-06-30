@@ -11,7 +11,7 @@ angular.module('webrtcTestApp')
     {
       'title': 'Game',
       'link': '#/game',
-      'name':'game.login'
+      'name':'main.game'
     },
     { 
       'title': 'Demo',

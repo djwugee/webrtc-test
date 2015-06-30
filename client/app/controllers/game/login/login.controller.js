@@ -2,7 +2,7 @@
 
 angular.module('webrtcTestApp')
   .controller('LoginCtrl', function ($scope,$log,$state,$rootScope) {
-    $log.debug('LoginCtrl');
+    $log.debug('LoginCtrl - entering');
 
     function initVarsForFacebook($scope){
 
@@ -19,7 +19,7 @@ angular.module('webrtcTestApp')
       //$http.get('www.facebook.com/me',function(result){$log.debug('result',result);},function(error){$log.debug('error',error);});
 
       $scope.facebookRedirectUrl=href;
-      $log.info('facebookRedirectUrl: '+$scope.facebookRedirectUrl);
+      $log.info('LoginCtrl - facebookRedirectUrl: '+$scope.facebookRedirectUrl);
 
       href= encodeURIComponent(href);
       $scope.facebookRedirectUrlEncoded=href;

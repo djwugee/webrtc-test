@@ -2,14 +2,15 @@
 
 angular.module('webrtcTestApp')
   .controller('FacebookCtrl', function ($rootScope,$scope,$location,$log,$resource,$state) {
+    $log.info('FacebookCtrl - entering...');
     var FACEBOOK_BASE_URL='https://graph.facebook.com/v2.3';
     
     //load HATEOAS resources
     var $oauthResource= $resource(FACEBOOK_BASE_URL+'/oauth/access_token');
     var $userResource= $resource(FACEBOOK_BASE_URL+'/me');
 
-    $log.info('Entering into FacebookCtrl, $location.absUrl():',$location.absUrl());
-    $log.info('Entering into FacebookCtrl, $location.search():',$location.search());
+    $log.debug('FacebookCtrl - $location.absUrl():',$location.absUrl());
+    $log.debug('FacebookCtrl - Entering into FacebookCtrl, $location.search():',$location.search());
 
     $scope.facebookCode=$location.search().code;
     $scope.accessToken='loading';
@@ -28,7 +29,7 @@ angular.module('webrtcTestApp')
       * Handle facebook userData query result. It's called after the code is validated.
       */
     var handleUserDataQuery= function(data, status, headers, config){
-      $log.info('Handling facebook userData query',data, status, headers, config);
+      $log.info('FacebookCtrl - Handling facebook userData query',data, status, headers, config);
 
 
       $scope.userData= data;
@@ -42,8 +43,8 @@ angular.module('webrtcTestApp')
     };
 
 
-    function handleError(resurceName,data, status, headers, config){
-      $log.error('Handling facebook '+resurceName+' query error',data, status, headers, config);
+    function handleError(resourceName,data, status, headers, config){
+      $log.error('FacebookCtrl - Handling facebook '+resourceName+' query error',data, status, headers, config);
       $scope.error=data.data.error;
     }
 
@@ -58,7 +59,7 @@ angular.module('webrtcTestApp')
 
 
     var handleFacebookOauthQuery= function(data, status, headers, config){
-      $log.info('Handling facebook OAUTH query',data, status, headers, config);
+      $log.info('FacebookCtrl - Handling facebook OAUTH query',data, status, headers, config);
 
       //update access token
       /*jshint camelcase: false */
@@ -86,7 +87,7 @@ angular.module('webrtcTestApp')
         access_token:$scope.accessToken
       };
 
-      $log.info('calling /me endpoint with params',requestParams);
+      $log.info('FacebookCtrl - calling facebook /me endpoint with params',requestParams);
       $userResource.get(
         requestParams,
         handleUserDataQuery,
@@ -109,7 +110,7 @@ angular.module('webrtcTestApp')
         scope:'basic_info'
       };
       
-      $log.info('GET oauth with params',requestParams);
+      $log.info('FacebookCtrl - calling GET /oauth/access_token with params',requestParams);
 
       $oauthResource.get(
         requestParams,

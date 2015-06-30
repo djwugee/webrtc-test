@@ -1,20 +1,16 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('RegisteringPlayerCtrl', function ($stateParams,$rootScope,$scope,$log,$midiService,$http,$state,$location) {
-
-    var loginState='main.game.login';
+  .controller('RegisteringPlayerCtrl', function ($stateParams,$rootScope,$scope,$log,$midiService,$http,$state) {
+    $log.info('RegisteringPlayerCtrl - entering');
+    var loginState=$rootScope.LOGIN_STATE;
+    var selectSongState= $rootScope.SELECT_SONG_STATE;
+    var errorState=$rootScope.ERROR_STATE;
 
 
     //get name from scope or url
-    $log.debug('Retrieving username from scope or stateParams',$scope.user,$stateParams.userName);
+    $log.debug('RegisteringPlayerCtrl - Retrieving username from scope or stateParams',$scope.user,$stateParams.userName);
     $scope.user.name= $scope.user.name || $stateParams.userName;
-
-    //handle facebook login
-    if($scope.user.name==='facebook'){
-      // TODO handle facebook login
-      $log.debug('handling facebook login, redirect url: '+$location.path());
-    }
 
 
     function registerPlayer(userName){
@@ -26,13 +22,12 @@ angular.module('webrtcTestApp')
     }
 
 
-    $log.debug('Registering player '+$scope.user.name);
     //if no username --> go to login
     if(!$scope.user.name){
-      $log.debug('No username, go to state: '+loginState);
+      $log.info('No username, go to state: '+loginState);
       $state.go(loginState);
     } else {
-      $log.debug('Registering player '+$scope.user.name);
+      $log.info('RegisteringPlayerCtrl - Registering player '+$scope.user.name);
       //SIP register
       registerPlayer($scope.user.name);
 
@@ -42,25 +37,26 @@ angular.module('webrtcTestApp')
 
 
     $rootScope.$on('playmyband.webrtc.client.opened',function(){
-      $state.go('main.selectSong');
-      try
-      {
-        if ($rootScope.pMBtelScaleWebRTCPhoneController.audio || $rootScope.pMBtelScaleWebRTCPhoneController.video)
-        {
+      $log.info('RegisteringPlayerCtrl - SIP register OK');
+      try {
+        if ($rootScope.pMBtelScaleWebRTCPhoneController.audio || $rootScope.pMBtelScaleWebRTCPhoneController.video){
+          $log.debug('RegisteringPlayerCtrl - trying to get local user media');
           this.getLocalUserMedia($rootScope.pMBtelScaleWebRTCPhoneController.DEFAULT_LOCAL_VIDEO_FORMAT);
         }
-      }
-      catch(exception)
-      {
-          console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
-          console.error('TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: '+exception);
+      }catch(exception){
+          $log.error('RegisteringPlayerCtrl - TelScaleWebRTCPhoneController:onWebRTCommClientOpenedEvent(): catched exception: ',exception);
       }       
+
+      $log.info('RegisteringPlayerCtrl - going to select song state'+ selectSongState);
+      $state.go(selectSongState);
+
     });
 
 
 
     $rootScope.$on('playmyband.webrtc.client.openError',function(){
-      $state.go('main.error');
+      $log.info('RegisteringPlayerCtrl - SIP register KO, going to error state'+errorState);
+      $state.go(errorState);
     });    
 
     
