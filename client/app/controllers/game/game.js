@@ -25,37 +25,37 @@ angular.module('webrtcTestApp')
     */
     $stateProvider
       .state('main.waitingPlayersHost', {
-        url: 'game',
+        url: 'waitingPlayersHost',
         templateUrl: 'app/controllers/game/waitingPlayersHost.html',
         controller: 'WaitingPlayersHostCtrl'
       });
     $stateProvider
       .state('main.connectingToHost', {
-        url: 'game',
+        url: 'connectingToHost',
         templateUrl: 'app/controllers/game/connectingToHost.html',
         controller: 'ConnectingToHostCtrl'
       });      
     $stateProvider
       .state('main.waitingPlayers', {
-        url: 'game',
+        url: 'waitingPlayers',
         templateUrl: 'app/controllers/game/waitingPlayers.html',
         controller: 'WaitingPlayersCtrl'
       });
     $stateProvider
       .state('main.startingGame', {
-        url: 'game',
+        url: 'startingGame',
         templateUrl: 'app/controllers/game/startingGame.html',
         controller: 'StartingGameCtrl'
       });     
     $stateProvider
       .state('main.playing', {
-        url: 'game',
+        url: 'playing',
         templateUrl: 'app/controllers/game/playing.html',
         controller: 'PlayingCtrl'
       });
     $stateProvider
       .state('main.error', {
-        url: 'game',
+        url: 'error',
         templateUrl: 'app/controllers/game/error.html',
         controller: 'ErrorCtrl'
       });      
