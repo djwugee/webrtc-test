@@ -136,10 +136,10 @@ angular.module('webrtcTestApp')
 
       //if note track is between 1 and 3
       if(noteEvent.track>=1 && noteEvent.track<=3 && noteEvent.event.noteNumber >= 0 ){
-        //var eventName='playmyband.canvas.midinoteoff.instrument'+ noteEvent.track;
+       var eventName='playmyband.canvas.midinoteoff.instrument'+ noteEvent.track;
 
         //send event
-        //$rootScope.$broadcast(eventName,noteEvent);        
+        $rootScope.$broadcast(eventName,noteEvent);        
 
       }      
     });
