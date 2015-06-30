@@ -76,20 +76,23 @@ angular.module('webrtcTestApp')
     TelScaleWebRTCPhoneController.prototype.DEFAULT_SIP_URI_CONTACT_PARAMETERS=undefined;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_DTLS_SRTP_KEY_AGREEMENT_MODE=true;
     TelScaleWebRTCPhoneController.prototype.DEFAULT_FORCE_TURN_MEDIA_RELAY_MODE=false;
-    TelScaleWebRTCPhoneController.prototype.XIRSYS_URL='https://api.xirsys.com/getIceServers'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_URL='https://service.xirsys.com/ice'; 
     TelScaleWebRTCPhoneController.prototype.XIRSYS_LOGIN='jaimehomer'; 
-    TelScaleWebRTCPhoneController.prototype.XIRSYS_PASSWORD='6d879ff7-96ac-45c7-a408-a998c197dee3';     
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_PASSWORD='6932092e-1a54-11e5-955c-c0b182264791'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_DOMAIN='playmybandnow.ddns.net'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_APP='playmyband'; 
+    TelScaleWebRTCPhoneController.prototype.XIRSYS_ROOM='default';    
 
     TelScaleWebRTCPhoneController.prototype.retrieveIceServers=function()
     {
-        var postData = $.param({
-                  domain: 'www.104.155.83.241', // FIXME: what should go here ?
-                  room: 'default',
-                  application: 'playmyband',
+        var postData = {
+                  domain: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_DOMAIN,
+                  room: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_ROOM,
+                  application: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_APP,
                   ident: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_LOGIN,
                   secret: $rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_PASSWORD,
                   secure: '1'
-                });
+                };
         var postReq = {
             method :'POST',
             url:$rootScope.pMBtelScaleWebRTCPhoneController.XIRSYS_URL,
