@@ -53,7 +53,7 @@ angular.module('webrtcTestApp')
             reader.onload = function(event) {
               var contents = event.target.result; 
               $rootScope.pMBmidiFile = new $midiService.MidiFile(contents, $rootScope.pMBdifficultyLevel);
-              $log.info('Midi loaded, going to state'+waitingPlayersHostState);
+              $log.info('SelectSongCtrl - Midi loaded, going to state '+waitingPlayersHostState);
               $state.go(waitingPlayersHostState);              
             };
 
@@ -90,23 +90,26 @@ angular.module('webrtcTestApp')
 
     };
 
-    $rootScope.$on('playmyband.webrtc.iceservers.error',function(){
-      $log.error('iceservers error');
-      if ($state.is(selectSongState)) {
-        $rootScope.pMBtelScaleWebRTCPhoneController.call($rootScope.pMBremotePlayerName);
+    function handleIceResult(){
+      if ($state.is(selectSongState)) {      
 
-        $log.info('SelectSongCtrl - going to state '+connectingToHostState);
-        $state.go(connectingToHostState);
+        var params={host:$rootScope.pMBremotePlayerName};
+        $log.info('SelectSongCtrl - going to state '+connectingToHostState,' with params: ',params);
+        $state.go(connectingToHostState,params);
       }
+
+    }
+
+    $rootScope.$on('playmyband.webrtc.iceservers.error',function(){
+      $log.error('SelectSongCtrl - iceservers error');
+      handleIceResult();
+
     });     
 
     $rootScope.$on('playmyband.webrtc.iceservers.retrieved',function(){
-      $log.error('iceservers OK');
+      $log.info('SelectSongCtrl - iceservers OK');
+      handleIceResult();
 
-      if ($state.is(selectSongState)) {      
-        $log.info('SelectSongCtrl - going to state '+connectingToHostState);
-        $state.go(connectingToHostState);
-      }
     });
 
     $scope.joinGame=function(joinModel){
