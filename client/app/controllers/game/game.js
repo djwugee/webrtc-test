@@ -22,7 +22,6 @@ angular.module('webrtcTestApp')
         templateUrl: 'app/controllers/game/selectSong.html',
         controller: 'SelectSongCtrl'
       });
-    */
     $stateProvider
       .state('main.waitingPlayersHost', {
         url: 'waitingPlayersHost',
@@ -41,6 +40,10 @@ angular.module('webrtcTestApp')
         templateUrl: 'app/controllers/game/waitingPlayers.html',
         controller: 'WaitingPlayersCtrl'
       });
+
+
+ESTE NO EXISTE????
+
     $stateProvider
       .state('main.startingGame', {
         url: 'startingGame',
@@ -53,10 +56,13 @@ angular.module('webrtcTestApp')
         templateUrl: 'app/controllers/game/playing.html',
         controller: 'PlayingCtrl'
       });
+*/
+     /* 
     $stateProvider
       .state('main.error', {
         url: 'error',
         templateUrl: 'app/controllers/game/error.html',
         controller: 'ErrorCtrl'
       });      
+*/
   });

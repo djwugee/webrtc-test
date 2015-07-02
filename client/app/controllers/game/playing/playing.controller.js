@@ -93,7 +93,7 @@ angular.module('webrtcTestApp')
     function sendNoteRemotely(note, accumulatedNoteDelta,nAction)
     {
       var userInputMsg = {playerId:$rootScope.pMBlocalPlayerId, noteNumber: note, delta: accumulatedNoteDelta,noteAction:nAction};
-      //$log.debug('PlayingCtrl - Sending user note thorugh the wire', userInputMsg);
+      $log.debug('PlayingCtrl - Sending user note thorugh the wire', userInputMsg);
       setTimeout(function(){
           if($rootScope.serverRuntime){
             $rootScope.pMBtelScaleWebRTCPhoneController.sendDataMessage('allContacts', JSON.stringify(userInputMsg));
