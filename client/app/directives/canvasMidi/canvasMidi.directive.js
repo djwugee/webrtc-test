@@ -113,7 +113,7 @@
                         });
 
                         $rootScope.$on(releaseEventName, function (event, note) {
-                            $log.debug('new release user note event', event, note);
+                            //$log.debug('new release user note event', event, note);
 
                             if (note >= 0 && note <= 4) {
                                 //_this.createMidiNote(note);
@@ -126,6 +126,7 @@
                          * capture midi event
                          */
                         $rootScope.$on(midiEventName, function (event, noteEvent) {
+                            $log.debug('New note',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
                             _this.createMidiNote(noteEvent.event, noteImages);
                         });
 
@@ -134,6 +135,7 @@
                          */
                         $rootScope.$on(midiOffEventName, function (event, noteEvent) {
                             //populate parallel array with noteOff event, so we can draw the line later
+                            $log.debug('New noteoff',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
                             $scope.offNotes[noteEvent.event.noteNumber].push(noteEvent.event);
                         });
 
@@ -161,9 +163,7 @@
                             //calculate iamge vars
                             var image = userNoteImages[noteIndex];
                             var left = noteIndex * NOTE_WIDTH + NOTE_WIDTH / 2;
-
                             var top = _this.getUserTop() - (NOTE_HEIGHT / 2);
-
 
 
                             var note = {
@@ -385,30 +385,38 @@
                                         ctx.stroke();
                                     }
                                     //draw the line until the proper noteOff event
-                                    ctx.beginPath();
                                     var lineLeft = note.left + (NOTE_WIDTH / 2);
-                                    ctx.moveTo(lineLeft, note.top);
-                                    ctx.lineWidth = LINE_WIDTH;
-                                    ctx.strokeStyle = noteColors[noteIndex];
                                     //by default draw the line to the top
-                                    var lineCoord = 0;
+                                    var lineStartYCoord = canvas.height;
+                                    var lineEndYCoord = 0;
+                                    if (note.top < canvas.height)
+                                    {
+                                        lineStartYCoord = note.top;
+                                    }
                                     if (scope.offNotes[noteIndex][noteJindex])
                                     {
                                         //if the noteOf is there, calculate coor
                                         var lineDelta = currentDelta - scope.offNotes[noteIndex][noteJindex].accumulatedDelta;
-                                        lineCoord = lineDelta * PIXELS_PER_MILLISECOND;
+                                        lineEndYCoord = lineDelta * PIXELS_PER_MILLISECOND;
                                     }
-                                    ctx.lineTo(lineLeft, lineCoord);
-                                    ctx.stroke();
+                                    //$log.debug('Render index,pos,notetop,linetop',noteIndex,noteJindex,note.top,lineStartYCoord, lineEndYCoord);
                                     
                                     //check if the note is out of bounds
-                                    if (lineCoord + NOTE_HEIGHT >= canvas.height) {
+                                    if (lineEndYCoord >= canvas.height) {
                                         //remove the note from notes
+                                        $log.debug('removing ', noteIndex, noteJindex);
                                         scope.notes[noteIndex].splice(noteJindex, 1);
                                         scope.offNotes[noteIndex].splice(noteJindex, 1);
                                         scope.notesCounter = scope.notesCounter - 1;
 
-                                    }      
+                                    } else {
+                                        ctx.beginPath();
+                                        ctx.moveTo(lineLeft, lineStartYCoord);
+                                        ctx.lineWidth = LINE_WIDTH;
+                                        ctx.strokeStyle = noteColors[noteIndex];
+                                        ctx.lineTo(lineLeft, lineEndYCoord);
+                                        ctx.stroke();
+                                    }
                                 }
                             }
 
