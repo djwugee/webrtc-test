@@ -126,7 +126,7 @@
                          * capture midi event
                          */
                         $rootScope.$on(midiEventName, function (event, noteEvent) {
-                            $log.debug('New note',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
+                            //$log.debug('New note',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
                             _this.createMidiNote(noteEvent.event, noteImages);
                         });
 
@@ -135,7 +135,7 @@
                          */
                         $rootScope.$on(midiOffEventName, function (event, noteEvent) {
                             //populate parallel array with noteOff event, so we can draw the line later
-                            $log.debug('New noteoff',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
+                            //$log.debug('New noteoff',$scope.canvasId, noteEvent.event.noteNumber, noteEvent.event);
                             $scope.offNotes[noteEvent.event.noteNumber].push(noteEvent.event);
                         });
 
@@ -404,7 +404,7 @@
                                     //check if the note is out of bounds
                                     if (lineEndYCoord >= canvas.height) {
                                         //remove the note from notes
-                                        $log.debug('removing ', noteIndex, noteJindex);
+                                        //$log.debug('removing ', noteIndex, noteJindex);
                                         scope.notes[noteIndex].splice(noteJindex, 1);
                                         scope.offNotes[noteIndex].splice(noteJindex, 1);
                                         scope.notesCounter = scope.notesCounter - 1;
