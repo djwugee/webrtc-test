@@ -67,7 +67,7 @@ angular.module('webrtcTestApp')
 
 
     $scope.continue=function(){
-      $state.go('main.playing');
+      $state.go('main.game.playing');
     };
 
   });

@@ -31,21 +31,23 @@
           var currentProgram = $synthService.PianoProgram; // NOT USED
           
           function noteOn(noteEvent) {
-            if (generatorsByNote[noteEvent.noteNumber] && !generatorsByNote[noteEvent.noteNumber].released) {
+            if (generatorsByNote[noteEvent.event.noteNumber] && !generatorsByNote[noteEvent.event.noteNumber].released) {
               /* playing same note before releasing the last one. BOO */
-              generatorsByNote[noteEvent.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
+              generatorsByNote[noteEvent.event.noteNumber].noteOff(); /* TODO: check whether we ought to be passing a velocity in */
+              $rootScope.$broadcast('playmyband.midi.noteOffEvent',noteEvent);
             }
             //console.log('playing note' + note);
             $rootScope.$broadcast('playmyband.midi.noteEvent',noteEvent);
-            var generator = currentProgram.createNote(noteEvent.noteNumber, noteEvent.velocity);
+            var generator = currentProgram.createNote(noteEvent.event.noteNumber, noteEvent.event.velocity);
             synth.addGenerator(generator);
             generatorsByNote[noteEvent.noteNumber] = generator;
           }
           function noteOff(noteEvent) {
-            if (generatorsByNote[noteEvent.noteNumber] && !generatorsByNote[noteEvent.noteNumber].released) {
-              generatorsByNote[noteEvent.noteNumber].noteOff(noteEvent.velocity);
-              $rootScope.$broadcast('playmyband.midi.noteOffEvent',noteEvent);
+            if (generatorsByNote[noteEvent.event.noteNumber] && !generatorsByNote[noteEvent.event.noteNumber].released) {
+              generatorsByNote[noteEvent.noteNumber].noteOff(noteEvent.event.velocity);
             }
+            $rootScope.$broadcast('playmyband.midi.noteOffEvent',noteEvent);
+
           }
             function setProgram(programNumber) {
               console.debug(programNumber);
