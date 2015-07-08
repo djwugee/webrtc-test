@@ -103,7 +103,7 @@
                         var _this = this;
 
                         $rootScope.$on(eventName, function (event, note) {
-                            $log.debug('new user note event', event, note);
+                            //$log.debug('new user note event', event, note);
 
                             if (note >= 0 && note <= 4) {
                                 //_this.createMidiNote(note);
@@ -175,7 +175,7 @@
 
 
 
-                            $log.debug('creating user note', note);
+                            //$log.debug('creating user note', note);
 
                             //push to current notes (toggle)
                             $scope.userNotes[noteIndex] = note;
