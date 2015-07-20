@@ -19,11 +19,12 @@ block content
       a.btn.btn-facebook.btn-lg(ng-href='https://www.facebook.com/dialog/oauth?client_id={{facebookAppId}}&response_type=code&scope=basic_info&data-scope=basic_info&redirect_uri={{facebookRedirectUrlEncoded}}')
         i.fa.fa-facebook
         |  Connect with Facebook
-  +form({id:'googleLoginForm'},{style:'margin-top:1em;'})
-    +input-group
-      a.btn.btn-google-plus.btn-lg(href='rest/googleRegister')
-        i.fa.fa-google-plus
-        |  Connect with Google+
+  //
+    +form({id:'googleLoginForm'},{style:'margin-top:1em;'})
+      +input-group
+        a.btn.btn-google-plus.btn-lg(href='rest/googleRegister')
+          i.fa.fa-google-plus
+          |  Connect with Google+
   div(ui-view="")
 //
   div
