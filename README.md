@@ -1,8 +1,7 @@
 # webrtc-test
 
-## Configuración entorno front
+## Front configuration
 
-Ir a la carpeta donde se quiera trabajar y lanzar:
 ```
 git clone https://github.com/nosolojava/webrtc-test.git
 
@@ -16,32 +15,33 @@ grunt
 
 ```
 
-Para trabajar levantar servidor de pruebas:
+To work with test service (just to develop front):
 ```
 grun serve
 ```
 
-Para crear la parte estática (la que luego utiliza Maven para la build):
+To create static resources for real app:
 ```
 grunt serve:dist
 ```
 
 
-## Para probar el WAR con Docker (aún no está listo).
+## Deploy WAR with Docker
 
 
+Inside project directory you will see a folder called playmyband-war, this is a war maven project, so
+
+1- First build the application
 ```
-docker run --name=restcomm -d -p 9990:9990 -p 8080:8080 -p 5080:5080 -p 5082:5082 -p 5080:5080/udp -p 65000-65535:65000-65535/udp -v /c/Users/cverdes/workspace/front-ws/webrtc-test/playmyband-war/target:/opt/Mobicents-Restcomm-JBoss-AS7/standalone/deployments gvagenas/restcomm
+cd $project_dir/playmyband-war
+mvn clean package
+```
+2- Start a docker jboss image mapping the target folder to the /apps docker image folder (so anytime you do a rebuild jboss will deploy playmyband automatically):
+```
+docker run --name=restcomm -d -p 9990:9990 -p 8080:8080 -p 5080:5080 -p 5082:5082 -p 5080:5080/udp -p 65000-65535:65000-65535/udp -v $project_dir/playmyband-war/target:/apps nosolojava/restcomm
 ```
 
-Donde
-- /c/Users/cverdes/workspace/front-ws/webrtc-test/playmyband-war/target es una carpeta donde se despliegue el war.
-
-Dentro de la misma carpeta se tiene que copiar los .war de Mobicents --> se actualizará esta parte en un futuro.
-
-Entonces ya puedes probar que el war se ha desplegado bien (cambiar 192.168.59.103 por la ip de docker en tu entorno, en linux por ejemplo sería localhost):
-
-
+3- Check with the next url (192.168.59.103 is the docker IP, check your docker setup):
 http://192.168.59.103:8080/playmyband/
 
 
