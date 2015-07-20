@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webrtcTestApp')
-  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService) {
+  .controller('SelectSongCtrl', function ($rootScope,$scope,$log,$http,$state,$midiService,inviteService) {
     var waitingPlayersHostState= $rootScope.WAITING_PLAYERS_HOST_STATE;
     var errorState=$rootScope.ERROR_STATE;
     var selectSongState=$rootScope.SELECT_SONG_STATE;
@@ -117,5 +117,16 @@ angular.module('webrtcTestApp')
       $rootScope.pMBtelScaleWebRTCPhoneController.retrieveIceServers(); 
       
     };
+
+    //consume invitation (it only happens if there is any invitation)
+    inviteService.consumeInvitation(function(hostName){
+      
+      var invitation={
+        contact:hostName
+      };
+
+      $scope.joinGame(invitation);
+    });
+
 
   });
